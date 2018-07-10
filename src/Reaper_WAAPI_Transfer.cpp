@@ -25,8 +25,6 @@
 HWND g_parentWindow;
 HINSTANCE g_hInst;
 
-int g_Waapi_Port;
-
 //actions
 gaccel_register_t action01 = { { 0, 0, 0 }, "Do action 01." };
 gaccel_register_t action02 = { { 0, 0, 0 }, "Do action 02." };
