@@ -308,8 +308,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\src\Reaper_WAAPI_Transfer.cpp" />
-    <ClInclude Include="E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\include\Reaper_WAAPI_Transfer.h" />
+    <ClCompile Include="src\SimonsReaperPlugin.cpp" />
+    <ClInclude Include="include\SimonsReaperPlugin.h" />
     <ClInclude Include="E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\include\reaper_plugin.h" />
     <ClInclude Include="E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\include\reaper_plugin_functions.h" />
     <ResourceCompile Include="E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\reaper_waapi_transfer.rc" />
