@@ -39,19 +39,19 @@ typedef double ReaSample;
 
 
 
-#ifdef _WIN32
+//#ifdef _WIN32
 #include <windows.h>
 
 #define REAPER_PLUGIN_DLL_EXPORT __declspec(dllexport)
 #define REAPER_PLUGIN_HINSTANCE HINSTANCE
 
-#else
-#include "../WDL/swell/swell.h"
-#include <pthread.h>
+//#else
+//#include "../WDL/swell/swell.h"
+//#include <pthread.h>
 
-#define REAPER_PLUGIN_DLL_EXPORT __attribute__((visibility("default")))
-#define REAPER_PLUGIN_HINSTANCE void *
-#endif
+//#define REAPER_PLUGIN_DLL_EXPORT __attribute__((visibility("default")))
+//#define REAPER_PLUGIN_HINSTANCE void *
+//#endif
 
 #define REAPER_PLUGIN_ENTRYPOINT ReaperPluginEntry
 #define REAPER_PLUGIN_ENTRYPOINT_NAME "ReaperPluginEntry"
