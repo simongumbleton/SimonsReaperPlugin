@@ -12,9 +12,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\CMakeLists.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <Filter Include="include">
       <UniqueIdentifier>{BC877715-68B9-34C2-BDBD-F83832BB3D85}</UniqueIdentifier>
     </Filter>

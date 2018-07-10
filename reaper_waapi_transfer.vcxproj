@@ -252,62 +252,6 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\CMakeLists.txt">
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Building Custom Rule E:/Projects/Personal/ReaperAPI/SimonsReaperPlugin/CMakeLists.txt</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -HE:/Projects/Personal/ReaperAPI/SimonsReaperPlugin -BE:/Projects/Personal/ReaperAPI/SimonsReaperPlugin --check-stamp-file E:/Projects/Personal/ReaperAPI/SimonsReaperPlugin/CMakeFiles/generate.stamp
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">E:/Projects/Personal/ReaperAPI/SimonsReaperPlugin/CMakeLists.txt;C:\Program Files\CMake\share\cmake-3.12\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\Platform\WindowsPaths.cmake;E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\CMakeFiles\3.12.0-rc2\CMakeCCompiler.cmake;E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\CMakeFiles\3.12.0-rc2\CMakeCXXCompiler.cmake;E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\CMakeFiles\3.12.0-rc2\CMakeRCCompiler.cmake;E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\CMakeFiles\3.12.0-rc2\CMakeSystem.cmake;E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\CMakeLists.txt;E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\CMakeFiles\generate.stamp</Outputs>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Building Custom Rule E:/Projects/Personal/ReaperAPI/SimonsReaperPlugin/CMakeLists.txt</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -HE:/Projects/Personal/ReaperAPI/SimonsReaperPlugin -BE:/Projects/Personal/ReaperAPI/SimonsReaperPlugin --check-stamp-file E:/Projects/Personal/ReaperAPI/SimonsReaperPlugin/CMakeFiles/generate.stamp
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">E:/Projects/Personal/ReaperAPI/SimonsReaperPlugin/CMakeLists.txt;C:\Program Files\CMake\share\cmake-3.12\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\Platform\WindowsPaths.cmake;E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\CMakeFiles\3.12.0-rc2\CMakeCCompiler.cmake;E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\CMakeFiles\3.12.0-rc2\CMakeCXXCompiler.cmake;E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\CMakeFiles\3.12.0-rc2\CMakeRCCompiler.cmake;E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\CMakeFiles\3.12.0-rc2\CMakeSystem.cmake;E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\CMakeLists.txt;E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\CMakeFiles\generate.stamp</Outputs>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">Building Custom Rule E:/Projects/Personal/ReaperAPI/SimonsReaperPlugin/CMakeLists.txt</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -HE:/Projects/Personal/ReaperAPI/SimonsReaperPlugin -BE:/Projects/Personal/ReaperAPI/SimonsReaperPlugin --check-stamp-file E:/Projects/Personal/ReaperAPI/SimonsReaperPlugin/CMakeFiles/generate.stamp
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">E:/Projects/Personal/ReaperAPI/SimonsReaperPlugin/CMakeLists.txt;C:\Program Files\CMake\share\cmake-3.12\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\Platform\WindowsPaths.cmake;E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\CMakeFiles\3.12.0-rc2\CMakeCCompiler.cmake;E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\CMakeFiles\3.12.0-rc2\CMakeCXXCompiler.cmake;E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\CMakeFiles\3.12.0-rc2\CMakeRCCompiler.cmake;E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\CMakeFiles\3.12.0-rc2\CMakeSystem.cmake;E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\CMakeLists.txt;E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\CMakeFiles\generate.stamp</Outputs>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">Building Custom Rule E:/Projects/Personal/ReaperAPI/SimonsReaperPlugin/CMakeLists.txt</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -HE:/Projects/Personal/ReaperAPI/SimonsReaperPlugin -BE:/Projects/Personal/ReaperAPI/SimonsReaperPlugin --check-stamp-file E:/Projects/Personal/ReaperAPI/SimonsReaperPlugin/CMakeFiles/generate.stamp
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">E:/Projects/Personal/ReaperAPI/SimonsReaperPlugin/CMakeLists.txt;C:\Program Files\CMake\share\cmake-3.12\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.12\Modules\Platform\WindowsPaths.cmake;E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\CMakeFiles\3.12.0-rc2\CMakeCCompiler.cmake;E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\CMakeFiles\3.12.0-rc2\CMakeCXXCompiler.cmake;E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\CMakeFiles\3.12.0-rc2\CMakeRCCompiler.cmake;E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\CMakeFiles\3.12.0-rc2\CMakeSystem.cmake;E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\CMakeLists.txt;E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\CMakeFiles\generate.stamp</Outputs>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">false</LinkObjects>
-    </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="src\SimonsReaperPlugin.cpp" />
     <ClInclude Include="include\SimonsReaperPlugin.h" />
     <ClInclude Include="E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\include\reaper_plugin.h" />
