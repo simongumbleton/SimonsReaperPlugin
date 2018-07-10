@@ -15,11 +15,6 @@
     <CustomBuild Include="E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\reaper_waapi_transfer.rc">
-      <Filter>src</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
     <Filter Include="include">
       <UniqueIdentifier>{BC877715-68B9-34C2-BDBD-F83832BB3D85}</UniqueIdentifier>
     </Filter>

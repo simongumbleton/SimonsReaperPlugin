@@ -312,7 +312,6 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="include\SimonsReaperPlugin.h" />
     <ClInclude Include="E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\include\reaper_plugin.h" />
     <ClInclude Include="E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\include\reaper_plugin_functions.h" />
-    <ResourceCompile Include="E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\reaper_waapi_transfer.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
