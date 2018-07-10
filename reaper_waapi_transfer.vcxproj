@@ -22,7 +22,7 @@
     <ProjectGuid>{0AD7B96E-1BB7-3F7F-BCEF-FEC52E891821}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <Platform>Win32</Platform>
-    <ProjectName>reaper_waapi_transfer</ProjectName>
+    <ProjectName>SimonsReaperPlugin</ProjectName>
     <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
