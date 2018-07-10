@@ -1,0 +1,30 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2027
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "reaper_waapi_transfer", "reaper_waapi_transfer.vcxproj", "{0AD7B96E-1BB7-3F7F-BCEF-FEC52E891821}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		MinSizeRel|Win32 = MinSizeRel|Win32
+		Release|Win32 = Release|Win32
+		RelWithDebInfo|Win32 = RelWithDebInfo|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0AD7B96E-1BB7-3F7F-BCEF-FEC52E891821}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0AD7B96E-1BB7-3F7F-BCEF-FEC52E891821}.Debug|Win32.Build.0 = Debug|Win32
+		{0AD7B96E-1BB7-3F7F-BCEF-FEC52E891821}.MinSizeRel|Win32.ActiveCfg = MinSizeRel|Win32
+		{0AD7B96E-1BB7-3F7F-BCEF-FEC52E891821}.MinSizeRel|Win32.Build.0 = MinSizeRel|Win32
+		{0AD7B96E-1BB7-3F7F-BCEF-FEC52E891821}.Release|Win32.ActiveCfg = Release|Win32
+		{0AD7B96E-1BB7-3F7F-BCEF-FEC52E891821}.Release|Win32.Build.0 = Release|Win32
+		{0AD7B96E-1BB7-3F7F-BCEF-FEC52E891821}.RelWithDebInfo|Win32.ActiveCfg = RelWithDebInfo|Win32
+		{0AD7B96E-1BB7-3F7F-BCEF-FEC52E891821}.RelWithDebInfo|Win32.Build.0 = RelWithDebInfo|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4BC68D26-4ED5-34EF-9A8C-DC9B10BE7B66}
+	EndGlobalSection
+EndGlobal

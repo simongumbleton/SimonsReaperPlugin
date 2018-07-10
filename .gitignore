@@ -1,0 +1,12 @@
+build/*
+build32/*
+x64/*
+Win32/*
+build/
+resources/icons/*
+!resources/icons/.gitempty
+Debug/*
+reaper_waapi_transfer.dir/*
+CMakeFiles/*
+
+*.aps
