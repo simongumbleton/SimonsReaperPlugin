@@ -141,6 +141,7 @@ bool HookCommandProc(int command, int flag)
     if (command == action02.accel.cmd)
     {
         //OpenRecallWindow();
+		doAction2();
         return true;
     }
     return false;
@@ -149,4 +150,9 @@ bool HookCommandProc(int command, int flag)
 void doAction1()
 {
 	MessageBox(g_parentWindow, "Hello World!", "Reaper extension API test", MB_OK);
+}
+
+void doAction2()
+{
+	MessageBox(g_parentWindow, "My Super Action 2!", "Reaper extension API test", MB_OK+MB_ICONEXCLAMATION);
 }

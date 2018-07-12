@@ -10,3 +10,5 @@ extern REAPER_PLUGIN_HINSTANCE g_hInst;
 bool HookCommandProc(int command, int flag);
 
 void doAction1();
+
+void doAction2();
