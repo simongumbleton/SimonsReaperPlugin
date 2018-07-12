@@ -12,3 +12,6 @@ reaper_simonsreaperplugin.dir/*
 SimonsReaperPlugin.dir/*
 .vs/*
 *.aps
+*.tlog
+*.tlog
+*.lastbuildstate

@@ -8,3 +8,5 @@ extern HWND g_parentWindow;
 extern REAPER_PLUGIN_HINSTANCE g_hInst;
 
 bool HookCommandProc(int command, int flag);
+
+void doAction1();

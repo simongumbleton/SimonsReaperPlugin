@@ -42,6 +42,9 @@ void StartupError(const std::string &errMsg,
     }
 }
 
+
+
+
 extern "C"
 {
     REAPER_PLUGIN_DLL_EXPORT int REAPER_PLUGIN_ENTRYPOINT(REAPER_PLUGIN_HINSTANCE hInstance, reaper_plugin_info_t *rec)
@@ -132,6 +135,7 @@ bool HookCommandProc(int command, int flag)
     if (command == action01.accel.cmd)
     {
         //OpenTransferWindow();
+		doAction1();
         return true;
     }
     if (command == action02.accel.cmd)
@@ -140,4 +144,9 @@ bool HookCommandProc(int command, int flag)
         return true;
     }
     return false;
+}
+
+void doAction1()
+{
+	MessageBox(g_parentWindow, "Hello World!", "Reaper extension API test", MB_OK);
 }
