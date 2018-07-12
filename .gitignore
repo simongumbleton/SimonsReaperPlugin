@@ -8,5 +8,7 @@ resources/icons/*
 Debug/*
 reaper_waapi_transfer.dir/*
 CMakeFiles/*
-
+reaper_simonsreaperplugin.dir/*
+SimonsReaperPlugin.dir/*
+.vs/*
 *.aps

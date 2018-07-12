@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\include\reaper_plugin.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\include\reaper_plugin_functions.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="include\SimonsReaperPlugin.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\reaper_plugin_functions.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\reaper_plugin.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
