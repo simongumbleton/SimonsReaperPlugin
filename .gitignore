@@ -15,3 +15,5 @@ SimonsReaperPlugin.dir/*
 *.tlog
 *.tlog
 *.lastbuildstate
+*.db
+*.ipch
