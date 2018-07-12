@@ -25,6 +25,9 @@
 HWND g_parentWindow;
 HINSTANCE g_hInst;
 
+
+
+
 //actions
 gaccel_register_t action01 = { { 0, 0, 0 }, "Do action 01." };
 gaccel_register_t action02 = { { 0, 0, 0 }, "Do action 02." };
@@ -80,7 +83,6 @@ extern "C"
         GET_FUNC_AND_CHKERROR(GetSetMediaTrackInfo_String);
         GET_FUNC_AND_CHKERROR(CountTracks);
         GET_FUNC_AND_CHKERROR(CountProjectMarkers);
-        GET_FUNC_AND_CHKERROR(ShowConsoleMsg);
 
         //exit if any func pointer couldn't be found
         if (funcerrcnt)
@@ -149,10 +151,20 @@ bool HookCommandProc(int command, int flag)
 
 void doAction1()
 {
+	GetReaperGlobals();
+	
+	ShowConsoleMsg(reaperProjectName);
 	MessageBox(g_parentWindow, "Hello World!", "Reaper extension API test", MB_OK);
 }
 
 void doAction2()
 {
 	MessageBox(g_parentWindow, "My Super Action 2!", "Reaper extension API test", MB_OK+MB_ICONEXCLAMATION);
+}
+
+void GetReaperGlobals()
+{
+	//get open project and compare
+	EnumProjects(-1, currentProject, MAX_PATH);
+	GetProjectName(EnumProjects(-1, nullptr, 0), reaperProjectName, 256);
 }
