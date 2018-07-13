@@ -10,6 +10,96 @@
     <ClInclude Include="include\reaper_plugin.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\WaapiConnect.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AkAutobahn\AkJson.h">
+      <Filter>AkAutobahn</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AkAutobahn\AkVariant.h">
+      <Filter>AkAutobahn</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AkAutobahn\autobahn.h">
+      <Filter>AkAutobahn</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AkAutobahn\civetweb.h">
+      <Filter>AkAutobahn</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AkAutobahn\Client.h">
+      <Filter>AkAutobahn</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AkAutobahn\FutureUtils.h">
+      <Filter>AkAutobahn</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AkAutobahn\IWebSocketClientHandler.h">
+      <Filter>AkAutobahn</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AkAutobahn\JSONHelpers.h">
+      <Filter>AkAutobahn</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AkAutobahn\JsonProvider.h">
+      <Filter>AkAutobahn</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AkAutobahn\Logger.h">
+      <Filter>AkAutobahn</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AkAutobahn\WebSocketClient.h">
+      <Filter>AkAutobahn</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AkAutobahn\util\Continuation.h">
+      <Filter>AkAutobahn</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AkAutobahn\util\make_unique.h">
+      <Filter>AkAutobahn</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\allocators.h">
+      <Filter>rapidjason</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\document.h">
+      <Filter>rapidjason</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\encodedstream.h">
+      <Filter>rapidjason</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\encodings.h">
+      <Filter>rapidjason</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\filereadstream.h">
+      <Filter>rapidjason</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\filewritestream.h">
+      <Filter>rapidjason</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\memorybuffer.h">
+      <Filter>rapidjason</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\memorystream.h">
+      <Filter>rapidjason</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\pointer.h">
+      <Filter>rapidjason</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\prettywriter.h">
+      <Filter>rapidjason</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\rapidjson.h">
+      <Filter>rapidjason</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\reader.h">
+      <Filter>rapidjason</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\stringbuffer.h">
+      <Filter>rapidjason</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rapidjson\writer.h">
+      <Filter>rapidjason</Filter>
+    </ClInclude>
+    <ClInclude Include="include\config.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\types.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">
@@ -18,10 +108,40 @@
     <Filter Include="src">
       <UniqueIdentifier>{FB3FB8F2-7BC3-35F6-9E71-2AA7D26FB4C0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AkAutobahn">
+      <UniqueIdentifier>{5c12ff54-1178-4b12-bf03-aedfd52b3088}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="rapidjason">
+      <UniqueIdentifier>{be35a390-9b88-45fc-8143-cacc8a28f457}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\SimonsReaperPlugin.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WaapiConnect.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="include\AkAutobahn\autobahn.cpp">
+      <Filter>AkAutobahn</Filter>
+    </ClCompile>
+    <ClCompile Include="include\AkAutobahn\civetweb.cpp">
+      <Filter>AkAutobahn</Filter>
+    </ClCompile>
+    <ClCompile Include="include\AkAutobahn\Client.cpp">
+      <Filter>AkAutobahn</Filter>
+    </ClCompile>
+    <ClCompile Include="include\AkAutobahn\FutureUtils.cpp">
+      <Filter>AkAutobahn</Filter>
+    </ClCompile>
+    <ClCompile Include="include\AkAutobahn\JSONHelpers.cpp">
+      <Filter>AkAutobahn</Filter>
+    </ClCompile>
+    <ClCompile Include="include\AkAutobahn\Logger.cpp">
+      <Filter>AkAutobahn</Filter>
+    </ClCompile>
+    <ClCompile Include="include\AkAutobahn\WebSocketClient.cpp">
+      <Filter>AkAutobahn</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

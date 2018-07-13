@@ -167,7 +167,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\include;%(AdditionalIncludeDirectories);C:\Program Files (x86)\Audiokinetic\Wwise 2017.2.1.6524\SDK\include</AdditionalIncludeDirectories>
       <AssemblerListingLocation>Debug/</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <CompileAs>CompileAsCpp</CompileAs>
@@ -210,7 +210,6 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>x64/Debug/</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <CompileAs>CompileAsCpp</CompileAs>
@@ -224,6 +223,7 @@
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;VALIDATE_WAMP;USE_WEBSOCKET;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR="Debug";SimonsReaperPlugin_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
+      <AdditionalIncludeDirectories>$(SolutionDir)\include;%(AdditionalIncludeDirectories);C:\Program Files (x86)\Audiokinetic\Wwise 2017.2.1.6524\SDK\include</AdditionalIncludeDirectories>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;VALIDATE_WAMP;USE_WEBSOCKET;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"Debug\";SimonsReaperPlugin_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -591,10 +591,48 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="include\AkAutobahn\autobahn.cpp" />
+    <ClCompile Include="include\AkAutobahn\civetweb.cpp" />
+    <ClCompile Include="include\AkAutobahn\Client.cpp" />
+    <ClCompile Include="include\AkAutobahn\FutureUtils.cpp" />
+    <ClCompile Include="include\AkAutobahn\JSONHelpers.cpp" />
+    <ClCompile Include="include\AkAutobahn\Logger.cpp" />
+    <ClCompile Include="include\AkAutobahn\WebSocketClient.cpp" />
     <ClCompile Include="src\SimonsReaperPlugin.cpp" />
+    <ClCompile Include="src\WaapiConnect.cpp" />
+    <ClInclude Include="include\AkAutobahn\AkJson.h" />
+    <ClInclude Include="include\AkAutobahn\AkVariant.h" />
+    <ClInclude Include="include\AkAutobahn\autobahn.h" />
+    <ClInclude Include="include\AkAutobahn\civetweb.h" />
+    <ClInclude Include="include\AkAutobahn\Client.h" />
+    <ClInclude Include="include\AkAutobahn\FutureUtils.h" />
+    <ClInclude Include="include\AkAutobahn\IWebSocketClientHandler.h" />
+    <ClInclude Include="include\AkAutobahn\JSONHelpers.h" />
+    <ClInclude Include="include\AkAutobahn\JsonProvider.h" />
+    <ClInclude Include="include\AkAutobahn\Logger.h" />
+    <ClInclude Include="include\AkAutobahn\util\Continuation.h" />
+    <ClInclude Include="include\AkAutobahn\util\make_unique.h" />
+    <ClInclude Include="include\AkAutobahn\WebSocketClient.h" />
+    <ClInclude Include="include\config.h" />
+    <ClInclude Include="include\rapidjson\allocators.h" />
+    <ClInclude Include="include\rapidjson\document.h" />
+    <ClInclude Include="include\rapidjson\encodedstream.h" />
+    <ClInclude Include="include\rapidjson\encodings.h" />
+    <ClInclude Include="include\rapidjson\filereadstream.h" />
+    <ClInclude Include="include\rapidjson\filewritestream.h" />
+    <ClInclude Include="include\rapidjson\memorybuffer.h" />
+    <ClInclude Include="include\rapidjson\memorystream.h" />
+    <ClInclude Include="include\rapidjson\pointer.h" />
+    <ClInclude Include="include\rapidjson\prettywriter.h" />
+    <ClInclude Include="include\rapidjson\rapidjson.h" />
+    <ClInclude Include="include\rapidjson\reader.h" />
+    <ClInclude Include="include\rapidjson\stringbuffer.h" />
+    <ClInclude Include="include\rapidjson\writer.h" />
     <ClInclude Include="include\SimonsReaperPlugin.h" />
     <ClInclude Include="include\reaper_plugin.h" />
     <ClInclude Include="include\reaper_plugin_functions.h" />
+    <ClInclude Include="include\types.h" />
+    <ClInclude Include="include\WaapiConnect.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

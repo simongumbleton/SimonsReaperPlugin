@@ -16,6 +16,7 @@
 #include "reaper_plugin_functions.h"
 
 #include "SimonsReaperPlugin.h"
+#include "WaapiConnect.h"
 
 
 #define GET_FUNC_AND_CHKERROR(x) if (!((*((void **)&(x)) = (void *)rec->GetFunc(#x)))) ++funcerrcnt
@@ -25,12 +26,12 @@
 HWND g_parentWindow;
 HINSTANCE g_hInst;
 
-
+char currentProject[256];
 
 
 //actions
 gaccel_register_t action01 = { { 0, 0, 0 }, "Do action 01." };
-gaccel_register_t action02 = { { 0, 0, 0 }, "Do action 02." };
+gaccel_register_t connectToWwise = { { 0, 0, 0 }, "Do action 02." };
 
 //produces an error message during reaper startup
 //similar to SWS function ErrMsg in sws_extension.cpp
@@ -95,7 +96,7 @@ extern "C"
         //register commands
         int regerrcnt = 0;
         REGISTER_AND_CHKERROR(action01.accel.cmd, "command_id", "action01");
-        REGISTER_AND_CHKERROR(action02.accel.cmd, "command_id", "action02");
+        REGISTER_AND_CHKERROR(connectToWwise.accel.cmd, "command_id", "action02");
         if (regerrcnt)
         {
             StartupError("An error occured whilst initializing.\n"
@@ -104,7 +105,7 @@ extern "C"
         }
 
         //register actions
-        plugin_register("gaccel", &action02.accel);
+        plugin_register("gaccel", &connectToWwise.accel);
         plugin_register("gaccel", &action01.accel);
 
         rec->Register("hookcommand", (void*)HookCommandProc);
@@ -124,8 +125,8 @@ extern "C"
             MENUITEMINFO mi = { sizeof(MENUITEMINFO), };
             mi.fMask = MIIM_TYPE | MIIM_ID;
             mi.fType = MFT_STRING;
-            mi.wID = action02.accel.cmd;
-            mi.dwTypeData = "Action 02";
+            mi.wID = connectToWwise.accel.cmd;
+            mi.dwTypeData = "Connect To Wwise";
             InsertMenuItem(hMenu, 1, true, &mi);
         }
     }
@@ -140,10 +141,10 @@ bool HookCommandProc(int command, int flag)
 		doAction1();
         return true;
     }
-    if (command == action02.accel.cmd)
+    if (command == connectToWwise.accel.cmd)
     {
         //OpenRecallWindow();
-		doAction2();
+		ConnectToWwise();
         return true;
     }
     return false;
@@ -157,9 +158,11 @@ void doAction1()
 	MessageBox(g_parentWindow, "Hello World!", "Reaper extension API test", MB_OK);
 }
 
-void doAction2()
+void ConnectToWwise()
 {
-	MessageBox(g_parentWindow, "My Super Action 2!", "Reaper extension API test", MB_OK+MB_ICONEXCLAMATION);
+	WAAPIConnect MyWwiseConnection;
+	MyWwiseConnection.Connect();	//Connect to Wwise. Optionally pass bool true to supress message boxes from wwise connection
+	//MessageBox(g_parentWindow, "My Super Action 2!", "Reaper extension API test", MB_OK+MB_ICONEXCLAMATION);
 }
 
 void GetReaperGlobals()
