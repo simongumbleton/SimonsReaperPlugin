@@ -66,3 +66,87 @@ bool WAAPIConnect::Connect(bool suppressOuputMessages)	//Connect to Wwise. Optio
 
 	return success;
 }
+
+bool WAAPIConnect::GetSelectedWwiseObject()
+{
+	using namespace AK::WwiseAuthoringAPI;
+	AkJson ReturnResults;
+	AkJson options(AkJson::Map{
+		{"return", AkJson::Array
+		{
+			AkVariant("id"),
+			AkVariant("name"),
+			AkVariant("type"),
+			AkVariant("parent"),
+			}
+		}
+		}
+	);
+
+	bool success = false;
+
+	if (success = m_client.Connect("127.0.0.1", g_Waapi_Port))
+	{
+		if (success = m_client.Call(ak::wwise::ui::getSelectedObjects, AkJson(AkJson::Map()), options, ReturnResults))
+		{
+			AkJson::Array SelectedObjectReturn;
+			GetWaapiResultsArray(SelectedObjectReturn,ReturnResults);
+
+			for (const auto &result : SelectedObjectReturn)
+			{
+				const std::string wwiseObjectGuid = result["id"].GetVariant().GetString();
+				const std::string wwiseObjectName = result["name"].GetVariant().GetString();
+				const std::string wwiseObjectType = result["type"].GetVariant().GetString();
+//				const std::string wwiseObjectParent = result["parent"].GetVariant().GetString();
+
+				//create a status text string and set it
+				std::stringstream status;
+				status << wwiseObjectGuid + " Named: " +wwiseObjectName;
+				status << " is type " + wwiseObjectType;
+//				status << " Parent =  " + wwiseObjectParent;
+				std::string SelectedObject = status.str();
+
+				MessageBox(NULL, SelectedObject.c_str(), "Wwise Objects Selected", MB_OK);
+			}
+		}
+	}
+	else
+	{
+		MessageBox(NULL, "No Wwise Connection Found!", "Wwise Objects Selected", MB_OK);
+	}
+
+
+	return false;
+}
+
+void WAAPIConnect::GetWaapiResultsArray(AK::WwiseAuthoringAPI::AkJson::Array & arrayIn, AK::WwiseAuthoringAPI::AkJson & results)
+{
+	using namespace AK::WwiseAuthoringAPI;
+	switch (results.GetType())
+	{
+	case AkJson::Type::Map:
+	{
+		if (results.HasKey("objects"))
+		{
+			arrayIn = results["objects"].GetArray();
+			return;
+		}
+		else if (results.HasKey("return"))
+		{
+			arrayIn = results["return"].GetArray();
+			return;
+		}
+		else
+		{
+			assert(!"Not implemented.");
+			return;
+		}
+
+	} break;
+
+
+	default:
+		assert(!"Not implemented.");
+		return;
+	}
+}

@@ -32,6 +32,7 @@ char currentProject[256];
 //actions
 gaccel_register_t action01 = { { 0, 0, 0 }, "Do action 01." };
 gaccel_register_t connectToWwise = { { 0, 0, 0 }, "Do action 02." };
+gaccel_register_t getSelectedObjects = { { 0, 0, 0 }, "Do action 03." };
 
 //produces an error message during reaper startup
 //similar to SWS function ErrMsg in sws_extension.cpp
@@ -97,6 +98,7 @@ extern "C"
         int regerrcnt = 0;
         REGISTER_AND_CHKERROR(action01.accel.cmd, "command_id", "action01");
         REGISTER_AND_CHKERROR(connectToWwise.accel.cmd, "command_id", "action02");
+		REGISTER_AND_CHKERROR(getSelectedObjects.accel.cmd, "command_id", "action03");
         if (regerrcnt)
         {
             StartupError("An error occured whilst initializing.\n"
@@ -107,6 +109,7 @@ extern "C"
         //register actions
         plugin_register("gaccel", &connectToWwise.accel);
         plugin_register("gaccel", &action01.accel);
+		plugin_register("gaccel", &getSelectedObjects.accel);
 
         rec->Register("hookcommand", (void*)HookCommandProc);
 
@@ -129,6 +132,14 @@ extern "C"
             mi.dwTypeData = "Connect To Wwise";
             InsertMenuItem(hMenu, 1, true, &mi);
         }
+		{
+			MENUITEMINFO mi = { sizeof(MENUITEMINFO), };
+			mi.fMask = MIIM_TYPE | MIIM_ID;
+			mi.fType = MFT_STRING;
+			mi.wID = getSelectedObjects.accel.cmd;
+			mi.dwTypeData = "Get Selected Objects";
+			InsertMenuItem(hMenu, 2, true, &mi);
+		}
     }
 }
 
@@ -147,6 +158,11 @@ bool HookCommandProc(int command, int flag)
 		ConnectToWwise();
         return true;
     }
+	if (command == getSelectedObjects.accel.cmd)
+	{
+		GetWwiseSelectedObjects();
+		return true;
+	}
     return false;
 }
 
@@ -162,7 +178,13 @@ void ConnectToWwise()
 {
 	WAAPIConnect MyWwiseConnection;
 	MyWwiseConnection.Connect();	//Connect to Wwise. Optionally pass bool true to supress message boxes from wwise connection
-	//MessageBox(g_parentWindow, "My Super Action 2!", "Reaper extension API test", MB_OK+MB_ICONEXCLAMATION);
+	
+}
+
+void GetWwiseSelectedObjects()
+{
+	WAAPIConnect MyWwiseConnection;
+	MyWwiseConnection.GetSelectedWwiseObject();
 }
 
 void GetReaperGlobals()

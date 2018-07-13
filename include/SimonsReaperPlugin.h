@@ -17,3 +17,5 @@ bool HookCommandProc(int command, int flag);
 void doAction1();
 
 void ConnectToWwise();
+
+void GetWwiseSelectedObjects();

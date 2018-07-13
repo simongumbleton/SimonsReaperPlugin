@@ -31,11 +31,17 @@ public:
 	int g_Waapi_Port = 8095;
 
 	//struct to hold the current Waapi connection info (version, port etc)
-	struct CurrentWwiseConnection {
-		int port;
-		std::string Version;
-		std::string DisplayName;
-	};
+	//struct CurrentWwiseConnection {
+	//	int port;
+	//	std::string Version;
+	//	std::string DisplayName;
+	//};
+
+
+	///Get Seleted Object
+	bool GetSelectedWwiseObject();
+
+	void GetWaapiResultsArray(AK::WwiseAuthoringAPI::AkJson::Array &arrayIn, AK::WwiseAuthoringAPI::AkJson &results);
 
 
 private:
