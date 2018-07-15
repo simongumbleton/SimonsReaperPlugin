@@ -26,8 +26,12 @@
 //define globals
 HWND g_parentWindow;
 HINSTANCE g_hInst;
+char reaperProjectName[256];
 
 char currentProject[256];
+bool supressMessagebox = false;
+bool supressConsoleOutput = false;
+
 
 //actions
 gaccel_register_t action01 = { { 0, 0, 0 }, "Do action 01." };
@@ -54,6 +58,7 @@ extern "C"
 {
     REAPER_PLUGIN_DLL_EXPORT int REAPER_PLUGIN_ENTRYPOINT(REAPER_PLUGIN_HINSTANCE hInstance, reaper_plugin_info_t *rec)
     {
+
         //return if plugin is exiting
         if (!rec)
         {
@@ -140,6 +145,7 @@ extern "C"
 			mi.dwTypeData = "Get Selected Objects";
 			InsertMenuItem(hMenu, 2, true, &mi);
 		}
+
     }
 }
 
@@ -153,12 +159,12 @@ bool HookCommandProc(int command, int flag)
     }
     if (command == connectToWwise.accel.cmd)
     {
-		ConnectToWwise();	/// WwiseConnectionHandler
-        return true;
+		ConnectToWwise(supressMessagebox);	/// WwiseConnectionHandler //Connect to Wwise. Optionally pass bool true to supress message boxes from wwise connection
+		return true;
     }
 	if (command == getSelectedObjects.accel.cmd)
 	{
-		GetSelectedWwiseObjects();	/// WwiseConnectionHandler
+		GetSelectedWwiseObjects(supressMessagebox);	/// WwiseConnectionHandler
 		return true;
 	}
     return false;
@@ -172,6 +178,22 @@ void doAction1()
 	MessageBox(g_parentWindow, "Hello World!", "Reaper extension API test", MB_OK);
 }
 
+void PrintToConsole(std::string text)
+{
+	if (AllocConsole())
+	{
+		FILE* fp;
+		freopen_s(&fp, "CONOUT$", "w", stdout);
+	}
+	
+	if (!supressConsoleOutput)
+	{
+		printf("%s\n", text.c_str());
+	}
+
+	FreeConsole();
+
+}
 
 void GetReaperGlobals()
 {
@@ -179,3 +201,5 @@ void GetReaperGlobals()
 	EnumProjects(-1, currentProject, MAX_PATH);
 	GetProjectName(EnumProjects(-1, nullptr, 0), reaperProjectName, 256);
 }
+
+

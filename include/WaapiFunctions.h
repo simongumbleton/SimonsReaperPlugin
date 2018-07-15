@@ -24,11 +24,10 @@
 	bool waapi_Connect(bool suppressOuputMessages = false);
 
 	///struct to hold the current Waapi connection info (version, port etc)
-	//struct CurrentWwiseConnection {
-	//	int port;
-	//	std::string Version;
-	//	std::string DisplayName;
-	//};
+	struct CurrentWwiseConnection {
+		int port;
+		std::string Version;
+	};
 
 	///////////////////////////////
 	////     Get Selected Objects

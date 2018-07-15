@@ -13,6 +13,8 @@ AK::WwiseAuthoringAPI::Client my_client;
 int My_WAAPI_CLIENT_TIMEOUT_MS = 2000;
 int my_Waapi_Port = 8095;
 
+CurrentWwiseConnection waapi_CurrentWwiseConnection;
+
 bool waapi_Connect(bool suppressOuputMessages)
 {
 	using namespace AK::WwiseAuthoringAPI;
@@ -27,13 +29,15 @@ bool waapi_Connect(bool suppressOuputMessages)
 			AkJson(AkJson::Type::Map),
 			wwiseInfo))
 		{
+			waapi_CurrentWwiseConnection.port = my_Waapi_Port;
+			waapi_CurrentWwiseConnection.Version = wwiseInfo["version"]["displayName"].GetVariant().GetString();
+
 			if (!suppressOuputMessages)
 			{ 
 				//create a status text string and set it
 				std::stringstream status;
-				status << "Connected on port " + std::to_string(my_Waapi_Port) + ": ";
-				status << wwiseInfo["displayName"].GetVariant().GetString();
-				status << " - " + wwiseInfo["version"]["displayName"].GetVariant().GetString();
+				status << "Connected on port " + std::to_string(waapi_CurrentWwiseConnection.port) + ": ";
+				status << " - " + waapi_CurrentWwiseConnection.Version;
 				std::string WwiseConnectionStatus = status.str();
 				MessageBox(NULL, WwiseConnectionStatus.c_str(), "Wwise Connection Status", MB_OK);
 			}
