@@ -8,9 +8,6 @@
 extern HWND g_parentWindow;
 extern REAPER_PLUGIN_HINSTANCE g_hInst;
 
-
-
-
 void GetReaperGlobals();
 
 bool HookCommandProc(int command, int flag);
@@ -19,3 +16,6 @@ void doAction1();
 
 void PrintToConsole(std::string text);
 
+void StartDebugConsole();
+
+void CloseDebugConsole();

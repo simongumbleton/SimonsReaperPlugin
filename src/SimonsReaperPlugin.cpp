@@ -27,10 +27,14 @@
 HWND g_parentWindow;
 HINSTANCE g_hInst;
 char reaperProjectName[256];
+int WaapiPort = 8095;
 
 char currentProject[256];
 bool supressMessagebox = false;
 bool supressConsoleOutput = false;
+
+HWND consoleWindowHndl;
+DWORD currentPID = 0;
 
 
 //actions
@@ -58,6 +62,14 @@ extern "C"
 {
     REAPER_PLUGIN_DLL_EXPORT int REAPER_PLUGIN_ENTRYPOINT(REAPER_PLUGIN_HINSTANCE hInstance, reaper_plugin_info_t *rec)
     {
+
+		if (AllocConsole())
+		{
+			FILE* fp;
+			freopen_s(&fp, "CONOUT$", "w", stdout);
+			currentPID = GetCurrentProcessId();
+			FreeConsole();
+		}
 
         //return if plugin is exiting
         if (!rec)
@@ -159,12 +171,13 @@ bool HookCommandProc(int command, int flag)
     }
     if (command == connectToWwise.accel.cmd)
     {
-		ConnectToWwise(supressMessagebox);	/// WwiseConnectionHandler //Connect to Wwise. Optionally pass bool true to supress message boxes from wwise connection
+		ConnectToWwise(supressMessagebox, WaapiPort);	/// WwiseConnectionHandler //Connect to Wwise. 
 		return true;
     }
 	if (command == getSelectedObjects.accel.cmd)
 	{
-		GetSelectedWwiseObjects(supressMessagebox);	/// WwiseConnectionHandler
+	//	GetSelectedWwiseObjects(supressMessagebox);	/// WwiseConnectionHandler
+		GetChildrenFromSelectedParent(supressMessagebox);
 		return true;
 	}
     return false;
@@ -180,19 +193,25 @@ void doAction1()
 
 void PrintToConsole(std::string text)
 {
-	if (AllocConsole())
-	{
-		FILE* fp;
-		freopen_s(&fp, "CONOUT$", "w", stdout);
-	}
-	
 	if (!supressConsoleOutput)
 	{
 		printf("%s\n", text.c_str());
 	}
+}
 
+void StartDebugConsole()
+{
+	if (AllocConsole())
+	{
+		FILE* fp;
+		freopen_s(&fp, "CONOUT$", "w", stdout);
+		consoleWindowHndl = GetConsoleWindow();
+	}
+}
+
+void CloseDebugConsole()
+{
 	FreeConsole();
-
 }
 
 void GetReaperGlobals()

@@ -12,9 +12,9 @@ struct WwiseObject
 };
 
 
-void ConnectToWwise(bool suppressOuputMessages);
+void ConnectToWwise(bool suppressOuputMessages, int port);
 
 void GetSelectedWwiseObjects(bool suppressOuputMessages);
 
-
+void GetChildrenFromSelectedParent(bool suppressOuputMessages);
 
