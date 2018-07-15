@@ -10,9 +10,6 @@
     <ClInclude Include="include\reaper_plugin.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\WaapiConnect.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="include\AkAutobahn\AkJson.h">
       <Filter>AkAutobahn</Filter>
     </ClInclude>
@@ -94,13 +91,13 @@
     <ClInclude Include="include\rapidjson\writer.h">
       <Filter>rapidjason</Filter>
     </ClInclude>
-    <ClInclude Include="include\config.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="include\types.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\WaapiFunctions.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\WwiseConnectionHandler.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
@@ -120,9 +117,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\SimonsReaperPlugin.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\WaapiConnect.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="include\AkAutobahn\autobahn.cpp">
@@ -147,6 +141,9 @@
       <Filter>AkAutobahn</Filter>
     </ClCompile>
     <ClCompile Include="src\WaapiFunctions.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WwiseConnectionHandler.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

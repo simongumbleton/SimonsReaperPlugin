@@ -16,7 +16,6 @@
 
 #include "SimonsReaperPlugin.h"
 #include "WaapiFunctions.h"
-#include "WaapiConnect.h"
 
 
 
@@ -28,9 +27,6 @@ HWND g_parentWindow;
 HINSTANCE g_hInst;
 
 char currentProject[256];
-
-WaapiFunctions MyWwiseConnection;
-AK::WwiseAuthoringAPI::Client MyClient;
 
 //actions
 gaccel_register_t action01 = { { 0, 0, 0 }, "Do action 01." };
@@ -178,17 +174,23 @@ void doAction1()
 void ConnectToWwise(bool supressMessagebox)
 {
 	using namespace AK::WwiseAuthoringAPI;
-	MyWwiseConnection.Connect(supressMessagebox);  //Connect to Wwise. Optionally pass bool true to supress message boxes from wwise connection
+	Connect(supressMessagebox);  //Connect to Wwise. Optionally pass bool true to supress message boxes from wwise connection
 }
 
 void GetWwiseSelectedObjects()
 {
+	if(!Connect(true))
+	{
+		/// WWise connection not found!
+		MessageBox(NULL, "Wwise Connection not found! Exiting!","Wwise Connection Error", MB_OK);
+		return;
+	}
 	using namespace AK::WwiseAuthoringAPI;
 	AkJson RawReturnResults;
-	MyWwiseConnection.GetSelectedWwiseObjects(RawReturnResults, true);
+	GetSelectedWwiseObjects(RawReturnResults, true);
 
 	AkJson::Array MyReturnResults;
-	MyWwiseConnection.GetWaapiResultsArray(MyReturnResults, RawReturnResults);
+	GetWaapiResultsArray(MyReturnResults, RawReturnResults);
 
 	for (const auto &result : MyReturnResults)
 	{

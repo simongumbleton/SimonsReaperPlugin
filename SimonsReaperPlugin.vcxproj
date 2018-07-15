@@ -599,8 +599,8 @@
     <ClCompile Include="include\AkAutobahn\Logger.cpp" />
     <ClCompile Include="include\AkAutobahn\WebSocketClient.cpp" />
     <ClCompile Include="src\SimonsReaperPlugin.cpp" />
-    <ClCompile Include="src\WaapiConnect.cpp" />
     <ClCompile Include="src\WaapiFunctions.cpp" />
+    <ClCompile Include="src\WwiseConnectionHandler.cpp" />
     <ClInclude Include="include\AkAutobahn\AkJson.h" />
     <ClInclude Include="include\AkAutobahn\AkVariant.h" />
     <ClInclude Include="include\AkAutobahn\autobahn.h" />
@@ -614,7 +614,6 @@
     <ClInclude Include="include\AkAutobahn\util\Continuation.h" />
     <ClInclude Include="include\AkAutobahn\util\make_unique.h" />
     <ClInclude Include="include\AkAutobahn\WebSocketClient.h" />
-    <ClInclude Include="include\config.h" />
     <ClInclude Include="include\rapidjson\allocators.h" />
     <ClInclude Include="include\rapidjson\document.h" />
     <ClInclude Include="include\rapidjson\encodedstream.h" />
@@ -633,8 +632,8 @@
     <ClInclude Include="include\reaper_plugin.h" />
     <ClInclude Include="include\reaper_plugin_functions.h" />
     <ClInclude Include="include\types.h" />
-    <ClInclude Include="include\WaapiConnect.h" />
     <ClInclude Include="include\WaapiFunctions.h" />
+    <ClInclude Include="include\WwiseConnectionHandler.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
