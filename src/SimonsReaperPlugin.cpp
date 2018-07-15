@@ -15,7 +15,8 @@
 #include <AkAutobahn\AkJson.h>
 
 #include "SimonsReaperPlugin.h"
-#include "WaapiFunctions.h"
+
+#include "WwiseConnectionHandler.h"
 
 
 
@@ -152,12 +153,12 @@ bool HookCommandProc(int command, int flag)
     }
     if (command == connectToWwise.accel.cmd)
     {
-		ConnectToWwise();
+		ConnectToWwise();	/// WwiseConnectionHandler
         return true;
     }
 	if (command == getSelectedObjects.accel.cmd)
 	{
-		GetWwiseSelectedObjects();
+		GetSelectedWwiseObjects();	/// WwiseConnectionHandler
 		return true;
 	}
     return false;
@@ -171,46 +172,6 @@ void doAction1()
 	MessageBox(g_parentWindow, "Hello World!", "Reaper extension API test", MB_OK);
 }
 
-void ConnectToWwise(bool supressMessagebox)
-{
-	using namespace AK::WwiseAuthoringAPI;
-	Connect(supressMessagebox);  //Connect to Wwise. Optionally pass bool true to supress message boxes from wwise connection
-}
-
-void GetWwiseSelectedObjects()
-{
-	if(!Connect(true))
-	{
-		/// WWise connection not found!
-		MessageBox(NULL, "Wwise Connection not found! Exiting!","Wwise Connection Error", MB_OK);
-		return;
-	}
-	using namespace AK::WwiseAuthoringAPI;
-	AkJson RawReturnResults;
-	GetSelectedWwiseObjects(RawReturnResults, true);
-
-	AkJson::Array MyReturnResults;
-	GetWaapiResultsArray(MyReturnResults, RawReturnResults);
-
-	for (const auto &result : MyReturnResults)
-	{
-		const std::string wwiseObjectGuid = result["id"].GetVariant().GetString();
-		const std::string wwiseObjectName = result["name"].GetVariant().GetString();
-		const std::string wwiseObjectType = result["type"].GetVariant().GetString();
-		//				const std::string wwiseObjectParent = result["parent"].GetVariant().GetString();
-
-		//create a status text string and set it
-		std::stringstream status;
-		status << wwiseObjectGuid + " Named: " + wwiseObjectName;
-		status << " is type " + wwiseObjectType;
-		//				status << " Parent =  " + wwiseObjectParent;
-		std::string SelectedObject = status.str();
-
-		MessageBox(NULL, SelectedObject.c_str(), "Wwise Objects Selected", MB_OK);
-	}
-
-
-}
 
 void GetReaperGlobals()
 {

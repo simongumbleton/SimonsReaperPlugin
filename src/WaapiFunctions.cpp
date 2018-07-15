@@ -13,7 +13,7 @@ AK::WwiseAuthoringAPI::Client my_client;
 int My_WAAPI_CLIENT_TIMEOUT_MS = 2000;
 int my_Waapi_Port = 8095;
 
-bool Connect(bool suppressOuputMessages)
+bool waapi_Connect(bool suppressOuputMessages)
 {
 	using namespace AK::WwiseAuthoringAPI;
 	AkJson wwiseInfo;
@@ -51,7 +51,7 @@ bool Connect(bool suppressOuputMessages)
 }
 
 
-bool GetSelectedWwiseObjects(AK::WwiseAuthoringAPI::AkJson & resultsOut, bool getNotes)
+bool waapi_GetSelectedWwiseObjects(AK::WwiseAuthoringAPI::AkJson & resultsOut, bool getNotes)
 {
 	using namespace AK::WwiseAuthoringAPI;
 	AkJson ReturnResults;
@@ -71,7 +71,7 @@ bool GetSelectedWwiseObjects(AK::WwiseAuthoringAPI::AkJson & resultsOut, bool ge
 	return my_client.Call(ak::wwise::ui::getSelectedObjects, AkJson(AkJson::Map()), options, resultsOut);
 }
 
-void GetWaapiResultsArray(AK::WwiseAuthoringAPI::AkJson::Array & arrayIn, AK::WwiseAuthoringAPI::AkJson & results)
+void waapi_GetWaapiResultsArray(AK::WwiseAuthoringAPI::AkJson::Array & arrayIn, AK::WwiseAuthoringAPI::AkJson & results)
 {
 	using namespace AK::WwiseAuthoringAPI;
 	switch (results.GetType())

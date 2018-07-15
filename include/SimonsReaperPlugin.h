@@ -15,7 +15,3 @@ void GetReaperGlobals();
 bool HookCommandProc(int command, int flag);
 
 void doAction1();
-
-void ConnectToWwise(bool supressMessagebox = false);
-
-void GetWwiseSelectedObjects();
