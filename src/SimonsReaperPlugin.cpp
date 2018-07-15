@@ -1,22 +1,23 @@
-//#ifdef _WIN32
-//#pragma comment(linker,"\"/manifestdependency:type='win32' name='Microsoft.Windows.Common-Controls' version = '6.0.0.0' processorArchitecture = '*' publicKeyToken = '6595b64144ccf1df' language = '*'\"")
 #include <windows.h>
 #include <Wincodec.h>
 #include <Commctrl.h>
-//#else
-//#endif
 
 #include "stdio.h"
 #include "stdlib.h"
 #include <string>
+#include <iostream> 
+#include <sstream>
 
 #include "reaper_plugin.h"
 
 #define REAPERAPI_IMPLEMENT
 #include "reaper_plugin_functions.h"
+#include <AkAutobahn\AkJson.h>
 
 #include "SimonsReaperPlugin.h"
+#include "WaapiFunctions.h"
 #include "WaapiConnect.h"
+
 
 
 #define GET_FUNC_AND_CHKERROR(x) if (!((*((void **)&(x)) = (void *)rec->GetFunc(#x)))) ++funcerrcnt
@@ -28,6 +29,8 @@ HINSTANCE g_hInst;
 
 char currentProject[256];
 
+WaapiFunctions MyWwiseConnection;
+AK::WwiseAuthoringAPI::Client MyClient;
 
 //actions
 gaccel_register_t action01 = { { 0, 0, 0 }, "Do action 01." };
@@ -148,13 +151,11 @@ bool HookCommandProc(int command, int flag)
 {
     if (command == action01.accel.cmd)
     {
-        //OpenTransferWindow();
 		doAction1();
         return true;
     }
     if (command == connectToWwise.accel.cmd)
     {
-        //OpenRecallWindow();
 		ConnectToWwise();
         return true;
     }
@@ -174,17 +175,39 @@ void doAction1()
 	MessageBox(g_parentWindow, "Hello World!", "Reaper extension API test", MB_OK);
 }
 
-void ConnectToWwise()
+void ConnectToWwise(bool supressMessagebox)
 {
-	WAAPIConnect MyWwiseConnection;
-	MyWwiseConnection.Connect();	//Connect to Wwise. Optionally pass bool true to supress message boxes from wwise connection
-	
+	using namespace AK::WwiseAuthoringAPI;
+	MyWwiseConnection.Connect(supressMessagebox);  //Connect to Wwise. Optionally pass bool true to supress message boxes from wwise connection
 }
 
 void GetWwiseSelectedObjects()
 {
-	WAAPIConnect MyWwiseConnection;
-	MyWwiseConnection.GetSelectedWwiseObject();
+	using namespace AK::WwiseAuthoringAPI;
+	AkJson RawReturnResults;
+	MyWwiseConnection.GetSelectedWwiseObjects(RawReturnResults, true);
+
+	AkJson::Array MyReturnResults;
+	MyWwiseConnection.GetWaapiResultsArray(MyReturnResults, RawReturnResults);
+
+	for (const auto &result : MyReturnResults)
+	{
+		const std::string wwiseObjectGuid = result["id"].GetVariant().GetString();
+		const std::string wwiseObjectName = result["name"].GetVariant().GetString();
+		const std::string wwiseObjectType = result["type"].GetVariant().GetString();
+		//				const std::string wwiseObjectParent = result["parent"].GetVariant().GetString();
+
+		//create a status text string and set it
+		std::stringstream status;
+		status << wwiseObjectGuid + " Named: " + wwiseObjectName;
+		status << " is type " + wwiseObjectType;
+		//				status << " Parent =  " + wwiseObjectParent;
+		std::string SelectedObject = status.str();
+
+		MessageBox(NULL, SelectedObject.c_str(), "Wwise Objects Selected", MB_OK);
+	}
+
+
 }
 
 void GetReaperGlobals()

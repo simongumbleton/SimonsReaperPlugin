@@ -600,6 +600,7 @@
     <ClCompile Include="include\AkAutobahn\WebSocketClient.cpp" />
     <ClCompile Include="src\SimonsReaperPlugin.cpp" />
     <ClCompile Include="src\WaapiConnect.cpp" />
+    <ClCompile Include="src\WaapiFunctions.cpp" />
     <ClInclude Include="include\AkAutobahn\AkJson.h" />
     <ClInclude Include="include\AkAutobahn\AkVariant.h" />
     <ClInclude Include="include\AkAutobahn\autobahn.h" />
@@ -633,6 +634,7 @@
     <ClInclude Include="include\reaper_plugin_functions.h" />
     <ClInclude Include="include\types.h" />
     <ClInclude Include="include\WaapiConnect.h" />
+    <ClInclude Include="include\WaapiFunctions.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

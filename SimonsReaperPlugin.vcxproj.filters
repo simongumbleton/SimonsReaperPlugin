@@ -100,6 +100,9 @@
     <ClInclude Include="include\types.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\WaapiFunctions.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">
@@ -142,6 +145,9 @@
     </ClCompile>
     <ClCompile Include="include\AkAutobahn\WebSocketClient.cpp">
       <Filter>AkAutobahn</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WaapiFunctions.cpp">
+      <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

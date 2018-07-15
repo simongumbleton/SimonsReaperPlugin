@@ -16,6 +16,6 @@ bool HookCommandProc(int command, int flag);
 
 void doAction1();
 
-void ConnectToWwise();
+void ConnectToWwise(bool supressMessagebox = false);
 
 void GetWwiseSelectedObjects();
