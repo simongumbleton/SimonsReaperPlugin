@@ -3,6 +3,8 @@
 #include "stdlib.h"
 #include <string>
 #include <unordered_map>
+#include <utility>
+#include <vector>
 
 #include <AkAutobahn\Client.h>
 #include <AkAutobahn\AkJson.h>
@@ -13,6 +15,14 @@ struct CurrentWwiseConnection {
 	std::string Version;
 	int timeoutMS = 2000;
 };
+
+struct ObjectGetArgs {
+	std::vector<std::string> From{ "id","GUID goes here" };
+	std::string Select = "Children";
+	std::vector<std::string> Where{ "type:isIn","Sound" };
+	std::vector<std::string> customReturnArgs{"","","",""};
+};
+
 
 	///////////////////////////////
 	////     Connect to wwise client
@@ -31,9 +41,12 @@ struct CurrentWwiseConnection {
 
 	bool waapi_GetChildrenFromGUID(const AK::WwiseAuthoringAPI::AkVariant &id,AK::WwiseAuthoringAPI::AkJson &results);
 
+	bool waapi_GetParentFromGUID(const AK::WwiseAuthoringAPI::AkVariant &id, AK::WwiseAuthoringAPI::AkJson &results);
+
+	bool waapi_GetObjectFromArgs(ObjectGetArgs getArgs, AK::WwiseAuthoringAPI::AkJson &results);
+
 	///////////////////////////////
 	////     Get the results array for calls to Waapi functions
 	///////////////////////////////
 	///get the array for a succesfull call to any of the above functions, results is 'resultsOut' from above functions
 	void waapi_GetWaapiResultsArray(AK::WwiseAuthoringAPI::AkJson::Array &arrayIn, AK::WwiseAuthoringAPI::AkJson &results);
-

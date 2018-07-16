@@ -84,6 +84,81 @@ bool waapi_GetChildrenFromGUID(const AK::WwiseAuthoringAPI::AkVariant &id,AK::Ww
 	return my_client.Call(ak::wwise::core::object::get, args, options, results);
 }
 
+bool waapi_GetParentFromGUID(const AK::WwiseAuthoringAPI::AkVariant & id, AK::WwiseAuthoringAPI::AkJson & results)
+{
+	using namespace AK::WwiseAuthoringAPI;
+	AkJson query;
+	AkJson args(AkJson::Map{
+		{ "from", AkJson::Map{
+			{ "id", AkJson::Array{ id } } } },
+		{ "transform",
+		{ AkJson::Array{ AkJson::Map{ { "select", AkJson::Array{ { "parent" } } } } } }
+		}
+		});
+
+	AkJson options(AkJson::Map{
+		{ "return", AkJson::Array{
+			AkVariant("id"),
+			AkVariant("name"),
+			AkVariant("path"),
+			AkVariant("type"),
+			AkVariant("parent"),
+			AkVariant("childrenCount")
+		} }
+		});
+
+	return my_client.Call(ak::wwise::core::object::get, args, options, results);;
+}
+
+bool waapi_GetObjectFromArgs(ObjectGetArgs & getArgs, AK::WwiseAuthoringAPI::AkJson & results)
+{
+	using namespace AK::WwiseAuthoringAPI;
+
+	AkVariant from0 = getArgs.From[0];
+	AkVariant from1 = getArgs.From[1];
+
+	AkJson args(AkJson::Map
+	{
+		{ "from", AkJson::Map{{ from0, AkJson::Array{from1}}} },
+		{ "transform",
+			{ AkJson::Array{ AkJson::Map{ 
+				{ "select", AkJson::Array{ 
+					{ getArgs.Select } }
+				}}}}
+		},
+		{ "where",
+			{AkJson::Array{AkJson::Map{
+				{ getArgs.Where[0], AkJson::Array{
+					{ getArgs.Where[1]}}
+				}}}}
+		}
+	});
+
+	AkJson options(AkJson::Map{
+		{ "return", AkJson::Array{
+			AkVariant("id"),
+			AkVariant("name"),
+			AkVariant("path"),
+			AkVariant("type"),
+			AkVariant("parent"),
+			AkVariant("childrenCount")
+		} }
+		});
+
+	if (!getArgs.customReturnArgs.empty())
+	{
+		for (auto i : getArgs.customReturnArgs)
+		{
+			if (i != "")
+			{
+				options["return"].GetArray().push_back(AkVariant(i));
+			}
+		}
+	}
+
+	return my_client.Call(ak::wwise::core::object::get, args, options, results);;
+}
+
 void waapi_GetWaapiResultsArray(AK::WwiseAuthoringAPI::AkJson::Array & arrayIn, AK::WwiseAuthoringAPI::AkJson & results)
 {
 	using namespace AK::WwiseAuthoringAPI;
