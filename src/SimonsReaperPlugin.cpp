@@ -56,20 +56,29 @@ void StartupError(const std::string &errMsg,
 }
 
 
-
-
 extern "C"
 {
     REAPER_PLUGIN_DLL_EXPORT int REAPER_PLUGIN_ENTRYPOINT(REAPER_PLUGIN_HINSTANCE hInstance, reaper_plugin_info_t *rec)
     {
-
-		if (AllocConsole())
+		STARTUPINFO si;
+		PROCESS_INFORMATION pi;
+		if (!CreateProcess("cmd.exe", "", nullptr, nullptr, false, 0, nullptr, nullptr, &si, &pi))
 		{
-			FILE* fp;
-			freopen_s(&fp, "CONOUT$", "w", stdout);
-			currentPID = GetCurrentProcessId();
-			FreeConsole();
+			// explode
 		}
+
+		if (!AttachConsole(pi.dwProcessId))
+		{
+			// explode
+		}
+
+		//if (AllocConsole())
+		//{
+		//	FILE* fp;
+		//	freopen_s(&fp, "CONOUT$", "w", stdout);
+		//	currentPID = GetCurrentProcessId();
+		//	FreeConsole();
+		//}
 
         //return if plugin is exiting
         if (!rec)
