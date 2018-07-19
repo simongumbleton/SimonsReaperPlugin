@@ -17,9 +17,9 @@ struct CurrentWwiseConnection {
 };
 
 struct ObjectGetArgs {
-	std::vector<std::string> From{ "id","GUID goes here" };
-	std::string Select = "Children";
-	std::vector<std::string> Where{ "type:isIn","Sound" };
+	std::vector<std::string> From{ "","" };
+	std::string Select = "";
+	std::vector<std::string> Where{ "","" };
 	std::vector<std::string> customReturnArgs{"","","",""};
 };
 

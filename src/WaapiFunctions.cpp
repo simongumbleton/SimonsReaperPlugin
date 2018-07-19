@@ -115,6 +115,12 @@ bool waapi_GetParentFromGUID(const AK::WwiseAuthoringAPI::AkVariant & id, AK::Ww
 
 bool waapi_GetObjectFromArgs(ObjectGetArgs & getArgs, AK::WwiseAuthoringAPI::AkJson & results)
 {
+	//Check for missing inputs
+	if (getArgs.From[0] == "" || getArgs.From[1] == "" || getArgs.Select == "")
+	{
+		PrintToConsole("!ERROR! - One or more required inputs are missing from GetObjectFromArgs call");
+		return false;
+	}
 	using namespace AK::WwiseAuthoringAPI;
 
 	AkVariant from0 = getArgs.From[0];
@@ -124,12 +130,25 @@ bool waapi_GetObjectFromArgs(ObjectGetArgs & getArgs, AK::WwiseAuthoringAPI::AkJ
 	AkVariant where1 = getArgs.Where[1];
 
 	AkJson args;
-	args = (AkJson::Map{
-		{ "from", AkJson::Map{ { from0, AkJson::Array{ from1 } } } },
-		{ "transform",{ AkJson::Array
-		{{ AkJson::Map{ { "select",AkJson::Array{ { Akselect } } } } },
-		{ AkJson::Map{ { "where", AkJson::Array{ { where0,  AkJson::Array{ where1 } } } } } }}
-		} } });
+
+	if (getArgs.Where[0] == "" || getArgs.Where[1] == "")
+	{
+		args = (AkJson::Map{
+			{ "from", AkJson::Map{ { from0, AkJson::Array{ from1 } } } },
+			{ "transform",{ AkJson::Array
+			{ AkJson::Map{ { "select",AkJson::Array{ { Akselect } } } } }, 
+			} } });
+	}
+	else
+	{
+		args = (AkJson::Map{
+			{ "from", AkJson::Map{ { from0, AkJson::Array{ from1 } } } },
+			{ "transform",{ AkJson::Array
+			{ { AkJson::Map{ { "select",AkJson::Array{ { Akselect } } } } },
+			{ AkJson::Map{ { "where", AkJson::Array{ { where0,  AkJson::Array{ where1 } } } } } } }
+			} } });
+	}
+
 
 //	using namespace AK::WwiseAuthoringAPI::JSONHelpers;
 //	std::string argsToString = GetAkJsonString(args);
@@ -179,12 +198,12 @@ void waapi_GetWaapiResultsArray(AK::WwiseAuthoringAPI::AkJson::Array & arrayIn, 
 		}
 		else
 		{
-			assert(!"Not implemented.");
+			MessageBox(NULL,"!Error! Malformed Results array","Waapi Results Array Error", MB_OK);
 			return;
 		}
 	} break;
 	default:
-		assert(!"Not implemented.");
+		MessageBox(NULL, "!Error! Results array is not of type AkJson::Map", "Waapi Results Array Error", MB_OK);
 		return;
 	}
 }
