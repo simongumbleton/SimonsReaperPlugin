@@ -62,23 +62,6 @@ extern "C"
     {
 		STARTUPINFO si;
 		PROCESS_INFORMATION pi;
-		if (!CreateProcess("cmd.exe", "", nullptr, nullptr, false, 0, nullptr, nullptr, &si, &pi))
-		{
-			// explode
-		}
-
-		if (!AttachConsole(pi.dwProcessId))
-		{
-			// explode
-		}
-
-		//if (AllocConsole())
-		//{
-		//	FILE* fp;
-		//	freopen_s(&fp, "CONOUT$", "w", stdout);
-		//	currentPID = GetCurrentProcessId();
-		//	FreeConsole();
-		//}
 
         //return if plugin is exiting
         if (!rec)
@@ -166,7 +149,6 @@ extern "C"
 			mi.dwTypeData = "Get Selected Objects";
 			InsertMenuItem(hMenu, 2, true, &mi);
 		}
-
     }
 }
 
@@ -204,24 +186,12 @@ void PrintToConsole(std::string text)
 {
 	if (!supressConsoleOutput)
 	{
-		printf("%s\n", text.c_str());
+		std::string debugText = text + "\n";
+		ShowConsoleMsg(debugText.c_str());
 	}
 }
 
-void StartDebugConsole()
-{
-	if (AllocConsole())
-	{
-		FILE* fp;
-		freopen_s(&fp, "CONOUT$", "w", stdout);
-		consoleWindowHndl = GetConsoleWindow();
-	}
-}
 
-void CloseDebugConsole()
-{
-	FreeConsole();
-}
 
 void GetReaperGlobals()
 {

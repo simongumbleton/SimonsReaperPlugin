@@ -1,6 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="DebugWork|Win32">
+      <Configuration>DebugWork</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugWork|x64">
+      <Configuration>DebugWork</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Debugx64|Win32">
       <Configuration>Debugx64</Configuration>
       <Platform>Win32</Platform>
@@ -56,8 +64,15 @@
     <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugWork|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
     <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
@@ -111,23 +126,33 @@
   <PropertyGroup>
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\Build\Debug\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugWork|Win32'">$(SolutionDir)\Build\Debug\</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debugx64|Win32'">E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\Debug\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">reaper_simonsreaperplugin.dir\Debug\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugWork|Win32'">reaper_simonsreaperplugin.dir\Debug\</IntDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debugx64|Win32'">reaper_simonsreaperplugin.dir\Debug\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">reaper_simonsreaperplugin_x86</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='DebugWork|Win32'">reaper_simonsreaperplugin_x86</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">reaper_simonsreaperplugin_x64</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='DebugWork|x64'">reaper_simonsreaperplugin_x64</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debugx64|Win32'">reaper_simonsreaperplugin_x86</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debugx64|x64'">reaper_simonsreaperplugin_x86</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.dll</TargetExt>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='DebugWork|Win32'">.dll</TargetExt>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.dll</TargetExt>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='DebugWork|x64'">.dll</TargetExt>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debugx64|Win32'">.dll</TargetExt>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debugx64|x64'">.dll</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='DebugWork|Win32'">true</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='DebugWork|x64'">true</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debugx64|Win32'">true</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debugx64|x64'">true</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</GenerateManifest>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='DebugWork|Win32'">true</GenerateManifest>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='DebugWork|x64'">true</GenerateManifest>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debugx64|Win32'">true</GenerateManifest>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debugx64|x64'">true</GenerateManifest>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\Release\</OutDir>
@@ -163,7 +188,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IntDir>reaper_simonsreaperplugin.dir\x64\Debug\</IntDir>
-    <OutDir>$(SolutionDir)\Build\x64\Debug\</OutDir>
+    <OutDir>C:\REAPER\UserPlugins</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugWork|x64'">
+    <IntDir>reaper_simonsreaperplugin.dir\x64\Debug\</IntDir>
+    <OutDir>C:\REAPER\UserPlugins</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -208,7 +237,90 @@
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugWork|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir)\include;%(AdditionalIncludeDirectories);C:\Program Files (x86)\Audiokinetic\Wwise 2017.2.1.6524\SDK\include</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>Debug/</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;VALIDATE_WAMP;USE_WEBSOCKET;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR="Debug";SimonsReaperPlugin_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;VALIDATE_WAMP;USE_WEBSOCKET;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"Debug\";SimonsReaperPlugin_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\include;E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\.;C:\Program Files (x86)\Audiokinetic\Wwise 2017.2.1.6524\SDK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\include;E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\.;C:\Program Files (x86)\Audiokinetic\Wwise 2017.2.1.6524\SDK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>Comctl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>$(SolutionDir)/Build/Debug/reaper_simonsreaperplugin_x86.lib</ImportLibrary>
+      <ProgramDataBaseFile>$(SolutionDir)/Build/Debug/reaper_simonsreaperplugin_x86.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AssemblerListingLocation>x64/Debug/</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;VALIDATE_WAMP;USE_WEBSOCKET;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR="Debug";SimonsReaperPlugin_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <AdditionalIncludeDirectories>$(SolutionDir)\include;%(AdditionalIncludeDirectories);C:\Program Files (x86)\Audiokinetic\Wwise 2017.2.1.6524\SDK\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;VALIDATE_WAMP;USE_WEBSOCKET;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"Debug\";SimonsReaperPlugin_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\include;E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\.;C:\Program Files (x86)\Audiokinetic\Wwise 2017.2.1.6524\SDK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\include;E:\Projects\Personal\ReaperAPI\SimonsReaperPlugin\.;C:\Program Files (x86)\Audiokinetic\Wwise 2017.2.1.6524\SDK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>$(SolutionDir)/Build/x64/Debug/reaper_simonsreaperplugin_x64.lib</ImportLibrary>
+      <ProgramDataBaseFile>$(SolutionDir)/Build/x64/Debug/reaper_simonsreaperplugin_x64.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugWork|x64'">
     <ClCompile>
       <AssemblerListingLocation>x64/Debug/</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -611,8 +723,6 @@
     <ClInclude Include="include\AkAutobahn\JSONHelpers.h" />
     <ClInclude Include="include\AkAutobahn\JsonProvider.h" />
     <ClInclude Include="include\AkAutobahn\Logger.h" />
-    <ClInclude Include="include\AkAutobahn\util\Continuation.h" />
-    <ClInclude Include="include\AkAutobahn\util\make_unique.h" />
     <ClInclude Include="include\AkAutobahn\WebSocketClient.h" />
     <ClInclude Include="include\rapidjson\allocators.h" />
     <ClInclude Include="include\rapidjson\document.h" />
@@ -634,6 +744,15 @@
     <ClInclude Include="include\types.h" />
     <ClInclude Include="include\WaapiFunctions.h" />
     <ClInclude Include="include\WwiseConnectionHandler.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="include\AkAutobahn\APACHE_LICENSE.txt" />
+    <Text Include="include\AkAutobahn\BOOST_LICENSE.txt" />
+    <Text Include="include\AkAutobahn\CHANGES.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="include\AkAutobahn\handle_form.inl" />
+    <None Include="include\AkAutobahn\md5.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

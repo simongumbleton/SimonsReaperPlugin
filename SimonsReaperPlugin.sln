@@ -8,6 +8,8 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
+		DebugWork|x64 = DebugWork|x64
+		DebugWork|x86 = DebugWork|x86
 		Debugx64|x64 = Debugx64|x64
 		Debugx64|x86 = Debugx64|x86
 		MinSizeRel|x64 = MinSizeRel|x64
@@ -22,6 +24,10 @@ Global
 		{0AD7B96E-1BB7-3F7F-BCEF-FEC52E891821}.Debug|x64.Build.0 = Debug|x64
 		{0AD7B96E-1BB7-3F7F-BCEF-FEC52E891821}.Debug|x86.ActiveCfg = Debug|Win32
 		{0AD7B96E-1BB7-3F7F-BCEF-FEC52E891821}.Debug|x86.Build.0 = Debug|Win32
+		{0AD7B96E-1BB7-3F7F-BCEF-FEC52E891821}.DebugWork|x64.ActiveCfg = DebugWork|x64
+		{0AD7B96E-1BB7-3F7F-BCEF-FEC52E891821}.DebugWork|x64.Build.0 = DebugWork|x64
+		{0AD7B96E-1BB7-3F7F-BCEF-FEC52E891821}.DebugWork|x86.ActiveCfg = DebugWork|Win32
+		{0AD7B96E-1BB7-3F7F-BCEF-FEC52E891821}.DebugWork|x86.Build.0 = DebugWork|Win32
 		{0AD7B96E-1BB7-3F7F-BCEF-FEC52E891821}.Debugx64|x64.ActiveCfg = Debugx64|x64
 		{0AD7B96E-1BB7-3F7F-BCEF-FEC52E891821}.Debugx64|x64.Build.0 = Debugx64|x64
 		{0AD7B96E-1BB7-3F7F-BCEF-FEC52E891821}.Debugx64|x86.ActiveCfg = Debugx64|Win32

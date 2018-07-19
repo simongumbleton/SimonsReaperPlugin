@@ -6,10 +6,13 @@
 #include <AK/WwiseAuthoringAPI/AkVariantBase.h>
 #include <AkAutobahn\AkJson.h>
 #include <AK/WwiseAuthoringAPI/waapi.h>
-
+#include <AkAutobahn\JSONHelpers.h>
+#include "SimonsReaperPlugin.h"
 
 ///Socket client for Waapi connection
 AK::WwiseAuthoringAPI::Client my_client;
+
+
 
 bool waapi_Connect(CurrentWwiseConnection &wwiseConnectionReturn)
 {
@@ -32,7 +35,7 @@ bool waapi_Connect(CurrentWwiseConnection &wwiseConnectionReturn)
 	}
 	if (!success)
 	{
-		MessageBox(NULL, "! Failed to Connect !", "Wwise Connection Status", MB_OK);
+		MessageBox(NULL, "! ERROR - Failed to Connect to Wwise. !", "Wwise Connection Status", MB_OK);
 	}
 	return success;
 }
@@ -116,23 +119,21 @@ bool waapi_GetObjectFromArgs(ObjectGetArgs & getArgs, AK::WwiseAuthoringAPI::AkJ
 
 	AkVariant from0 = getArgs.From[0];
 	AkVariant from1 = getArgs.From[1];
+	AkVariant Akselect = getArgs.Select;
+	AkVariant where0 = getArgs.Where[0];
+	AkVariant where1 = getArgs.Where[1];
 
-	AkJson args(AkJson::Map
-	{
-		{ "from", AkJson::Map{{ from0, AkJson::Array{from1}}} },
-		{ "transform",
-			{ AkJson::Array{ AkJson::Map{ 
-				{ "select", AkJson::Array{ 
-					{ getArgs.Select } }
-				}}}}
-		},
-		{ "where",
-			{AkJson::Array{AkJson::Map{
-				{ getArgs.Where[0], AkJson::Array{
-					{ getArgs.Where[1]}}
-				}}}}
-		}
-	});
+	AkJson args;
+	args = (AkJson::Map{
+		{ "from", AkJson::Map{ { from0, AkJson::Array{ from1 } } } },
+		{ "transform",{ AkJson::Array
+		{{ AkJson::Map{ { "select",AkJson::Array{ { Akselect } } } } },
+		{ AkJson::Map{ { "where", AkJson::Array{ { where0,  AkJson::Array{ where1 } } } } } }}
+		} } });
+
+//	using namespace AK::WwiseAuthoringAPI::JSONHelpers;
+//	std::string argsToString = GetAkJsonString(args);
+//	PrintToConsole(argsToString);
 
 	AkJson options(AkJson::Map{
 		{ "return", AkJson::Array{

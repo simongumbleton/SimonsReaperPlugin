@@ -11,10 +11,11 @@ struct WwiseObject
 	std::string guid;
 };
 
-
 void ConnectToWwise(bool suppressOuputMessages, int port);
 
 void GetSelectedWwiseObjects(bool suppressOuputMessages);
 
 void GetChildrenFromSelectedParent(bool suppressOuputMessages);
+
+void GetWwiseObjects();
 

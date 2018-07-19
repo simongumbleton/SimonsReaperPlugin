@@ -43,12 +43,6 @@
     <ClInclude Include="include\AkAutobahn\WebSocketClient.h">
       <Filter>AkAutobahn</Filter>
     </ClInclude>
-    <ClInclude Include="include\AkAutobahn\util\Continuation.h">
-      <Filter>AkAutobahn</Filter>
-    </ClInclude>
-    <ClInclude Include="include\AkAutobahn\util\make_unique.h">
-      <Filter>AkAutobahn</Filter>
-    </ClInclude>
     <ClInclude Include="include\rapidjson\allocators.h">
       <Filter>rapidjason</Filter>
     </ClInclude>
@@ -100,6 +94,39 @@
     <ClInclude Include="include\WwiseConnectionHandler.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\AkAutobahn\AkJson.h">
+      <Filter>AkAutobahn</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AkAutobahn\AkVariant.h">
+      <Filter>AkAutobahn</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AkAutobahn\autobahn.h">
+      <Filter>AkAutobahn</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AkAutobahn\civetweb.h">
+      <Filter>AkAutobahn</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AkAutobahn\Client.h">
+      <Filter>AkAutobahn</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AkAutobahn\FutureUtils.h">
+      <Filter>AkAutobahn</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AkAutobahn\IWebSocketClientHandler.h">
+      <Filter>AkAutobahn</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AkAutobahn\JSONHelpers.h">
+      <Filter>AkAutobahn</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AkAutobahn\JsonProvider.h">
+      <Filter>AkAutobahn</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AkAutobahn\Logger.h">
+      <Filter>AkAutobahn</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AkAutobahn\WebSocketClient.h">
+      <Filter>AkAutobahn</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">
@@ -117,6 +144,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\SimonsReaperPlugin.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WaapiFunctions.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WwiseConnectionHandler.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="include\AkAutobahn\autobahn.cpp">
@@ -140,11 +173,24 @@
     <ClCompile Include="include\AkAutobahn\WebSocketClient.cpp">
       <Filter>AkAutobahn</Filter>
     </ClCompile>
-    <ClCompile Include="src\WaapiFunctions.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\WwiseConnectionHandler.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="include\AkAutobahn\APACHE_LICENSE.txt">
+      <Filter>AkAutobahn</Filter>
+    </Text>
+    <Text Include="include\AkAutobahn\BOOST_LICENSE.txt">
+      <Filter>AkAutobahn</Filter>
+    </Text>
+    <Text Include="include\AkAutobahn\CHANGES.txt">
+      <Filter>AkAutobahn</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="include\AkAutobahn\handle_form.inl">
+      <Filter>AkAutobahn</Filter>
+    </None>
+    <None Include="include\AkAutobahn\md5.inl">
+      <Filter>AkAutobahn</Filter>
+    </None>
   </ItemGroup>
 </Project>

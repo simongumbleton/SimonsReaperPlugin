@@ -43,7 +43,7 @@ struct ObjectGetArgs {
 
 	bool waapi_GetParentFromGUID(const AK::WwiseAuthoringAPI::AkVariant &id, AK::WwiseAuthoringAPI::AkJson &results);
 
-	bool waapi_GetObjectFromArgs(ObjectGetArgs getArgs, AK::WwiseAuthoringAPI::AkJson &results);
+	bool waapi_GetObjectFromArgs(ObjectGetArgs & getArgs, AK::WwiseAuthoringAPI::AkJson & results);
 
 	///////////////////////////////
 	////     Get the results array for calls to Waapi functions

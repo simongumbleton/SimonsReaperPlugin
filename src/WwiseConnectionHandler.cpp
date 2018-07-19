@@ -11,6 +11,12 @@
 CurrentWwiseConnection MyCurrentWwiseConnection;
 
 
+void ReportConnectionError(CurrentWwiseConnection attemptedConnection)
+{
+	std::string errorLog = "Wwise Connection not found on port " + std::to_string(attemptedConnection.port) + "...Exiting!";
+	PrintToConsole(errorLog);
+}
+
 void ConnectToWwise(bool suppressOuputMessages, int port)
 {
 	
@@ -20,7 +26,6 @@ void ConnectToWwise(bool suppressOuputMessages, int port)
 	{
 		if (!suppressOuputMessages)
 		{
-			StartDebugConsole();
 			//create a status text string and set it
 			std::stringstream status;
 			status << "Connected on port " + std::to_string(MyCurrentWwiseConnection.port) + ": ";
@@ -28,8 +33,11 @@ void ConnectToWwise(bool suppressOuputMessages, int port)
 			std::string WwiseConnectionStatus = status.str();
 			//MessageBox(NULL, WwiseConnectionStatus.c_str(), "Wwise Connection Status", MB_OK);
 			PrintToConsole(WwiseConnectionStatus);
-			CloseDebugConsole();
 		}
+	}
+	else
+	{
+		ReportConnectionError(MyCurrentWwiseConnection);
 	}
 }
 
@@ -39,10 +47,9 @@ void GetSelectedWwiseObjects(bool suppressOuputMessages)
 	if (!waapi_Connect(MyCurrentWwiseConnection))
 	{
 		/// WWise connection not found!
-		MessageBox(NULL, "Wwise Connection not found! Exiting!", "Wwise Connection Error", MB_OK);
+		ReportConnectionError(MyCurrentWwiseConnection);
 		return;
 	}
-	StartDebugConsole();
 	PrintToConsole("Getting Selected Wwise Objects.......");
 	using namespace AK::WwiseAuthoringAPI;
 	AkJson RawReturnResults;
@@ -76,7 +83,6 @@ void GetSelectedWwiseObjects(bool suppressOuputMessages)
 		//MessageBox(NULL, s_SelectedWwiseObjects.c_str(), "Wwise Objects Selected", MB_OK);
 		PrintToConsole(s_SelectedWwiseObjects);
 	}
-	CloseDebugConsole();
 }
 
 void GetChildrenFromSelectedParent(bool suppressOuputMessages)
@@ -84,10 +90,9 @@ void GetChildrenFromSelectedParent(bool suppressOuputMessages)
 	if (!waapi_Connect(MyCurrentWwiseConnection))
 	{
 		/// WWise connection not found!
-		MessageBox(NULL, "Wwise Connection not found! Exiting!", "Wwise Connection Error", MB_OK);
+		ReportConnectionError(MyCurrentWwiseConnection);
 		return;
 	}
-	StartDebugConsole();
 	PrintToConsole("Getting Children of Selected Wwise Objects.......");
 	using namespace AK::WwiseAuthoringAPI;
 	AkJson RawReturnResults;
@@ -139,5 +144,41 @@ void GetChildrenFromSelectedParent(bool suppressOuputMessages)
 	}
 
 
-	CloseDebugConsole();
+	ObjectGetArgs myGetArgs;
+	myGetArgs.From = { "id", WwiseObjects[0].guid };
+	myGetArgs.Select = "descendants";
+	myGetArgs.Where = {"type:isIn","Sound"};
+	myGetArgs.customReturnArgs = {"notes","workunit"};
+
+	AkJson MoreRawReturnResults;
+	waapi_GetObjectFromArgs(myGetArgs, MoreRawReturnResults);
+
+	AkJson::Array MoreMyReturnResults;
+	waapi_GetWaapiResultsArray(MoreMyReturnResults, MoreRawReturnResults);
+	std::stringstream objectList;
+	objectList << "Using Generic Get Call....\n";
+	objectList << "Getting "+myGetArgs.Select + " where " + myGetArgs.Where[0] + " " +myGetArgs.Where[1]+"\n";
+	for (const auto &result : MoreMyReturnResults)
+	{
+		objectList << "Name = " + result["name"].GetVariant().GetString() + " \n";
+		objectList << "Type = " + result["type"].GetVariant().GetString() + " \n";
+		objectList << "Notes = " + result["notes"].GetVariant().GetString() + " \n";
+
+	}
+	objectList << "..Done..\n";
+	std::string getResults = objectList.str();
+	PrintToConsole(getResults);
+
+
+}
+
+void GetWwiseObjects()
+{
+	if (!waapi_Connect(MyCurrentWwiseConnection))
+	{
+		/// WWise connection not found!
+		ReportConnectionError(MyCurrentWwiseConnection);
+		return;
+	}
+
 }
