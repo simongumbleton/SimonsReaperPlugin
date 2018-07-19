@@ -10,39 +10,6 @@
     <ClInclude Include="include\reaper_plugin.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\AkAutobahn\AkJson.h">
-      <Filter>AkAutobahn</Filter>
-    </ClInclude>
-    <ClInclude Include="include\AkAutobahn\AkVariant.h">
-      <Filter>AkAutobahn</Filter>
-    </ClInclude>
-    <ClInclude Include="include\AkAutobahn\autobahn.h">
-      <Filter>AkAutobahn</Filter>
-    </ClInclude>
-    <ClInclude Include="include\AkAutobahn\civetweb.h">
-      <Filter>AkAutobahn</Filter>
-    </ClInclude>
-    <ClInclude Include="include\AkAutobahn\Client.h">
-      <Filter>AkAutobahn</Filter>
-    </ClInclude>
-    <ClInclude Include="include\AkAutobahn\FutureUtils.h">
-      <Filter>AkAutobahn</Filter>
-    </ClInclude>
-    <ClInclude Include="include\AkAutobahn\IWebSocketClientHandler.h">
-      <Filter>AkAutobahn</Filter>
-    </ClInclude>
-    <ClInclude Include="include\AkAutobahn\JSONHelpers.h">
-      <Filter>AkAutobahn</Filter>
-    </ClInclude>
-    <ClInclude Include="include\AkAutobahn\JsonProvider.h">
-      <Filter>AkAutobahn</Filter>
-    </ClInclude>
-    <ClInclude Include="include\AkAutobahn\Logger.h">
-      <Filter>AkAutobahn</Filter>
-    </ClInclude>
-    <ClInclude Include="include\AkAutobahn\WebSocketClient.h">
-      <Filter>AkAutobahn</Filter>
-    </ClInclude>
     <ClInclude Include="include\rapidjson\allocators.h">
       <Filter>rapidjason</Filter>
     </ClInclude>
