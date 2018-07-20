@@ -6,13 +6,13 @@
 
 struct WwiseObject
 {
-	std::map<char,std::string> properties;
-	std::string name;
-	std::string type;
-	std::string path;
-	std::string guid;
-	std::string notes;
-	std::string workunit;
+	std::map<std::string,std::string> properties;
+	//std::string name;
+	//std::string type;
+	//std::string path;
+	//std::string guid;
+	//std::string notes;
+	//std::string workunit;
 };
 
 void ConnectToWwise(bool suppressOuputMessages, int port);

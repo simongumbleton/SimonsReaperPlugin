@@ -62,10 +62,10 @@ void GetSelectedWwiseObjects(bool suppressOuputMessages)
 	for (const auto &result : MyReturnResults)
 	{
 		WwiseObject obj;
-		obj.guid = result["id"].GetVariant().GetString();
-		obj.name = result["name"].GetVariant().GetString();
-		obj.type = result["type"].GetVariant().GetString();
-		obj.path = result["path"].GetVariant().GetString();
+		obj.properties.insert(std::make_pair("guid", result["id"].GetVariant().GetString()));
+		obj.properties.insert(std::make_pair("name", result["name"].GetVariant().GetString()));
+		obj.properties.insert(std::make_pair("type", result["type"].GetVariant().GetString()));
+		obj.properties.insert(std::make_pair("path", result["path"].GetVariant().GetString()));
 		WwiseObjects.push_back(obj);
 		i++;
 	}
@@ -75,7 +75,7 @@ void GetSelectedWwiseObjects(bool suppressOuputMessages)
 		objectList << "Selected Wwise objects are........\n\n";
 		for (WwiseObject X : WwiseObjects)
 		{
-			objectList << X.name + " of type " + X.type;
+			objectList << X.properties["name"] + " of type " + X.properties["type"];
 			objectList << "\n";
 		}
 		std::string s_SelectedWwiseObjects = objectList.str();
@@ -105,7 +105,7 @@ void GetChildrenFromSelectedParent(bool suppressOuputMessages)
 	for (const auto &result : MyReturnResults)
 	{
 		WwiseObject obj;
-		obj.guid = result["id"].GetVariant().GetString();
+		obj.properties["guid"] = result["id"].GetVariant().GetString();
 		WwiseObjects.push_back(obj);
 		i++;
 	}
@@ -121,17 +121,17 @@ void GetChildrenFromSelectedParent(bool suppressOuputMessages)
 	for (WwiseObject SelectedObject : WwiseObjects)
 	{
 		
-		myGetArgs.From = { "id", SelectedObject.guid };
+		myGetArgs.From = { "id", SelectedObject.properties["guid"] };
 		AkJson::Array MyReturnResults;
 		GetWwiseObjects(true, myGetArgs, MyReturnResults);
 
 		for (const auto &result : MyReturnResults)
 		{
 			WwiseObject child;
-			child.properties.insert(std::make_pair('guid', result["id"].GetVariant().GetString()));
-			child.properties.insert(std::make_pair('name', result["name"].GetVariant().GetString()));
-			child.properties.insert(std::make_pair('type', result["type"].GetVariant().GetString()));
-			child.properties.insert(std::make_pair('path', result["path"].GetVariant().GetString()));
+			child.properties.insert(std::make_pair("guid", result["id"].GetVariant().GetString()));
+			child.properties.insert(std::make_pair("name", result["name"].GetVariant().GetString()));
+			child.properties.insert(std::make_pair("type", result["type"].GetVariant().GetString()));
+			child.properties.insert(std::make_pair("path", result["path"].GetVariant().GetString()));
 			for (std::string customReturnArg : myGetArgs.customReturnArgs)
 			{
 			//	const char *property = customReturnArg.c_str();
@@ -147,7 +147,7 @@ void GetChildrenFromSelectedParent(bool suppressOuputMessages)
 		objectList << "Children of Selected Wwise objects are........\n\n";
 		for (WwiseObject X : WwiseChildren)
 		{
-			objectList << X.properties['name'] + " of type " + X.properties['type'];
+			objectList << X.properties["name"] + " of type " + X.properties["type"];
 			objectList << "\n";
 		}
 		std::string s_ChildWwiseObjects = objectList.str();

@@ -195,7 +195,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugWork|x64'">
     <IntDir>reaper_simonsreaperplugin.dir\x64\Debug\</IntDir>
-    <OutDir>C:\REAPER\UserPlugins</OutDir>
+    <OutDir>N:\Projects\CSG\Audio\Users\Simon\_Reaper Portable\UserPlugins</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
