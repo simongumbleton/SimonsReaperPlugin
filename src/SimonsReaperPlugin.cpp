@@ -35,6 +35,7 @@ bool supressConsoleOutput = false;
 HWND consoleWindowHndl;
 DWORD currentPID = 0;
 
+WwiseConnectionHandler MyWwiseConnectionHandler;
 
 //actions
 gaccel_register_t action01 = { { 0, 0, 0 }, "Do action 01." };
@@ -146,6 +147,8 @@ extern "C"
 			mi.dwTypeData = "Get Selected Objects";
 			InsertMenuItem(hMenu, 2, true, &mi);
 		}
+
+		
     }
 }
 
@@ -159,15 +162,14 @@ bool HookCommandProc(int command, int flag)
     }
     if (command == connectToWwise.accel.cmd)
     {
-		ConnectToWwise(supressMessagebox, WaapiPort);	/// WwiseConnectionHandler //Connect to Wwise. 
 		
+		MyWwiseConnectionHandler.ConnectToWwise(supressMessagebox, WaapiPort);
 		WinMain(g_hInst, NULL, "Hello World", 0);
 		return true;
     }
 	if (command == getSelectedObjects.accel.cmd)
 	{
-	//	GetSelectedWwiseObjects(supressMessagebox);	/// WwiseConnectionHandler
-		GetChildrenFromSelectedParent(supressMessagebox);
+		MyWwiseConnectionHandler.GetChildrenFromSelectedParent(supressMessagebox);
 		return true;
 	}
     return false;

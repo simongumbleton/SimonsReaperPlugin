@@ -8,15 +8,25 @@
 
 #include "SimonsReaperPlugin.h"
 
-CurrentWwiseConnection MyCurrentWwiseConnection;
 
-void ReportConnectionError(CurrentWwiseConnection attemptedConnection)
+WwiseConnectionHandler::WwiseConnectionHandler()
+{
+}
+
+WwiseConnectionHandler::~WwiseConnectionHandler()
+{
+}
+
+
+
+
+void WwiseConnectionHandler::ReportConnectionError(CurrentWwiseConnection attemptedConnection)
 {
 	std::string errorLog = "Wwise Connection not found on port " + std::to_string(attemptedConnection.port) + "...Exiting!";
 	PrintToConsole(errorLog);
 }
 
-void ConnectToWwise(bool suppressOuputMessages, int port)
+void WwiseConnectionHandler::ConnectToWwise(bool suppressOuputMessages, int port)
 {
 	
 	MyCurrentWwiseConnection.port = port;
@@ -40,7 +50,7 @@ void ConnectToWwise(bool suppressOuputMessages, int port)
 	}
 }
 
-void GetSelectedWwiseObjects(bool suppressOuputMessages)
+void WwiseConnectionHandler::GetSelectedWwiseObjects(bool suppressOuputMessages)
 {
 
 	if (!waapi_Connect(MyCurrentWwiseConnection))
@@ -84,7 +94,7 @@ void GetSelectedWwiseObjects(bool suppressOuputMessages)
 	}
 }
 
-void GetChildrenFromSelectedParent(bool suppressOuputMessages)
+void WwiseConnectionHandler::GetChildrenFromSelectedParent(bool suppressOuputMessages)
 {
 	if (!waapi_Connect(MyCurrentWwiseConnection))
 	{
@@ -156,7 +166,7 @@ void GetChildrenFromSelectedParent(bool suppressOuputMessages)
 	}
 }
 
-void GetWwiseObjects(bool suppressOuputMessages, ObjectGetArgs& getargs, AK::WwiseAuthoringAPI::AkJson::Array& Results)
+void WwiseConnectionHandler::GetWwiseObjects(bool suppressOuputMessages, ObjectGetArgs& getargs, AK::WwiseAuthoringAPI::AkJson::Array& Results)
 {
 	if (!waapi_Connect(MyCurrentWwiseConnection))
 	{
