@@ -11,6 +11,20 @@ INT_PTR CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 void OnCommand(const HWND, int, int, const HWND);
 INT_PTR OnInitDlg(const HWND, LPARAM);
 
+
+///Handles to UI elements
+HWND comboBoxFROM;
+HWND textBoxFROM_Uinput;
+HWND comboBoxSELECT;
+HWND comboBoxWHERE;
+HWND textBoxWHERE_Uinput;
+HWND listBoxRETURN;
+HWND buttonGO;
+
+GetObjectChoices myGetObjectChoices;
+
+
+
 //non-message function declarations
 inline int ErrMsg(const ustring&);
 //=============================================================================
@@ -52,6 +66,9 @@ void OnCommand(const HWND hwnd, int id, int notifycode, const HWND hCntrl)
 	case ID_B_OK:        //RETURN key pressed or 'ok' button selected
 		MessageBox(NULL, "Ok buttor", _T("DEBUG"), MB_OK | MB_ICONEXCLAMATION);
 		break;
+	case IDC_COMBO_GetFrom:
+		handleUI_GetFrom(notifycode);
+		break;
 	case ID_B_CANCEL:    //ESC key pressed or 'cancel' button selected
 		EndDialog(hwnd, id);
 	}
@@ -79,14 +96,42 @@ inline int ErrMsg(const ustring& s)
 	return MessageBox(0, s.c_str(), _T("ERROR"), MB_OK | MB_ICONEXCLAMATION);
 }
 
+//////////////////////////////////
+////	Handle UI notifications 
+void handleUI_GetFrom(int notifCode)
+{
+	switch (notifCode)
+	{
+	case CBN_SELCHANGE:
+		break;
+	default:
+		break;
+	}
+}
+
+
+
+
+
+
 
 /// INIT ALL OPTIONS
 
 bool init_ALL_OPTIONS(HWND hwnd)
 {
-	HWND comboBox = GetDlgItem(hwnd, IDC_COMBO1);
-	GetObjectChoices myGetObjectChoices;
-	init_ComboBox_A(comboBox, myGetObjectChoices.waapiGETchoices_FROM);
+	comboBoxFROM = GetDlgItem(hwnd, IDC_COMBO_GetFrom);
+	textBoxFROM_Uinput = GetDlgItem(hwnd, IDC_GetFrom_Uinput);
+	comboBoxSELECT = GetDlgItem(hwnd, IDC_COMBO_GetSelect);
+	comboBoxWHERE = GetDlgItem(hwnd, IDC_COMBO_GetWhere);
+	textBoxWHERE_Uinput = GetDlgItem(hwnd, IDC_GetWhere_Uinput);
+	listBoxRETURN = GetDlgItem(hwnd, IDC_LIST_ReturnOptions);
+	buttonGO = GetDlgItem(hwnd, ID_B_GO);
+
+	
+	init_ComboBox_A(comboBoxFROM, myGetObjectChoices.waapiGETchoices_FROM);
+	init_ComboBox_A(comboBoxSELECT, myGetObjectChoices.waapiGETchoices_SELECT);
+	init_ComboBox_A(comboBoxWHERE, myGetObjectChoices.waapiGETchoices_WHERE);
+	init_ListBox_A(listBoxRETURN,myGetObjectChoices.waapiGETchoices_RETURN);
 	return true;
 }
 
@@ -97,6 +142,18 @@ bool init_ComboBox_A(HWND hwnd_combo, std::vector<std::string> choices)
 	for (auto choice: choices)
 	{
 		SendMessage(hwnd_combo, CB_ADDSTRING, i, (LPARAM)choice.c_str());
+		SendMessage(hwnd_combo, CB_SETCURSEL, 0, 0);
+		i++;
+	}
+	return true;
+}
+
+bool init_ListBox_A(HWND hwnd_list, std::vector<std::string> choices)
+{
+	int i = 0;
+	for (auto choice : choices)
+	{
+		SendMessage(hwnd_list, LB_ADDSTRING, i, (LPARAM)choice.c_str());
 		i++;
 	}
 	return true;

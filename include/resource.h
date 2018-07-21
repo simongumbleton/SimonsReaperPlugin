@@ -4,11 +4,17 @@
 //
 #define IDD_DIALOG1                     101
 #define IDC_LIST1                       1001
+#define IDC_GetFrom_Uinput              1001
 #define IDC_COMBO1                      1002
-#define ID_B_01                         1003
-#define IDC_CHECK1                      1004
+#define IDC_COMBO_GetFrom               1002
 #define ID_B_OK                         1005
+#define ID_B_GO                         1005
 #define ID_B_CANCEL                     1006
+#define IDC_STATIC_GetFrom              1007
+#define IDC_COMBO_GetSelect             1008
+#define IDC_COMBO_GetWhere              1009
+#define IDC_LIST_ReturnOptions          1013
+#define IDC_GetWhere_Uinput             1014
 
 // Next default values for new objects
 // 
@@ -16,7 +22,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        108
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1007
+#define _APS_NEXT_CONTROL_VALUE         1015
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

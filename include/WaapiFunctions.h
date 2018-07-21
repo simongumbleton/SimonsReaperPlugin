@@ -16,23 +16,23 @@ struct CurrentWwiseConnection {
 	int timeoutMS = 2000;
 };
 
-struct ObjectGetArgs {
+struct ObjectGetArgs {	/// Init struct with some sensible defaults that can be error checked
 	std::vector<std::string> From{ "","" };
-	std::string Select = "";
-	std::vector<std::string> Where{ "","" };
-	std::vector<std::string> customReturnArgs{"","","",""};
+	std::string Select = "descendants";
+	std::vector<std::string> Where{"",""};
+	std::vector<std::string> customReturnArgs{};
 };
 
 /// Vectors to store GET choices
 struct GetObjectChoices {
 	std::vector<std::string> waapiGETchoices_FROM
 	{
-		"id", "search", "path", "ofType"
+		"Wwise Selection","id", "search", "path", "ofType"
 	};
 
 	std::vector<std::string> waapiGETchoices_SELECT
 	{
-		"parent", "children", "descendants", "ancestors"
+		"descendants", "parent", "children", "ancestors"
 	};
 
 	std::vector<std::string> waapiGETchoices_WHERE
@@ -42,9 +42,9 @@ struct GetObjectChoices {
 
 	std::vector<std::string> waapiGETchoices_RETURN
 	{
-		"id", "name", "notes", "type", "shortId",
-		"classId", "category", "filePath", "workunit",
-		"parent", "owner", "path", "isPlayable", "childrenCount",
+		"id", "name", "type", "path", "parent", "notes",
+		"shortId","classId", "category", "filePath",
+		"owner",  "isPlayable", "childrenCount",
 		"sound:convertedWemFilePath", "sound:originalWavFilePath",
 		"soundbank:bnkFilePath", "music:transitionRoot", "music:playlistRoot",
 		"audioSource:playbackDuration", "audioSource:maxDurationSource",
@@ -79,3 +79,10 @@ struct GetObjectChoices {
 	///////////////////////////////
 	///get the array for a succesfull call to any of the above functions, results is 'resultsOut' from above functions
 	void waapi_GetWaapiResultsArray(AK::WwiseAuthoringAPI::AkJson::Array &arrayIn, AK::WwiseAuthoringAPI::AkJson &results);
+
+	///////////////////////////////
+	////     Helper function to print JSON data in a more readable way
+	///////////////////////////////
+	void waapi_HELPER_Print_AkJson_Array(AK::WwiseAuthoringAPI::AkJson::Array &printResults);
+	void waapi_HELPER_Print_AkJson_Map(AK::WwiseAuthoringAPI::AkJson::Map &printResults);
+

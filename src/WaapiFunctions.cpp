@@ -114,19 +114,16 @@ bool waapi_GetParentFromGUID(const AK::WwiseAuthoringAPI::AkVariant & id, AK::Ww
 
 bool waapi_GetObjectFromArgs(ObjectGetArgs & getArgs, AK::WwiseAuthoringAPI::AkJson & results)
 {
+	using namespace AK::WwiseAuthoringAPI;
 	//Check for missing inputs
-	if (getArgs.From[0] == "" || getArgs.From[1] == "" || getArgs.Select == "")
+	if (getArgs.From[0] == "" || getArgs.From[1] == "")
 	{
 		PrintToConsole("!ERROR! - One or more required inputs are missing from GetObjectFromArgs call");
 		return false;
 	}
-	using namespace AK::WwiseAuthoringAPI;
-
 	AkVariant from0 = getArgs.From[0];
 	AkVariant from1 = getArgs.From[1];
 	AkVariant Akselect = getArgs.Select;
-	AkVariant where0 = getArgs.Where[0];
-	AkVariant where1 = getArgs.Where[1];
 
 	AkJson args;
 
@@ -140,6 +137,8 @@ bool waapi_GetObjectFromArgs(ObjectGetArgs & getArgs, AK::WwiseAuthoringAPI::AkJ
 	}
 	else
 	{
+		AkVariant where0 = getArgs.Where[0];
+		AkVariant where1 = getArgs.Where[1];
 		args = (AkJson::Map{
 			{ "from", AkJson::Map{ { from0, AkJson::Array{ from1 } } } },
 			{ "transform",{ AkJson::Array
@@ -205,4 +204,18 @@ void waapi_GetWaapiResultsArray(AK::WwiseAuthoringAPI::AkJson::Array & arrayIn, 
 		MessageBox(NULL, "!Error! Results array is not of type AkJson::Map", "Waapi Results Array Error", MB_OK);
 		return;
 	}
+}
+
+void waapi_HELPER_Print_AkJson_Array(AK::WwiseAuthoringAPI::AkJson::Array & printResults)
+{
+		using namespace AK::WwiseAuthoringAPI::JSONHelpers;
+		std::string argsToString = GetAkJsonString(printResults);
+		PrintToConsole(argsToString);
+}
+
+void waapi_HELPER_Print_AkJson_Map(AK::WwiseAuthoringAPI::AkJson::Map & printResults)
+{
+	using namespace AK::WwiseAuthoringAPI::JSONHelpers;
+	std::string argsToString = GetAkJsonString(printResults);
+	PrintToConsole(argsToString);
 }

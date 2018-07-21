@@ -122,8 +122,8 @@ void WwiseConnectionHandler::GetChildrenFromSelectedParent(bool suppressOuputMes
 
 	ObjectGetArgs myGetArgs;
 	myGetArgs.Select = "children";
-	myGetArgs.Where = { "type:isIn","Sound" };
-	myGetArgs.customReturnArgs = { "notes","workunit" };
+	//myGetArgs.Where = { "type:isIn","Sound" };
+	myGetArgs.customReturnArgs = { "notes","","owner" };
 
 
 	std::vector<WwiseObject> WwiseChildren;
@@ -135,8 +135,11 @@ void WwiseConnectionHandler::GetChildrenFromSelectedParent(bool suppressOuputMes
 		AkJson::Array MyReturnResults;
 		GetWwiseObjects(true, myGetArgs, MyReturnResults);
 
+		//waapi_HELPER_Print_AkJson_Array(MyReturnResults);
+
 		for (const auto &result : MyReturnResults)
 		{
+
 			WwiseObject child;
 			child.properties.insert(std::make_pair("guid", result["id"].GetVariant().GetString()));
 			child.properties.insert(std::make_pair("name", result["name"].GetVariant().GetString()));
@@ -144,8 +147,15 @@ void WwiseConnectionHandler::GetChildrenFromSelectedParent(bool suppressOuputMes
 			child.properties.insert(std::make_pair("path", result["path"].GetVariant().GetString()));
 			for (std::string customReturnArg : myGetArgs.customReturnArgs)
 			{
-			//	const char *property = customReturnArg.c_str();
-			//	child.properties[*property] = result[customReturnArg].GetVariant().GetString();
+				if (customReturnArg != "") 
+				{
+					if (result.HasKey(customReturnArg.c_str()))
+					{
+						child.properties.insert(std::make_pair(customReturnArg.c_str(), result[customReturnArg].GetVariant().GetString()));
+					}
+					
+				}
+				
 			}
 			WwiseChildren.push_back(child);
 		}
@@ -179,7 +189,6 @@ void WwiseConnectionHandler::GetWwiseObjects(bool suppressOuputMessages, ObjectG
 	AkJson MoreRawReturnResults;
 	waapi_GetObjectFromArgs(getargs, MoreRawReturnResults);
 
-	AkJson::Array MoreMyReturnResults;
 	waapi_GetWaapiResultsArray(Results, MoreRawReturnResults);
 
 
