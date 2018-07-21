@@ -94,6 +94,12 @@
     <ClInclude Include="include\AkAutobahn\WebSocketClient.h">
       <Filter>AkAutobahn</Filter>
     </ClInclude>
+    <ClInclude Include="include\PluginWindow.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\resource.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">
@@ -140,6 +146,9 @@
     <ClCompile Include="include\AkAutobahn\WebSocketClient.cpp">
       <Filter>AkAutobahn</Filter>
     </ClCompile>
+    <ClCompile Include="src\PluginWindow.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="include\AkAutobahn\APACHE_LICENSE.txt">
@@ -159,5 +168,10 @@
     <None Include="include\AkAutobahn\md5.inl">
       <Filter>AkAutobahn</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="include\SimonsReaperPlugin.rc">
+      <Filter>include</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

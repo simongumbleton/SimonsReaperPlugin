@@ -1,10 +1,9 @@
-#include <windows.h>
 #include <Wincodec.h>
 #include <Commctrl.h>
 
 #include "stdio.h"
 #include "stdlib.h"
-#include <string>
+
 #include <iostream> 
 #include <sstream>
 
@@ -161,6 +160,8 @@ bool HookCommandProc(int command, int flag)
     if (command == connectToWwise.accel.cmd)
     {
 		ConnectToWwise(supressMessagebox, WaapiPort);	/// WwiseConnectionHandler //Connect to Wwise. 
+		
+		WinMain(g_hInst, NULL, "Hello World", 0);
 		return true;
     }
 	if (command == getSelectedObjects.accel.cmd)

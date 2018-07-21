@@ -1,6 +1,5 @@
 #include <iostream> 
 #include <sstream>
-#include <windows.h>
 
 #include "WaapiFunctions.h"
 #include <AK/WwiseAuthoringAPI/AkVariantBase.h>

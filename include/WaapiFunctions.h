@@ -23,6 +23,35 @@ struct ObjectGetArgs {
 	std::vector<std::string> customReturnArgs{"","","",""};
 };
 
+/// Vectors to store GET choices
+struct GetObjectChoices {
+	std::vector<std::string> waapiGETchoices_FROM
+	{
+		"id", "search", "path", "ofType"
+	};
+
+	std::vector<std::string> waapiGETchoices_SELECT
+	{
+		"parent", "children", "descendants", "ancestors"
+	};
+
+	std::vector<std::string> waapiGETchoices_WHERE
+	{
+		"name:contains", "name:matches", "type:isIn", "category:isIn"
+	};
+
+	std::vector<std::string> waapiGETchoices_RETURN
+	{
+		"id", "name", "notes", "type", "shortId",
+		"classId", "category", "filePath", "workunit",
+		"parent", "owner", "path", "isPlayable", "childrenCount",
+		"sound:convertedWemFilePath", "sound:originalWavFilePath",
+		"soundbank:bnkFilePath", "music:transitionRoot", "music:playlistRoot",
+		"audioSource:playbackDuration", "audioSource:maxDurationSource",
+		"audioSource:trimValues", "workunit:isDefault", "workunit:type",
+		"workunit:isDirty", "switchContainerChild:context"
+	};
+};
 
 	///////////////////////////////
 	////     Connect to wwise client
