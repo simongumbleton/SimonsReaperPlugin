@@ -30,11 +30,13 @@ bool waapi_Connect(CurrentWwiseConnection &wwiseConnectionReturn)
 		{
 			wwiseConnectionReturn.port = my_Waapi_Port;
 			wwiseConnectionReturn.Version = wwiseInfo["version"]["displayName"].GetVariant().GetString();
+			wwiseConnectionReturn.connected = true;
 		}
 	}
 	if (!success)
 	{
 		MessageBox(NULL, "! ERROR - Failed to Connect to Wwise. !", "Wwise Connection Status", MB_OK);
+		wwiseConnectionReturn.connected = false;
 	}
 	return success;
 }

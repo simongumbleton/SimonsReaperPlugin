@@ -3,6 +3,7 @@
 #include <string>
 #include <map>
 #include "WaapiFunctions.h"
+#include "PluginWindow.h"
 
 class WwiseConnectionHandler
 {
@@ -16,6 +17,8 @@ public:
 	};
 
 	CurrentWwiseConnection MyCurrentWwiseConnection;
+
+	bool StartGUI(HINSTANCE &myhInst);
 
 	void ConnectToWwise(bool suppressOuputMessages, int port);
 

@@ -19,11 +19,22 @@ WwiseConnectionHandler::~WwiseConnectionHandler()
 
 
 
-
 void WwiseConnectionHandler::ReportConnectionError(CurrentWwiseConnection attemptedConnection)
 {
 	std::string errorLog = "Wwise Connection not found on port " + std::to_string(attemptedConnection.port) + "...Exiting!";
 	PrintToConsole(errorLog);
+}
+
+bool WwiseConnectionHandler::StartGUI(HINSTANCE &myhInst)
+{
+	if (WinMain(myhInst, NULL, "Hello World", 0) == -1)
+	{
+		return false;	// Somethig Failed in the window creation
+	}
+	else
+	{
+		return true;
+	};
 }
 
 void WwiseConnectionHandler::ConnectToWwise(bool suppressOuputMessages, int port)

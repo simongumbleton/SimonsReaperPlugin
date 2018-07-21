@@ -14,6 +14,7 @@ struct CurrentWwiseConnection {
 	int port = 8095;
 	std::string Version;
 	int timeoutMS = 2000;
+	bool connected = false;
 };
 
 struct ObjectGetArgs {	/// Init struct with some sensible defaults that can be error checked

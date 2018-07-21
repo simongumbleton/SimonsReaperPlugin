@@ -32,10 +32,9 @@ char currentProject[256];
 bool supressMessagebox = false;
 bool supressConsoleOutput = false;
 
-HWND consoleWindowHndl;
-DWORD currentPID = 0;
 
 WwiseConnectionHandler MyWwiseConnectionHandler;
+
 
 //actions
 gaccel_register_t action01 = { { 0, 0, 0 }, "Do action 01." };
@@ -148,6 +147,8 @@ extern "C"
 			InsertMenuItem(hMenu, 2, true, &mi);
 		}
 
+		// set up properties of our wwise connection handler
+		//MyWwiseConnectionHandler.MyCurrentWwiseConnection.port = WaapiPort;
 		
     }
 }
@@ -162,9 +163,12 @@ bool HookCommandProc(int command, int flag)
     }
     if (command == connectToWwise.accel.cmd)
     {
-		
-		MyWwiseConnectionHandler.ConnectToWwise(supressMessagebox, WaapiPort);
-		WinMain(g_hInst, NULL, "Hello World", 0);
+		MyWwiseConnectionHandler.MyCurrentWwiseConnection.port = WaapiPort;
+		if (!MyWwiseConnectionHandler.StartGUI(g_hInst))
+		{
+			return false;
+		}
+		//MyWwiseConnectionHandler.ConnectToWwise(supressMessagebox, WaapiPort);
 		return true;
     }
 	if (command == getSelectedObjects.accel.cmd)
