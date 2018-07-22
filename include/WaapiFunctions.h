@@ -23,6 +23,7 @@ struct ObjectGetArgs {	/// Init struct with some sensible defaults that can be e
 	std::string Select = "descendants";
 	std::vector<std::string> Where{"",""};
 	std::vector<std::string> customReturnArgs{};
+	bool fromSelected = false;
 };
 
 /// Vectors to store GET choices

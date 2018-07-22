@@ -8,6 +8,10 @@
 #include "WaapiFunctions.h"
 //#include "PluginWindow.h"
 
+typedef struct WwiseObjectStruct
+{
+	std::map<std::string, std::string> properties;
+} WwiseObject;
 
 class WwiseConnectionHandler
 {
@@ -17,22 +21,19 @@ public:
 	WwiseConnectionHandler();
 	~WwiseConnectionHandler();
 
-	struct WwiseObject
-	{
-		std::map<std::string, std::string> properties;
-	};
+
 
 	CurrentWwiseConnection MyCurrentWwiseConnection;
 
 	bool StartGUI(HINSTANCE &myhInst);
-
-	void handle_GUI_notifications(int message);
 
 	bool handle_GUI_Connect();
 
 	bool ConnectToWwise(bool suppressOuputMessages, int port);
 
 	void GetSelectedWwiseObjects(bool suppressOuputMessages);
+
+	WwiseObject GetSelectedObject();
 
 	void GetChildrenFromSelectedParent(bool suppressOuputMessages);
 
@@ -96,6 +97,9 @@ private:
 
 	/////Handle the various UsI elements
 	void handleUI_GetFrom(int notifCode);
+	void handleUI_GetSelect(int notifCode);
+	void handleUI_GetWhere(int notifCode);
+	void handleUI_GetReturnOptions(int notifCode);
 	void handleUI_B_Connect();
 	void handleUI_B_GO();
 

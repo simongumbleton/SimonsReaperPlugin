@@ -6,11 +6,18 @@
 
 ///Handles to UI elements
 HWND comboBoxFROM;
+std::string s_comboBoxFROM;
 HWND textBoxFROM_Uinput;
+std::string s_textBoxFROM_Uinput;
 HWND comboBoxSELECT;
+std::string s_comboBoxSELECT;
 HWND comboBoxWHERE;
+std::string s_comboBoxWHERE;
 HWND textBoxWHERE_Uinput;
+std::string s_textBoxWHERE_Uinput;
 HWND listBoxRETURN;
+int i_listBoxRETURN[16] = {};
+std::vector<std::string> s_listBoxRETURN{};
 HWND buttonGO;
 HWND buttonConnect;
 HWND textConnectionStatus;
@@ -110,6 +117,15 @@ void PluginWindow::OnCommand(const HWND hwnd, int id, int notifycode, const HWND
 	case IDC_B_ConnectWwise:
 		handleUI_B_Connect();
 		break;
+	case IDC_COMBO_GetSelect:
+		handleUI_GetSelect(notifycode);
+		break;
+	case IDC_COMBO_GetWhere:
+		handleUI_GetWhere(notifycode);
+		break;
+	case IDC_LIST_ReturnOptions:
+		handleUI_GetReturnOptions(notifycode);
+		break;
 	case ID_B_CANCEL:    //ESC key pressed or 'cancel' button selected
 		EndDialog(hwnd, id);
 	}
@@ -147,6 +163,58 @@ void PluginWindow::handleUI_GetFrom(int notifCode)
 	switch (notifCode)
 	{
 	case CBN_SELCHANGE:
+		x = SendMessage(comboBoxFROM, CB_GETCURSEL, 0, 0);
+		if (x != 0)	// Somethig other than Wwise Selected
+		{
+			Edit_Enable(textBoxFROM_Uinput,true);
+		}
+		else
+		{
+			Edit_Enable(textBoxFROM_Uinput, false);
+		}
+		s_comboBoxFROM = myGetObjectChoices.waapiGETchoices_FROM[x];
+		break;
+	default:
+		break;
+	}
+}
+
+void PluginWindow::handleUI_GetSelect(int notifCode)
+{
+	int x = 0;
+	switch (notifCode)
+	{
+	case CBN_SELCHANGE:
+		x = SendMessage(comboBoxSELECT, CB_GETCURSEL, 0, 0);
+		s_comboBoxSELECT = myGetObjectChoices.waapiGETchoices_SELECT[x];
+		break;
+	default:
+		break;
+	}
+}
+
+void PluginWindow::handleUI_GetWhere(int notifCode)
+{
+	int x = 0;
+	switch (notifCode)
+	{
+	case CBN_SELCHANGE:
+		x = SendMessage(comboBoxWHERE, CB_GETCURSEL, 0, 0);
+		s_comboBoxWHERE = myGetObjectChoices.waapiGETchoices_WHERE[x];
+		break;
+	default:
+		break;
+	}
+}
+
+void PluginWindow::handleUI_GetReturnOptions(int notifCode)
+{		
+	
+	switch (notifCode)
+	{
+	case CBN_SELCHANGE:
+		std::fill_n(i_listBoxRETURN, 16, -1);
+		SendMessage(listBoxRETURN, LB_GETSELITEMS, 256,(LPARAM)&i_listBoxRETURN);
 		break;
 	default:
 		break;
@@ -171,6 +239,43 @@ void PluginWindow::handleUI_B_GO()
 {
 	/// GO pressed. Fill in the required structures for Object Get call from UI elements
 	PrintToConsole("Recreating Wwise Tree with results from core::object::Get");
+	///Force a "Selection change call on the drop downs" in case use made not selections away from the default
+	handleUI_GetFrom(1);
+	handleUI_GetSelect(1);
+	handleUI_GetWhere(1);
+	handleUI_GetReturnOptions(1);
+	///Get the FROM text if not selected
+	char buffer[256];
+	Edit_GetText(textBoxFROM_Uinput, buffer, 256);
+	s_textBoxFROM_Uinput = buffer;
+
+	///Get the where text
+	Edit_GetText(textBoxWHERE_Uinput, buffer, 256);
+	s_textBoxWHERE_Uinput = buffer;
+	//s_textBoxWHERE_Uinput
+
+	///fill in the return options array
+	///s_listBoxRETURN  from i_listBoxRETURN indexes
+	for (auto index : i_listBoxRETURN)
+	{
+		if (index != -1)
+		{
+			s_listBoxRETURN.push_back(myGetObjectChoices.waapiGETchoices_RETURN[index]);
+		}
+	}
+	///Fill in the args from GUI - getArgsFromGUI
+
+	getArgsFromGUI.fromSelected = (s_comboBoxFROM == "Wwise Selection"); // if choice is Wwise Selection
+	getArgsFromGUI.From = { s_comboBoxFROM ,s_textBoxFROM_Uinput };
+	getArgsFromGUI.Select = s_comboBoxSELECT;
+	getArgsFromGUI.Where = {s_comboBoxWHERE,s_textBoxWHERE_Uinput};
+	getArgsFromGUI.customReturnArgs = s_listBoxRETURN;
+	PrintToConsole("Args collected");
+
+	AK::WwiseAuthoringAPI::AkJson::Array results;
+
+	parentWwiseConnectionHnd->GetWwiseObjects(false, getArgsFromGUI, results);
+
 }
 
 /// INIT ALL OPTIONS

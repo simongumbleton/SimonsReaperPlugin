@@ -117,6 +117,7 @@ bool waapi_GetParentFromGUID(const AK::WwiseAuthoringAPI::AkVariant & id, AK::Ww
 bool waapi_GetObjectFromArgs(ObjectGetArgs & getArgs, AK::WwiseAuthoringAPI::AkJson & results)
 {
 	using namespace AK::WwiseAuthoringAPI;
+
 	//Check for missing inputs
 	if (getArgs.From[0] == "" || getArgs.From[1] == "")
 	{
@@ -156,12 +157,12 @@ bool waapi_GetObjectFromArgs(ObjectGetArgs & getArgs, AK::WwiseAuthoringAPI::AkJ
 
 	AkJson options(AkJson::Map{
 		{ "return", AkJson::Array{
-			AkVariant("id"),
-			AkVariant("name"),
-			AkVariant("path"),
-			AkVariant("type"),
-			AkVariant("parent"),
-			AkVariant("childrenCount")
+			//AkVariant("id"),
+			//AkVariant("name"),
+			//AkVariant("path"),
+			//AkVariant("type"),
+			//AkVariant("parent"),
+			//AkVariant("childrenCount")
 		} }
 		});
 
