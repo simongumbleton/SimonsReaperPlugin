@@ -19,7 +19,7 @@ PluginWindow myPluginWindow;
 
 
 //=============================================================================
-int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int)
+int CreatePluginWindow(HINSTANCE hInst, HINSTANCE, LPSTR, int)
 {
 	INT_PTR success = DialogBox(hInst, MAKEINTRESOURCE(IDD_DIALOG1), 0, DlgProc);
 

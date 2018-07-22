@@ -27,7 +27,7 @@ void WwiseConnectionHandler::ReportConnectionError(CurrentWwiseConnection attemp
 
 bool WwiseConnectionHandler::StartGUI(HINSTANCE &myhInst)
 {
-	if (WinMain(myhInst, NULL, "Hello World", 0) == -1)
+	if (CreatePluginWindow(myhInst, NULL, "Hello World", 0) == -1)
 	{
 		return false;	// Somethig Failed in the window creation
 	}

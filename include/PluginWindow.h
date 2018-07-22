@@ -8,7 +8,7 @@
 //define an unicode string type alias
 typedef std::basic_string<TCHAR> ustring;
 //=============================================================================
-int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int);
+int CreatePluginWindow(HINSTANCE hInst, HINSTANCE, LPSTR, int);
 //=============================================================================
 //message processing function declarations
 INT_PTR CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);

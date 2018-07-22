@@ -14,7 +14,6 @@
 #define IDC_COMBO_GetWhere              1009
 #define IDC_LIST_ReturnOptions          1013
 #define IDC_GetWhere_Uinput             1014
-#define IDC_BUTTON1                     1015
 #define IDC_B_ConnectWwise              1015
 #define IDC_WwiseConnection             1016
 
