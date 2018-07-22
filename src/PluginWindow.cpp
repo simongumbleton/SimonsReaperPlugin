@@ -1,6 +1,7 @@
-#include "PluginWindow.h"
+#pragma once
+#include "WwiseConnectionHandler.h"
 #include "resource.h"
-
+#include "PluginWindow.h"
 
 ///Handles to UI elements
 HWND comboBoxFROM;
@@ -15,53 +16,79 @@ HWND textConnectionStatus;
 
 GetObjectChoices myGetObjectChoices;
 
-PluginWindow myPluginWindow;
+HWND PluginWindow::m_hWindow = NULL;
+long PluginWindow::m_lSaveThis = 0;
+WwiseConnectionHandler* PluginWindow::parentWwiseConnectionHnd = NULL;
 
 
 //=============================================================================
-int CreatePluginWindow(HINSTANCE hInst, HINSTANCE, LPSTR, int)
+int PluginWindow::CreatePluginWindow(HINSTANCE hInst, HINSTANCE, LPSTR, int)
 {
-	INT_PTR success = DialogBox(hInst, MAKEINTRESOURCE(IDD_DIALOG1), 0, DlgProc);
+	INT_PTR success = DialogBox(hInst, MAKEINTRESOURCE(IDD_DIALOG1), 0, DialogProcStatic);
 
 	if (success == -1)
 	{
-		myPluginWindow.ErrMsg(_T("DialogBox failed."));
+		ErrMsg(_T("DialogBox failed."));
 	}
 	return 0;
 }
 
-static INT_PTR CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+void PluginWindow::SetupPluginParent(WwiseConnectionHandler * parent)
+{
+	parentWwiseConnectionHnd = parent;
+	thisPluginWindow = this;
+}
+
+INT_PTR CALLBACK PluginWindow::DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	//PluginWindow* pThis = (PluginWindow*)GetProp(hwnd, "my_class_data");
-	//return pThis ? pThis->DlgProc(hwnd, uMsg, wParam, lParam) : FALSE;
-
+	//return pThis ? pThis->realDlgProc(hwnd, uMsg, wParam, lParam) : FALSE;
 	switch (uMsg)
 	{
 	case WM_COMMAND:
 	{
-		myPluginWindow.OnCommand(hwnd, LOWORD(wParam), HIWORD(wParam),
+		OnCommand(hwnd, LOWORD(wParam), HIWORD(wParam),
 			reinterpret_cast<HWND>(lParam));
 		return 0;
 	}
 	case WM_INITDIALOG:
 	{
-		return myPluginWindow.OnInitDlg(hwnd, lParam);
+		return OnInitDlg(hwnd, lParam);
 	}
 	default:
 		return FALSE;  //let system deal with msg
 	}
 }
 
+INT_PTR PluginWindow::DialogProcStatic(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	if (m_hWindow == NULL)
+	{
+		m_hWindow = hDlg;
+	}
 
+	PluginWindow *pThis = (PluginWindow*)m_lSaveThis;
+
+	return (pThis->DlgProc(hDlg, message, wParam, lParam));
+}
 
 
 PluginWindow::PluginWindow()
 {
+	m_lSaveThis = (long)this;
+	saveThis = this;
 }
 
 PluginWindow::~PluginWindow()
 {
 }
+
+int PluginWindow::DoModal(void)
+{
+	return 0;
+}
+
+
 
 
 //=============================================================================
@@ -101,7 +128,7 @@ INT_PTR PluginWindow::OnInitDlg(const HWND hwnd, LPARAM lParam)
 	return TRUE;
 }
 //=============================================================================
-inline int PluginWindow::ErrMsg(const ustring& s)
+inline int PluginWindow::ErrMsg(const std::string& s)
 {
 	return MessageBox(0, s.c_str(), _T("ERROR"), MB_OK | MB_ICONEXCLAMATION);
 }
@@ -123,7 +150,7 @@ void PluginWindow::handleUI_GetFrom(int notifCode)
 
 void PluginWindow::handleUI_B_Connect(int notifCode)
 {
-	
+	parentWwiseConnectionHnd->handle_GUI_notifications(CONNECT);
 }
 
 /// INIT ALL OPTIONS

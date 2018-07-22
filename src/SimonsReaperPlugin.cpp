@@ -164,6 +164,7 @@ bool HookCommandProc(int command, int flag)
     if (command == connectToWwise.accel.cmd)
     {
 		MyWwiseConnectionHandler.MyCurrentWwiseConnection.port = WaapiPort;
+		MyWwiseConnectionHandler.MyCurrentWwiseConnection.supressDebugOutput = supressMessagebox;
 		if (!MyWwiseConnectionHandler.StartGUI(g_hInst))
 		{
 			return false;

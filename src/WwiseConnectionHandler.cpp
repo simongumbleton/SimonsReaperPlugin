@@ -7,17 +7,19 @@
 #include "WwiseConnectionHandler.h"
 
 #include "SimonsReaperPlugin.h"
+#include "PluginWindow.h"
 
+
+static PluginWindow myPluginWindow = PluginWindow();
 
 WwiseConnectionHandler::WwiseConnectionHandler()
 {
+	
 }
 
 WwiseConnectionHandler::~WwiseConnectionHandler()
 {
 }
-
-
 
 void WwiseConnectionHandler::ReportConnectionError(CurrentWwiseConnection attemptedConnection)
 {
@@ -27,14 +29,30 @@ void WwiseConnectionHandler::ReportConnectionError(CurrentWwiseConnection attemp
 
 bool WwiseConnectionHandler::StartGUI(HINSTANCE &myhInst)
 {
-	if (CreatePluginWindow(myhInst, NULL, "Hello World", 0) == -1)
+	myPluginWindow.SetupPluginParent(this);
+
+	if (myPluginWindow.CreatePluginWindow(myhInst, NULL, "Hello World", 0) == 0)
 	{
-		return false;	// Somethig Failed in the window creation
+		
+		return true;	
 	}
 	else
-	{
-		return true;
+	{	
+		return false;	// Somethig Failed in the window creation
 	};
+}
+
+void WwiseConnectionHandler::handle_GUI_notifications(int message)
+{
+	switch (message)
+	{
+	case CONNECT:
+		ConnectToWwise(false, MyCurrentWwiseConnection.port);
+		break;
+	default:
+		break;
+	}
+
 }
 
 void WwiseConnectionHandler::ConnectToWwise(bool suppressOuputMessages, int port)
@@ -220,3 +238,5 @@ void WwiseConnectionHandler::GetWwiseObjects(bool suppressOuputMessages, ObjectG
 		PrintToConsole(getResults);
 	}
 }
+
+

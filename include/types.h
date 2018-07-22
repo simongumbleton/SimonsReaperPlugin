@@ -25,21 +25,6 @@ namespace fs = std::filesystem;
 namespace fs = boost::filesystem;
 #endif
 
-using MappedListViewID = int32;
-using RenderItemID = uint32;
-
-struct WwiseObject
-{
-    std::string name;
-    std::string type;
-    std::string path;
-    std::unordered_set<RenderItemID> renderChildren;
-
-    //Currently 'type' is just used for the icon decoration, only music segment changes
-    //functionality as it dictates what object type a render child of a wwise object can be
-    bool isMusicSegment;
-};
-
 enum class ImportObjectType
 {
     SFX,
@@ -54,33 +39,3 @@ enum class WAAPIImportOperation
     replaceExisting
 };
 
-struct RenderItem
-{
-    fs::path projectPath;
-    fs::path audioFilePath;
-    std::string outputFileName;
-
-    std::string wwiseGuid;
-    std::string wwiseParentName;
-	std::string wwiseOriginalsSubpath;
-
-    WAAPIImportOperation importOperation;
-    ImportObjectType importObjectType;
-
-    int wwiseLanguageIndex;
-
-    //info for searching
-    uint32 regionRenderFlags;
-
-    //reaper region info
-    int reaperRegionId;
-    int regionMatrixOffset;
-
-    //optional based on flags
-    std::string trackStemGuid;
-    double inTime, outTime;
-};
-
-using RenderItemMap = std::unordered_map<RenderItemID, std::pair<RenderItem, MappedListViewID>>;
-using RenderProjectMap = std::unordered_map<std::string, std::vector<RenderItemID>>;
-using WwiseObjectMap = std::unordered_map<std::string, WwiseObject>;

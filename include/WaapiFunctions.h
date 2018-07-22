@@ -15,6 +15,7 @@ struct CurrentWwiseConnection {
 	std::string Version;
 	int timeoutMS = 2000;
 	bool connected = false;
+	bool supressDebugOutput = false;
 };
 
 struct ObjectGetArgs {	/// Init struct with some sensible defaults that can be error checked
