@@ -28,7 +28,9 @@ public:
 
 	void handle_GUI_notifications(int message);
 
-	void ConnectToWwise(bool suppressOuputMessages, int port);
+	bool handle_GUI_Connect();
+
+	bool ConnectToWwise(bool suppressOuputMessages, int port);
 
 	void GetSelectedWwiseObjects(bool suppressOuputMessages);
 
@@ -94,7 +96,8 @@ private:
 
 	/////Handle the various UsI elements
 	void handleUI_GetFrom(int notifCode);
-	void handleUI_B_Connect(int notifCode);
+	void handleUI_B_Connect();
+	void handleUI_B_GO();
 
 
 	/////Initialise dialogue boxes

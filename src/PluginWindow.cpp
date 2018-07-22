@@ -2,6 +2,7 @@
 #include "WwiseConnectionHandler.h"
 #include "resource.h"
 #include "PluginWindow.h"
+#include "SimonsReaperPlugin.h"
 
 ///Handles to UI elements
 HWND comboBoxFROM;
@@ -15,6 +16,8 @@ HWND buttonConnect;
 HWND textConnectionStatus;
 
 GetObjectChoices myGetObjectChoices;
+
+ObjectGetArgs getArgsFromGUI;
 
 HWND PluginWindow::m_hWindow = NULL;
 long PluginWindow::m_lSaveThis = 0;
@@ -98,13 +101,14 @@ void PluginWindow::OnCommand(const HWND hwnd, int id, int notifycode, const HWND
 	switch (id)
 	{
 	case ID_B_GO:        //RETURN key pressed or 'GO' button selected
-		MessageBox(NULL, "Ok buttor", _T("DEBUG"), MB_OK | MB_ICONEXCLAMATION);
+		//MessageBox(NULL, "Ok buttor", _T("DEBUG"), MB_OK | MB_ICONEXCLAMATION);
+		handleUI_B_GO();
 		break;
 	case IDC_COMBO_GetFrom:
 		handleUI_GetFrom(notifycode);
 		break;
 	case IDC_B_ConnectWwise:
-		handleUI_B_Connect(notifycode);
+		handleUI_B_Connect();
 		break;
 	case ID_B_CANCEL:    //ESC key pressed or 'cancel' button selected
 		EndDialog(hwnd, id);
@@ -124,6 +128,8 @@ INT_PTR PluginWindow::OnInitDlg(const HWND hwnd, LPARAM lParam)
 	//Init options
 	init_ALL_OPTIONS(hwnd);
 
+	//init Wwise Connection
+	handleUI_B_Connect();
 
 	return TRUE;
 }
@@ -141,16 +147,30 @@ void PluginWindow::handleUI_GetFrom(int notifCode)
 	switch (notifCode)
 	{
 	case CBN_SELCHANGE:
-		x = 1;
 		break;
 	default:
 		break;
 	}
 }
 
-void PluginWindow::handleUI_B_Connect(int notifCode)
+void PluginWindow::handleUI_B_Connect()
 {
-	parentWwiseConnectionHnd->handle_GUI_notifications(CONNECT);
+	if (parentWwiseConnectionHnd->handle_GUI_Connect())
+	{
+		SetDlgItemText(m_hWindow, IDC_WwiseConnection, "Wwise Connection Established");
+//		SendMessage(hwnd_combo, CB_SETCURSEL, 0, 0);
+//		textConnectionStatus
+	}
+	else
+	{
+		SetDlgItemText(m_hWindow, IDC_WwiseConnection, "!!Wwise Connection Missing!!");
+	}
+}
+
+void PluginWindow::handleUI_B_GO()
+{
+	/// GO pressed. Fill in the required structures for Object Get call from UI elements
+	PrintToConsole("Recreating Wwise Tree with results from core::object::Get");
 }
 
 /// INIT ALL OPTIONS
@@ -166,8 +186,6 @@ bool PluginWindow::init_ALL_OPTIONS(HWND hwnd)
 	buttonGO = GetDlgItem(hwnd, ID_B_GO);
 	buttonConnect = GetDlgItem(hwnd, IDC_B_ConnectWwise);
 	textConnectionStatus = GetDlgItem(hwnd, IDC_WwiseConnection);
-
-	
 		
 	
 	init_ComboBox_A(comboBoxFROM, myGetObjectChoices.waapiGETchoices_FROM);

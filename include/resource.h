@@ -16,6 +16,7 @@
 #define IDC_GetWhere_Uinput             1014
 #define IDC_B_ConnectWwise              1015
 #define IDC_WwiseConnection             1016
+#define IDC_TREE1                       1017
 
 // Next default values for new objects
 // 
@@ -23,7 +24,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        108
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1017
+#define _APS_NEXT_CONTROL_VALUE         1018
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

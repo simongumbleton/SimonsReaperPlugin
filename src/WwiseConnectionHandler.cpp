@@ -55,7 +55,12 @@ void WwiseConnectionHandler::handle_GUI_notifications(int message)
 
 }
 
-void WwiseConnectionHandler::ConnectToWwise(bool suppressOuputMessages, int port)
+bool WwiseConnectionHandler::handle_GUI_Connect()
+{
+	return ConnectToWwise(false, MyCurrentWwiseConnection.port);
+}
+
+bool WwiseConnectionHandler::ConnectToWwise(bool suppressOuputMessages, int port)
 {
 	
 	MyCurrentWwiseConnection.port = port;
@@ -72,10 +77,12 @@ void WwiseConnectionHandler::ConnectToWwise(bool suppressOuputMessages, int port
 			//MessageBox(NULL, WwiseConnectionStatus.c_str(), "Wwise Connection Status", MB_OK);
 			PrintToConsole(WwiseConnectionStatus);
 		}
+		return true;
 	}
 	else
 	{
 		ReportConnectionError(MyCurrentWwiseConnection);
+		return false;
 	}
 }
 
