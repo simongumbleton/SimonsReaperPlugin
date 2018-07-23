@@ -257,12 +257,38 @@ void WwiseConnectionHandler::GetWwiseObjects(bool suppressOuputMessages, ObjectG
 		std::stringstream objectList;
 		objectList << "Using Generic Get Call....\n";
 		objectList << "Getting " + getargs.Select + " where " + getargs.Where[0] + " " + getargs.Where[1] + "\n";
+		int resultCount = 1;
 		for (const auto &result : Results)
 		{
-			objectList << "Name = " + result["name"].GetVariant().GetString() + " \n";
-			objectList << "Type = " + result["type"].GetVariant().GetString() + " \n";
-			objectList << "Notes = " + result["notes"].GetVariant().GetString() + " \n";
+			for (const auto &string : getargs.customReturnArgs)
+			{
+				if (result.HasKey(string))
+				{
+					objectList << "Result " + std::to_string(resultCount) + ": " + string + " = ";
 
+					using namespace AK::WwiseAuthoringAPI::JSONHelpers;
+					std::string argsToString = GetAkJsonString(result);
+
+
+					AK::WwiseAuthoringAPI::AkJson::Type type;
+					type = result[string].GetType();
+					if (type == AK::WwiseAuthoringAPI::AkJson::Type::Variant)
+						objectList << result[string].GetVariant().GetString();
+					else if (type == AK::WwiseAuthoringAPI::AkJson::Type::Map)
+						for (const auto x : result[string].GetMap())
+						{
+						//	objectList << x.first + " = " + x.second.GetVariant().GetString();
+						}
+
+					else if (type == AK::WwiseAuthoringAPI::AkJson::Type::Array)
+						objectList << "";// result[string].GetArray().operator[string];
+					else
+						objectList << "Ak Type not found";
+					objectList << "\n";
+				}
+				
+			}
+			resultCount++;
 		}
 		objectList << "..Done..\n";
 		std::string getResults = objectList.str();

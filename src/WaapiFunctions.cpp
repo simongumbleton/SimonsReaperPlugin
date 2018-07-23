@@ -157,8 +157,8 @@ bool waapi_GetObjectFromArgs(ObjectGetArgs & getArgs, AK::WwiseAuthoringAPI::AkJ
 
 	AkJson options(AkJson::Map{
 		{ "return", AkJson::Array{
-			//AkVariant("id"),
-			//AkVariant("name"),
+			AkVariant("id"),
+			AkVariant("name"),
 			//AkVariant("path"),
 			//AkVariant("type"),
 			//AkVariant("parent"),

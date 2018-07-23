@@ -40,7 +40,7 @@ struct GetObjectChoices {
 
 	std::vector<std::string> waapiGETchoices_WHERE
 	{
-		"name:contains", "name:matches", "type:isIn", "category:isIn"
+		"","name:contains", "name:matches", "type:isIn", "category:isIn"
 	};
 
 	std::vector<std::string> waapiGETchoices_RETURN
