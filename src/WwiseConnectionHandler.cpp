@@ -269,15 +269,28 @@ void WwiseConnectionHandler::GetWwiseObjects(bool suppressOuputMessages, ObjectG
 					using namespace AK::WwiseAuthoringAPI::JSONHelpers;
 					std::string argsToString = GetAkJsonString(result);
 
-
+					////// CLEAN THIS UP!!!
+					//// Need to handle the differnet AK types in the return results. Maybe write some helper functions for this......
+					/////
 					AK::WwiseAuthoringAPI::AkJson::Type type;
 					type = result[string].GetType();
 					if (type == AK::WwiseAuthoringAPI::AkJson::Type::Variant)
 						objectList << result[string].GetVariant().GetString();
 					else if (type == AK::WwiseAuthoringAPI::AkJson::Type::Map)
 						for (const auto x : result[string].GetMap())
-						{
-						//	objectList << x.first + " = " + x.second.GetVariant().GetString();
+						{ 
+							objectList << x.first;// +" = " + x.second.GetVariant().GetString();
+							bool isString = x.second.GetVariant().IsString();
+							bool isNumber = x.second.GetVariant().IsNumber();
+							int variantType = x.second.GetVariant().GetType();
+							if (isString)
+							{
+								objectList << x.second.GetVariant().GetString();
+							}
+							if (isNumber)
+							{
+								objectList << x.second.GetVariant().operator double();
+							}
 						}
 
 					else if (type == AK::WwiseAuthoringAPI::AkJson::Type::Array)
