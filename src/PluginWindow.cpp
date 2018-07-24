@@ -239,6 +239,14 @@ void PluginWindow::handleUI_B_GO()
 {
 	/// GO pressed. Fill in the required structures for Object Get call from UI elements
 	PrintToConsole("Recreating Wwise Tree with results from core::object::Get");
+
+	///Clear the vecotrs for data storage
+	getArgsFromGUI.From.clear();
+	getArgsFromGUI.Where.clear();
+	getArgsFromGUI.Select = "";
+	getArgsFromGUI.customReturnArgs.clear();
+	s_listBoxRETURN.clear();
+
 	///Force a "Selection change call on the drop downs" in case use made not selections away from the default
 	handleUI_GetFrom(1);
 	handleUI_GetSelect(1);

@@ -89,3 +89,8 @@ struct GetObjectChoices {
 	void waapi_HELPER_Print_AkJson_Array(AK::WwiseAuthoringAPI::AkJson::Array &printResults);
 	void waapi_HELPER_Print_AkJson_Map(AK::WwiseAuthoringAPI::AkJson::Map &printResults);
 
+	///////////////////////////////
+	////     Helper function to Get the Results arrays in a more useful way than AkJson
+	///////////////////////////////
+	bool waapi_TranslateJSONResults(std::map<std::string,std::string> &INstringResults, std::map<std::string, double> &INnumberResults, AK::WwiseAuthoringAPI::AkJson result, std::string stringKey);
+

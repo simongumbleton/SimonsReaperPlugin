@@ -222,3 +222,78 @@ void waapi_HELPER_Print_AkJson_Map(AK::WwiseAuthoringAPI::AkJson::Map & printRes
 	std::string argsToString = GetAkJsonString(printResults);
 	PrintToConsole(argsToString);
 }
+
+bool waapi_TranslateJSONResults(std::map<std::string,std::string>& INstringResults, std::map<std::string, double>& INnumberResults, AK::WwiseAuthoringAPI::AkJson result, std::string stringKey)
+{
+	using namespace AK::WwiseAuthoringAPI;
+	int resultCount = 1;
+	std::string argsToString = JSONHelpers::GetAkJsonString(result);
+
+	AkJson::Type type;
+	type = result[stringKey].GetType();
+	///Type is already AK Variant
+	if (type == AkJson::Type::Variant)
+	{
+		AkVariant variant = result[stringKey].GetVariant();
+		if (variant.IsString())
+		{
+			//push value into string results
+			std::string key = stringKey;
+			std::string value = variant.GetString();
+			INstringResults[key] = value;
+		}
+		else if (variant.IsNumber())
+		{
+			//push value into number results
+			std::string key = stringKey;
+			double value = variant.operator double();
+			INnumberResults[key] = value;
+		}
+		else if (variant.GetType() == 11)//Type is bool
+		{
+			std::string key = stringKey;
+			bool b_value = variant.GetBoolean();
+			std::string value = std::to_string(b_value);
+			INstringResults[key] = value;
+		}
+	}
+	else if (type == AK::WwiseAuthoringAPI::AkJson::Type::Map)
+	{
+		for (const auto x : result[stringKey].GetMap())
+		{
+			std::string first = x.first;
+			AkVariant variant = x.second.GetVariant();
+			if (variant.IsString())
+			{
+				//push value into string results
+				std::string key = first;
+				std::string value = variant.GetString();
+				INstringResults[key] = value;
+			}
+			else if (variant.IsNumber())
+			{
+				//push value into number results
+				std::string key = first;
+				double value = variant.operator double();
+				INnumberResults[key] = value;
+			}
+			else if (variant.GetType() == 11)//Type is bool
+			{
+				std::string key = stringKey;
+				bool b_value = variant.GetBoolean();
+				std::string value = std::to_string(b_value);
+				INstringResults[key] = value;
+			}
+		}
+	}
+	else if (type == AK::WwiseAuthoringAPI::AkJson::Type::Array)
+	{
+		///Not implemented
+	}
+	else
+	{
+		//"Ak retunr Type not found";
+	}
+
+	return false;
+}

@@ -255,51 +255,34 @@ void WwiseConnectionHandler::GetWwiseObjects(bool suppressOuputMessages, ObjectG
 	if (!suppressOuputMessages)
 	{
 		std::stringstream objectList;
-		objectList << "Using Generic Get Call....\n";
-		objectList << "Getting " + getargs.Select + " where " + getargs.Where[0] + " " + getargs.Where[1] + "\n";
+		objectList << "Getting Wwise Results....\n";
+		objectList << "Getting " + getargs.Select + " from " + getargs.From[0] +" "+getargs.From[1];
+		if (getargs.Where[0] != "")
+			objectList << " where " + getargs.Where[0] + " " + getargs.Where[1];
+		objectList << "\n";
 		int resultCount = 1;
+		// Data structs to hold string and number results in after translation. BOOL types get converted to strings
+		std::map<std::string, std::string> stringResults;
+		std::map<std::string, double> numberResults;
+
 		for (const auto &result : Results)
 		{
 			for (const auto &string : getargs.customReturnArgs)
 			{
 				if (result.HasKey(string))
 				{
-					objectList << "Result " + std::to_string(resultCount) + ": " + string + " = ";
-
-					using namespace AK::WwiseAuthoringAPI::JSONHelpers;
-					std::string argsToString = GetAkJsonString(result);
-
-					////// CLEAN THIS UP!!!
-					//// Need to handle the differnet AK types in the return results. Maybe write some helper functions for this......
-					/////
-					AK::WwiseAuthoringAPI::AkJson::Type type;
-					type = result[string].GetType();
-					if (type == AK::WwiseAuthoringAPI::AkJson::Type::Variant)
-						objectList << result[string].GetVariant().GetString();
-					else if (type == AK::WwiseAuthoringAPI::AkJson::Type::Map)
-						for (const auto x : result[string].GetMap())
-						{ 
-							objectList << x.first;// +" = " + x.second.GetVariant().GetString();
-							bool isString = x.second.GetVariant().IsString();
-							bool isNumber = x.second.GetVariant().IsNumber();
-							int variantType = x.second.GetVariant().GetType();
-							if (isString)
-							{
-								objectList << x.second.GetVariant().GetString();
-							}
-							if (isNumber)
-							{
-								objectList << x.second.GetVariant().operator double();
-							}
-						}
-
-					else if (type == AK::WwiseAuthoringAPI::AkJson::Type::Array)
-						objectList << "";// result[string].GetArray().operator[string];
-					else
-						objectList << "Ak Type not found";
-					objectList << "\n";
+					waapi_TranslateJSONResults(stringResults, numberResults, result, string);
 				}
-				
+			}
+			objectList << "Result " + std::to_string(resultCount) + ": " + "\n";
+
+			for (auto i : stringResults)
+			{
+				objectList << i.first + " = " + i.second + "\n";
+			}
+			for (auto i : numberResults)
+			{
+				objectList << i.first + " = " + std::to_string(i.second) + "\n";
 			}
 			resultCount++;
 		}
