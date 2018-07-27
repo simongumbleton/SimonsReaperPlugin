@@ -141,8 +141,10 @@ bool waapi_GetObjectFromArgs(ObjectGetArgs & getArgs, AK::WwiseAuthoringAPI::AkJ
 	else
 	{
 		AkVariant where0 = getArgs.Where[0];
-		//std::string s_where1 = getArgs.Where[1];	// When using name:contains AK complains about expecting a string type argument, but seemingly this args needs to be AkVariant???
+		std::string s_where1 = getArgs.Where[1];	// When using name:contains AK complains about expecting a string type argument, but seemingly this args needs to be AkVariant???
 		//AkVariant where1 = s_where1;
+		
+		//AkVariant where1 = AkVariant(s_where1);
 		AkVariant where1 = getArgs.Where[1];
 		int type = where1.GetType();
 
@@ -151,9 +153,25 @@ bool waapi_GetObjectFromArgs(ObjectGetArgs & getArgs, AK::WwiseAuthoringAPI::AkJ
 			{ "from", AkJson::Map{ { from0, AkJson::Array{ from1 } } } },
 			{ "transform",{ AkJson::Array
 			{ { AkJson::Map{ { "select",AkJson::Array{ { Akselect } } } } },
-			{ AkJson::Map{ { "where", AkJson::Array{ { where0,  AkJson::Array{ where1 } } } } } } }
+			{ AkJson::Map{ { "where", AkJson::Array{ { where0,  AkJson::Array{ where1 } } } } } } }		
 			} } });
 	}
+
+	////////// FIGURED IT OUT!!	///// Type needs array args, others just need a string!
+
+		//"where": [
+		//	"type:isIn",
+		//		[
+		//			"Sound"
+		//		]
+		//]
+
+		//"where": [
+		//	"name:matches",
+		//		"^my"
+		//]
+
+
 
 
 //	using namespace AK::WwiseAuthoringAPI::JSONHelpers;
