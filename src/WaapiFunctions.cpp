@@ -141,7 +141,12 @@ bool waapi_GetObjectFromArgs(ObjectGetArgs & getArgs, AK::WwiseAuthoringAPI::AkJ
 	else
 	{
 		AkVariant where0 = getArgs.Where[0];
+		//std::string s_where1 = getArgs.Where[1];	// When using name:contains AK complains about expecting a string type argument, but seemingly this args needs to be AkVariant???
+		//AkVariant where1 = s_where1;
 		AkVariant where1 = getArgs.Where[1];
+		int type = where1.GetType();
+
+		
 		args = (AkJson::Map{
 			{ "from", AkJson::Map{ { from0, AkJson::Array{ from1 } } } },
 			{ "transform",{ AkJson::Array
