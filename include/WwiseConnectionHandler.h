@@ -142,7 +142,8 @@ private:
 	////=============================================================================
 	////message processing function declarations
 	void handleUI_B_Connect();
-
+	void handleUI_B_CreateObject();
+	void handleUI_B_GetSelectedParent();
 	////non-message function declarations
 	////=============================================================================
 	void OnCommand(const HWND hwnd, int id, int notifycode, const HWND hCntrl);

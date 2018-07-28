@@ -198,6 +198,49 @@ bool waapi_GetObjectFromArgs(ObjectGetArgs & getArgs, AK::WwiseAuthoringAPI::AkJ
 	return my_client.Call(ak::wwise::core::object::get, args, options, results);;
 }
 
+bool waapi_CreateObjectFromArgs(CreateObjectArgs & createArgs, AK::WwiseAuthoringAPI::AkJson & results)
+{
+	using namespace AK::WwiseAuthoringAPI;
+	AkJson args;
+	args = (AkJson::Map{
+		{ "parent",AkVariant(createArgs.ParentID)},
+		{ "type", AkVariant("BlendContainer") },
+		{ "name", AkVariant("MyCreatedObject")},
+		{ "onNameConflict",AkVariant(createArgs.onNameConflict)},
+		{ "notes",AkVariant("Created by REAPER plugin")}
+		});
+
+	AkJson options;
+	AkJson result;
+	return my_client.Call(ak::wwise::core::object::create, args, options, result);
+}
+
+//////Copy from waapi transfer
+//bool WaapiImportItems(const AK::WwiseAuthoringAPI::AkJson::Array &items,
+//	AK::WwiseAuthoringAPI::Client &client,
+//	WAAPIImportOperation importOperation)
+//{
+//	using namespace AK::WwiseAuthoringAPI;
+//
+//	AkJson createArgs(AkJson::Map{
+//		{ "importOperation", AkVariant(GetImportOperationString(importOperation)) },
+//		{ "default", AkJson::Map{
+//			{ "importLanguage", AkVariant("SFX") }
+//		} },
+//		{ "imports", items }
+//		});
+//	AkJson result;
+//
+//	return client.Call(ak::wwise::core::audio::import, createArgs, AkJson(AkJson::Map()), result, 0);
+//}
+
+
+
+bool wappi_ImportFromArgs()
+{
+	return false;
+}
+
 void waapi_GetWaapiResultsArray(AK::WwiseAuthoringAPI::AkJson::Array & arrayIn, AK::WwiseAuthoringAPI::AkJson & results)
 {
 	using namespace AK::WwiseAuthoringAPI;

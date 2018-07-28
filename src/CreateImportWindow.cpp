@@ -97,6 +97,12 @@ void CreateImportWindow::OnCommand(const HWND hwnd, int id, int notifycode, cons
 	case IDC_B_ConnectWwise:
 		handleUI_B_Connect();
 		break;
+	case IDC_B_CreateObject:
+		handleUI_B_CreateObject();
+		break;
+	case IDC_B_GetSelectedParent:
+		handleUI_B_GetSelectedParent();
+		break;
 	case ID_B_CANCEL:    //ESC key pressed or 'cancel' button selected
 		EndDialog(hwnd, id);
 	}
@@ -142,6 +148,32 @@ void CreateImportWindow::handleUI_B_Connect()
 	{
 		SetDlgItemText(m_hWindow, IDC_WwiseConnection, "!!Wwise Connection Missing!!");
 	}
+}
+
+void CreateImportWindow::handleUI_B_CreateObject()
+{
+	PrintToConsole("Creating New Wwise Object");
+	CreateObjectArgs myCreateObjectArgs;
+
+	///Get the FROM text if not selected
+	char buffer[256];
+	GetDlgItemTextA(m_hWindow,IDC_ImportParent_ID, buffer, 256);
+	std::string s_parID = buffer;
+	myCreateObjectArgs.ParentID = s_parID;
+
+	AK::WwiseAuthoringAPI::AkJson results;
+
+	waapi_CreateObjectFromArgs(myCreateObjectArgs, results);
+}
+
+void CreateImportWindow::handleUI_B_GetSelectedParent()
+{
+	WwiseObject selectedParent = parentWwiseConnectionHnd->GetSelectedObject();
+	std::string parID = selectedParent.properties["id"];
+	std::string parNameType = selectedParent.properties["name"] + " (" + selectedParent.properties["type"] + ")";
+	SetDlgItemText(m_hWindow, IDC_ImportParent_ID, parID.c_str());
+	SetDlgItemText(m_hWindow, IDC_ImportParent_NameType, parNameType.c_str());
+
 }
 
 /// INIT ALL OPTIONS

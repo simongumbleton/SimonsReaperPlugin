@@ -26,6 +26,14 @@ struct ObjectGetArgs {	/// Init struct with some sensible defaults that can be e
 	bool fromSelected = false;
 };
 
+struct CreateObjectArgs {
+	std::string ParentID = "";
+	std::string Type = "";
+	std::string Name = "";
+	std::string onNameConflict = "merge";
+	std::string Notes = "";
+};
+
 /// Vectors to store GET choices
 struct GetObjectChoices {
 	std::vector<std::string> waapiGETchoices_FROM
@@ -92,6 +100,13 @@ struct CreateObjectChoices {
 	bool waapi_GetParentFromGUID(const AK::WwiseAuthoringAPI::AkVariant &id, AK::WwiseAuthoringAPI::AkJson &results);
 
 	bool waapi_GetObjectFromArgs(ObjectGetArgs & getArgs, AK::WwiseAuthoringAPI::AkJson & results);
+
+	///////////////////////////////
+	////    Create and Import
+	///////////////////////////////
+	bool waapi_CreateObjectFromArgs(CreateObjectArgs & createArgs, AK::WwiseAuthoringAPI::AkJson & results);
+
+	bool wappi_ImportFromArgs();
 
 	///////////////////////////////
 	////     Get the results array for calls to Waapi functions
