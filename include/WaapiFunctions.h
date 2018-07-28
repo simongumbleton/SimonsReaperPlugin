@@ -56,6 +56,22 @@ struct GetObjectChoices {
 	};
 };
 
+struct CreateObjectChoices {
+	std::vector<std::string> waapiCREATEchoices_TYPE
+	{
+		"ActorMixer","Blend", "Random", "Sequence", "Switch"
+	};
+	std::vector<std::string> waapiCREATEchoices_NAMECONFLICT
+	{
+		"merge","rename", "replace", "fail"
+	};
+	std::vector<std::string> waapiCREATEchoices_IMPORTOP
+	{
+		"useExisting","createNew", "replaceExisting"
+	};
+
+};
+
 	///////////////////////////////
 	////     Connect to wwise client
 	///////////////////////////////

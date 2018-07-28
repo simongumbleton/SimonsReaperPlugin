@@ -1,5 +1,5 @@
 #include <Wincodec.h>
-#include <Commctrl.h>
+
 
 #include "stdio.h"
 #include "stdlib.h"
@@ -39,7 +39,7 @@ WwiseConnectionHandler MyWwiseConnectionHandler;
 //actions
 gaccel_register_t action01 = { { 0, 0, 0 }, "Do action 01." };
 gaccel_register_t connectToWwise = { { 0, 0, 0 }, "Do action 02." };
-gaccel_register_t getSelectedObjects = { { 0, 0, 0 }, "Do action 03." };
+gaccel_register_t Transfer_To_Wwise = { { 0, 0, 0 }, "Do action 03." };
 
 //produces an error message during reaper startup
 //similar to SWS function ErrMsg in sws_extension.cpp
@@ -104,7 +104,7 @@ extern "C"
         int regerrcnt = 0;
         REGISTER_AND_CHKERROR(action01.accel.cmd, "command_id", "action01");
         REGISTER_AND_CHKERROR(connectToWwise.accel.cmd, "command_id", "action02");
-		REGISTER_AND_CHKERROR(getSelectedObjects.accel.cmd, "command_id", "action03");
+		REGISTER_AND_CHKERROR(Transfer_To_Wwise.accel.cmd, "command_id", "action03");
         if (regerrcnt)
         {
             StartupError("An error occured whilst initializing.\n"
@@ -115,7 +115,7 @@ extern "C"
         //register actions
         plugin_register("gaccel", &connectToWwise.accel);
         plugin_register("gaccel", &action01.accel);
-		plugin_register("gaccel", &getSelectedObjects.accel);
+		plugin_register("gaccel", &Transfer_To_Wwise.accel);
 
         rec->Register("hookcommand", (void*)HookCommandProc);
 
@@ -142,13 +142,10 @@ extern "C"
 			MENUITEMINFO mi = { sizeof(MENUITEMINFO), };
 			mi.fMask = MIIM_TYPE | MIIM_ID;
 			mi.fType = MFT_STRING;
-			mi.wID = getSelectedObjects.accel.cmd;
-			mi.dwTypeData = "Get Selected Objects";
+			mi.wID = Transfer_To_Wwise.accel.cmd;
+			mi.dwTypeData = "Transfer To Wwise";
 			InsertMenuItem(hMenu, 2, true, &mi);
 		}
-
-		// set up properties of our wwise connection handler
-		//MyWwiseConnectionHandler.MyCurrentWwiseConnection.port = WaapiPort;
 		
     }
 }
@@ -156,6 +153,8 @@ extern "C"
 
 bool HookCommandProc(int command, int flag)
 {
+	MyWwiseConnectionHandler.MyCurrentWwiseConnection.port = WaapiPort;
+	MyWwiseConnectionHandler.MyCurrentWwiseConnection.supressDebugOutput = supressMessagebox;
     if (command == action01.accel.cmd)
     {
 		doAction1();
@@ -163,18 +162,20 @@ bool HookCommandProc(int command, int flag)
     }
     if (command == connectToWwise.accel.cmd)
     {
-		MyWwiseConnectionHandler.MyCurrentWwiseConnection.port = WaapiPort;
-		MyWwiseConnectionHandler.MyCurrentWwiseConnection.supressDebugOutput = supressMessagebox;
-		if (!MyWwiseConnectionHandler.StartGUI(g_hInst))
+		if (!MyWwiseConnectionHandler.StartGUI_Get(g_hInst))
 		{
 			return false;
 		}
 		//MyWwiseConnectionHandler.ConnectToWwise(supressMessagebox, WaapiPort);
 		return true;
     }
-	if (command == getSelectedObjects.accel.cmd)
+	if (command == Transfer_To_Wwise.accel.cmd)
 	{
-		MyWwiseConnectionHandler.GetChildrenFromSelectedParent(supressMessagebox);
+		if (!MyWwiseConnectionHandler.StartGUI_Transfer(g_hInst))
+		{
+			return false;
+		}
+		//MyWwiseConnectionHandler.GetChildrenFromSelectedParent(supressMessagebox);
 		return true;
 	}
     return false;

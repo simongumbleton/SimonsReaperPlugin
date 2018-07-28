@@ -3,9 +3,9 @@
 // Used by SimonsReaperPlugin.rc
 //
 #define IDD_DIALOG1                     101
+#define IDD_Transfer                    108
 #define IDC_LIST1                       1001
 #define IDC_GetFrom_Uinput              1001
-#define IDC_COMBO1                      1002
 #define IDC_COMBO_GetFrom               1002
 #define ID_B_GO                         1005
 #define ID_B_CANCEL                     1006
@@ -17,14 +17,27 @@
 #define IDC_B_ConnectWwise              1015
 #define IDC_WwiseConnection             1016
 #define IDC_TREE1                       1017
+#define IDC_B_Tree                      1018
+#define ID_B_OK                         1029
+#define IDC_LIST_RenderImportQue        1801
+#define IDC_C_Create_Type               1803
+#define IDC_B_GetSelectedParent         1819
+#define IDC_ImportParent_ID             1820
+#define IDC_ImportParent_NameType       1821
+#define IDC_B_RenderImport              1823
+#define IDC_B_AddToImportList           1824
+#define IDC_text_CreateName             1825
+#define IDC_C_CreateOnNameConflict      1826
+#define IDC_Text_CreateNotes            1827
+#define IDC_B_CreateObject              1828
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        108
+#define _APS_NEXT_RESOURCE_VALUE        110
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1018
+#define _APS_NEXT_CONTROL_VALUE         1030
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

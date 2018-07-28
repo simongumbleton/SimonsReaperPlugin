@@ -11,6 +11,7 @@
 
 
 static PluginWindow myPluginWindow = PluginWindow();
+static CreateImportWindow myCreateImportWindow = CreateImportWindow();
 
 WwiseConnectionHandler::WwiseConnectionHandler()
 {
@@ -27,7 +28,7 @@ void WwiseConnectionHandler::ReportConnectionError(CurrentWwiseConnection attemp
 	PrintToConsole(errorLog);
 }
 
-bool WwiseConnectionHandler::StartGUI(HINSTANCE &myhInst)
+bool WwiseConnectionHandler::StartGUI_Get(HINSTANCE &myhInst)
 {
 	myPluginWindow.SetupPluginParent(this);
 
@@ -38,6 +39,21 @@ bool WwiseConnectionHandler::StartGUI(HINSTANCE &myhInst)
 	}
 	else
 	{	
+		return false;	// Somethig Failed in the window creation
+	};
+}
+
+bool WwiseConnectionHandler::StartGUI_Transfer(HINSTANCE &myhInst)
+{
+	myCreateImportWindow.SetupPluginParent(this);
+
+	if (myCreateImportWindow.CreateTransferWindow(myhInst, NULL, "Hello World", 0) == 0)
+	{
+
+		return true;
+	}
+	else
+	{
 		return false;	// Somethig Failed in the window creation
 	};
 }

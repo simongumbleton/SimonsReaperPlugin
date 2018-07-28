@@ -149,6 +149,9 @@
     <ClCompile Include="src\PluginWindow.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\CreateImportWindow.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="include\AkAutobahn\APACHE_LICENSE.txt">

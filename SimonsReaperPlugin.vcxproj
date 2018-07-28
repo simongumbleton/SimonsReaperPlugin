@@ -719,6 +719,7 @@
     <ClCompile Include="include\AkAutobahn\JSONHelpers.cpp" />
     <ClCompile Include="include\AkAutobahn\Logger.cpp" />
     <ClCompile Include="include\AkAutobahn\WebSocketClient.cpp" />
+    <ClCompile Include="src\CreateImportWindow.cpp" />
     <ClCompile Include="src\PluginWindow.cpp" />
     <ClCompile Include="src\SimonsReaperPlugin.cpp" />
     <ClCompile Include="src\WaapiFunctions.cpp" />

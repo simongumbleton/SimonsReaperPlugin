@@ -25,7 +25,9 @@ public:
 
 	CurrentWwiseConnection MyCurrentWwiseConnection;
 
-	bool StartGUI(HINSTANCE &myhInst);
+	bool StartGUI_Get(HINSTANCE &myhInst);
+
+	bool StartGUI_Transfer(HINSTANCE &myhInst);
 
 	bool handle_GUI_Connect();
 
@@ -50,15 +52,10 @@ class PluginWindow
 {
 	/////Try this approach from https://www.codeguru.com/cpp/w-d/dislog/win32/article.php/c5073/Creating-a-Reusable-Dialog-Class-without-MFC.htm
 
-
-
-
-
 public:
 
 	PluginWindow();
 	~PluginWindow();
-
 
 	static HWND m_hWindow;
 	static long m_lSaveThis;
@@ -103,6 +100,7 @@ private:
 	void handleUI_B_Connect();
 	void handleUI_B_GO();
 
+	void handleUI_B_WwiseTree();
 
 	/////Initialise dialogue boxes
 	bool init_ALL_OPTIONS(HWND hwnd);
@@ -112,6 +110,57 @@ private:
 	INT_PTR CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 };
 
+
+class CreateImportWindow
+{
+public:
+	CreateImportWindow();
+	~CreateImportWindow();
+
+	static HWND m_hWindow;
+	static long m_lSaveThis;
+	CreateImportWindow* saveThis;
+
+
+	static INT_PTR CALLBACK DialogProcStatic(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+
+	static WwiseConnectionHandler* parentWwiseConnectionHnd;
+
+	void SetupPluginParent(WwiseConnectionHandler *parent);
+
+	////=============================================================================
+	int CreateTransferWindow(HINSTANCE hInst, HINSTANCE, LPSTR, int);
+
+private:
+
+	HWND m_hParent;
+	int m_nResId;
+
+	CreateImportWindow* thisPluginWindow;
+
+
+	////=============================================================================
+	////message processing function declarations
+	void handleUI_B_Connect();
+
+	////non-message function declarations
+	////=============================================================================
+	void OnCommand(const HWND hwnd, int id, int notifycode, const HWND hCntrl);
+	////=============================================================================
+	INT_PTR OnInitDlg(const HWND hwnd, LPARAM lParam);
+	////=============================================================================
+	inline int ErrMsg(const std::string& s);
+
+	/////Handle the various UsI elements
+
+
+	/////Initialise dialogue boxes
+	bool init_ALL_OPTIONS(HWND hwnd);
+	bool init_ComboBox_A(HWND hwnd_combo, std::vector<std::string> choices);
+	bool init_ListBox_A(HWND hwnd_list, std::vector<std::string> choices);
+
+	INT_PTR CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+};
 
 
 

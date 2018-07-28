@@ -229,9 +229,9 @@ void waapi_GetWaapiResultsArray(AK::WwiseAuthoringAPI::AkJson::Array & arrayIn, 
 
 void waapi_HELPER_Print_AkJson_Array(AK::WwiseAuthoringAPI::AkJson::Array & printResults)
 {
-		using namespace AK::WwiseAuthoringAPI::JSONHelpers;
-		std::string argsToString = GetAkJsonString(printResults);
-		PrintToConsole(argsToString);
+	using namespace AK::WwiseAuthoringAPI::JSONHelpers;
+	std::string argsToString = GetAkJsonString(printResults);
+	PrintToConsole(argsToString);
 }
 
 void waapi_HELPER_Print_AkJson_Map(AK::WwiseAuthoringAPI::AkJson::Map & printResults)

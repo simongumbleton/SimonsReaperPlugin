@@ -21,6 +21,8 @@ std::vector<std::string> s_listBoxRETURN{};
 HWND buttonGO;
 HWND buttonConnect;
 HWND textConnectionStatus;
+HWND buttonTREE;
+HWND wwiseTree;
 
 GetObjectChoices myGetObjectChoices;
 
@@ -286,6 +288,11 @@ void PluginWindow::handleUI_B_GO()
 
 }
 
+void PluginWindow::handleUI_B_WwiseTree()
+{
+
+}
+
 /// INIT ALL OPTIONS
 
 bool PluginWindow::init_ALL_OPTIONS(HWND hwnd)
@@ -299,6 +306,8 @@ bool PluginWindow::init_ALL_OPTIONS(HWND hwnd)
 	buttonGO = GetDlgItem(hwnd, ID_B_GO);
 	buttonConnect = GetDlgItem(hwnd, IDC_B_ConnectWwise);
 	textConnectionStatus = GetDlgItem(hwnd, IDC_WwiseConnection);
+	buttonTREE = GetDlgItem(hwnd, IDC_B_Tree);
+	wwiseTree = GetDlgItem(hwnd, IDC_TREE1);
 		
 	
 	init_ComboBox_A(comboBoxFROM, myGetObjectChoices.waapiGETchoices_FROM);
