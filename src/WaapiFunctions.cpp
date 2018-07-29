@@ -201,39 +201,32 @@ bool waapi_GetObjectFromArgs(ObjectGetArgs & getArgs, AK::WwiseAuthoringAPI::AkJ
 bool waapi_CreateObjectFromArgs(CreateObjectArgs & createArgs, AK::WwiseAuthoringAPI::AkJson & results)
 {
 	using namespace AK::WwiseAuthoringAPI;
-	AkJson args;
+
+	//Check for missing inputs
+	if (createArgs.ParentID == "" || createArgs.Name == "" || createArgs.Type == "")
+	{
+		PrintToConsole("!ERROR! - One or more required inputs are missing from Create Objects call");
+		return false;
+	}
+
+	AkJson args; //"@RandomOrSequence"
 	args = (AkJson::Map{
 		{ "parent",AkVariant(createArgs.ParentID)},
-		{ "type", AkVariant("BlendContainer") },
-		{ "name", AkVariant("MyCreatedObject")},
+		{ "type", AkVariant(createArgs.Type) },
+		{ "name", AkVariant(createArgs.Name)},
 		{ "onNameConflict",AkVariant(createArgs.onNameConflict)},
-		{ "notes",AkVariant("Created by REAPER plugin")}
+		{ "notes",AkVariant(createArgs.Notes)}
 		});
 
-	AkJson options;
-	AkJson result;
-	return my_client.Call(ak::wwise::core::object::create, args, options, result);
+	if (createArgs.Type == "RandomSequenceContainer")
+	{
+		args.GetMap().insert(std::make_pair("@RandomOrSequence", AkVariant(createArgs.RandomOrSequence)));
+	}
+
+
+	AkJson options = AkJson(AkJson::Map());
+	return my_client.Call(ak::wwise::core::object::create, args, options, results,0);
 }
-
-//////Copy from waapi transfer
-//bool WaapiImportItems(const AK::WwiseAuthoringAPI::AkJson::Array &items,
-//	AK::WwiseAuthoringAPI::Client &client,
-//	WAAPIImportOperation importOperation)
-//{
-//	using namespace AK::WwiseAuthoringAPI;
-//
-//	AkJson createArgs(AkJson::Map{
-//		{ "importOperation", AkVariant(GetImportOperationString(importOperation)) },
-//		{ "default", AkJson::Map{
-//			{ "importLanguage", AkVariant("SFX") }
-//		} },
-//		{ "imports", items }
-//		});
-//	AkJson result;
-//
-//	return client.Call(ak::wwise::core::audio::import, createArgs, AkJson(AkJson::Map()), result, 0);
-//}
-
 
 
 bool wappi_ImportFromArgs()
@@ -257,6 +250,10 @@ void waapi_GetWaapiResultsArray(AK::WwiseAuthoringAPI::AkJson::Array & arrayIn, 
 		{
 			arrayIn = results["return"].GetArray();
 			return;
+		}
+		else if (results.HasKey("id") && (results.HasKey("name")))
+		{
+			arrayIn.push_back(results);
 		}
 		else
 		{

@@ -12,7 +12,9 @@ HWND tr_s_ImportParentID;
 HWND tr_s_ImportParentNameType;
 HWND tr_B_CreateObject;
 HWND tr_c_CreateType;
+std::string s_CreateType;
 HWND tr_c_CreateNameConflict;
+std::string s_CreateNameConflict;
 HWND tr_txt_CreateName;
 HWND tr_txt_CreateNotes;
 
@@ -161,9 +163,14 @@ void CreateImportWindow::handleUI_B_CreateObject()
 	std::string s_parID = buffer;
 	myCreateObjectArgs.ParentID = s_parID;
 
-	AK::WwiseAuthoringAPI::AkJson results;
 
-	waapi_CreateObjectFromArgs(myCreateObjectArgs, results);
+
+
+
+	AK::WwiseAuthoringAPI::AkJson::Array results;
+	parentWwiseConnectionHnd->CreateWwiseObjects(false,myCreateObjectArgs, results);
+
+	//waapi_CreateObjectFromArgs(myCreateObjectArgs, results);
 }
 
 void CreateImportWindow::handleUI_B_GetSelectedParent()

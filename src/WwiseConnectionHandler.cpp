@@ -92,45 +92,6 @@ bool WwiseConnectionHandler::ConnectToWwise(bool suppressOuputMessages, int port
 void WwiseConnectionHandler::GetSelectedWwiseObjects(bool suppressOuputMessages)
 {
 
-	if (!waapi_Connect(MyCurrentWwiseConnection))
-	{
-		/// WWise connection not found!
-		ReportConnectionError(MyCurrentWwiseConnection);
-		return;
-	}
-	PrintToConsole("Getting Selected Wwise Objects.......");
-	using namespace AK::WwiseAuthoringAPI;
-	AkJson RawReturnResults;
-	waapi_GetSelectedWwiseObjects(RawReturnResults, true);
-
-	AkJson::Array MyReturnResults;
-	waapi_GetWaapiResultsArray(MyReturnResults, RawReturnResults);
-
-	std::vector<WwiseObjectStruct> WwiseObjects;
-	int i = 0;
-	for (const auto &result : MyReturnResults)
-	{
-		WwiseObjectStruct obj;
-		obj.properties.insert(std::make_pair("id", result["id"].GetVariant().GetString()));
-		obj.properties.insert(std::make_pair("name", result["name"].GetVariant().GetString()));
-		obj.properties.insert(std::make_pair("type", result["type"].GetVariant().GetString()));
-		obj.properties.insert(std::make_pair("path", result["path"].GetVariant().GetString()));
-		WwiseObjects.push_back(obj);
-		i++;
-	}
-	if (!suppressOuputMessages)
-	{ 
-		std::stringstream objectList;
-		objectList << "Selected Wwise objects are........\n\n";
-		for (WwiseObjectStruct X : WwiseObjects)
-		{
-			objectList << X.properties["name"] + " of type " + X.properties["type"];
-			objectList << "\n";
-		}
-		std::string s_SelectedWwiseObjects = objectList.str();
-		//MessageBox(NULL, s_SelectedWwiseObjects.c_str(), "Wwise Objects Selected", MB_OK);
-		PrintToConsole(s_SelectedWwiseObjects);
-	}
 }
 
 WwiseObject WwiseConnectionHandler::GetSelectedObject()
@@ -165,84 +126,7 @@ WwiseObject WwiseConnectionHandler::GetSelectedObject()
 
 void WwiseConnectionHandler::GetChildrenFromSelectedParent(bool suppressOuputMessages)
 {
-	if (!waapi_Connect(MyCurrentWwiseConnection))
-	{
-		/// WWise connection not found!
-		ReportConnectionError(MyCurrentWwiseConnection);
-		return;
-	}
-	PrintToConsole("Getting Children of Selected Wwise Objects.......");
-	using namespace AK::WwiseAuthoringAPI;
-	AkJson RawReturnResults;
-	waapi_GetSelectedWwiseObjects(RawReturnResults, true);
 
-	AkJson::Array MyReturnResults;
-	waapi_GetWaapiResultsArray(MyReturnResults, RawReturnResults);
-
-	std::vector<WwiseObjectStruct> WwiseObjects;
-	int i = 0;
-	for (const auto &result : MyReturnResults)
-	{
-		WwiseObjectStruct obj;
-		obj.properties["id"] = result["id"].GetVariant().GetString();
-		WwiseObjects.push_back(obj);
-		i++;
-	}
-
-	ObjectGetArgs myGetArgs;
-	myGetArgs.Select = "children";
-	//myGetArgs.Where = { "type:isIn","Sound" };
-	myGetArgs.customReturnArgs = { "notes","","owner" };
-
-
-	std::vector<WwiseObjectStruct> WwiseChildren;
-
-	for (WwiseObjectStruct SelectedObject : WwiseObjects)
-	{
-		
-		myGetArgs.From = { "id", SelectedObject.properties["id"] };
-		AkJson::Array MyReturnResults;
-		GetWwiseObjects(true, myGetArgs, MyReturnResults);
-
-		//waapi_HELPER_Print_AkJson_Array(MyReturnResults);
-
-		for (const auto &result : MyReturnResults)
-		{
-
-			WwiseObjectStruct child;
-			child.properties.insert(std::make_pair("id", result["id"].GetVariant().GetString()));
-			child.properties.insert(std::make_pair("name", result["name"].GetVariant().GetString()));
-			child.properties.insert(std::make_pair("type", result["type"].GetVariant().GetString()));
-			child.properties.insert(std::make_pair("path", result["path"].GetVariant().GetString()));
-			for (std::string customReturnArg : myGetArgs.customReturnArgs)
-			{
-				if (customReturnArg != "") 
-				{
-					if (result.HasKey(customReturnArg.c_str()))
-					{
-						child.properties.insert(std::make_pair(customReturnArg.c_str(), result[customReturnArg].GetVariant().GetString()));
-					}
-					
-				}
-				
-			}
-			WwiseChildren.push_back(child);
-		}
-
-	}
-	if (!suppressOuputMessages)
-	{
-		std::stringstream objectList;
-		objectList << "Children of Selected Wwise objects are........\n\n";
-		for (WwiseObjectStruct X : WwiseChildren)
-		{
-			objectList << X.properties["name"] + " of type " + X.properties["type"];
-			objectList << "\n";
-		}
-		std::string s_ChildWwiseObjects = objectList.str();
-		//MessageBox(NULL, s_SelectedWwiseObjects.c_str(), "Wwise Objects Selected", MB_OK);
-		PrintToConsole(s_ChildWwiseObjects);
-	}
 }
 
 void WwiseConnectionHandler::GetWwiseObjects(bool suppressOuputMessages, ObjectGetArgs& getargs, AK::WwiseAuthoringAPI::AkJson::Array& Results)
@@ -263,10 +147,10 @@ void WwiseConnectionHandler::GetWwiseObjects(bool suppressOuputMessages, ObjectG
 	}
 
 	AkJson MoreRawReturnResults;
-	waapi_GetObjectFromArgs(getargs, MoreRawReturnResults);
-
-	waapi_GetWaapiResultsArray(Results, MoreRawReturnResults);
-
+	if (waapi_GetObjectFromArgs(getargs, MoreRawReturnResults))
+	{
+		waapi_GetWaapiResultsArray(Results, MoreRawReturnResults);
+	}
 
 	if (!suppressOuputMessages)
 	{
@@ -306,6 +190,45 @@ void WwiseConnectionHandler::GetWwiseObjects(bool suppressOuputMessages, ObjectG
 		std::string getResults = objectList.str();
 		PrintToConsole(getResults);
 	}
+}
+
+void WwiseConnectionHandler::CreateWwiseObjects(bool suppressOutputMessages, CreateObjectArgs & createArgs, AK::WwiseAuthoringAPI::AkJson::Array & Results)
+{
+	if (!waapi_Connect(MyCurrentWwiseConnection))
+	{
+		/// WWise connection not found!
+		ReportConnectionError(MyCurrentWwiseConnection);
+		return;
+	}
+	using namespace AK::WwiseAuthoringAPI;
+
+	//Sort the inputs  "ActorMixer","Blend", "Random", "Sequence", "Switch"			RandomOrSequence 0 or 1
+	if (createArgs.Type == "Blend")
+	{
+		createArgs.Type = "BlendContainer";
+	}
+	else if (createArgs.Type == "Switch")
+	{
+		createArgs.Type = "SwitchContainer";
+	}
+	else if (createArgs.Type == "Random")
+	{
+		createArgs.Type = "RandomSequenceContainer";
+		createArgs.RandomOrSequence = 0;
+	}
+	else if (createArgs.Type == "Sequence")
+	{
+		createArgs.Type = "RandomSequenceContainer";
+		createArgs.RandomOrSequence = 1;
+	}
+
+
+	AkJson MoreRawReturnResults;
+	if (waapi_CreateObjectFromArgs(createArgs, MoreRawReturnResults))
+	{
+		waapi_GetWaapiResultsArray(Results, MoreRawReturnResults);
+	}
+
 }
 
 

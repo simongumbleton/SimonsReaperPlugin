@@ -32,6 +32,7 @@ struct CreateObjectArgs {
 	std::string Name = "";
 	std::string onNameConflict = "merge";
 	std::string Notes = "";
+	int RandomOrSequence = 0;
 };
 
 /// Vectors to store GET choices

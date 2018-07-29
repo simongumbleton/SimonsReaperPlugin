@@ -41,12 +41,19 @@ public:
 
 	void GetWwiseObjects(bool suppressOuputMessages, ObjectGetArgs& getargs, AK::WwiseAuthoringAPI::AkJson::Array& Results);
 
+	void CreateWwiseObjects(bool suppressOutputMessages, CreateObjectArgs& createArgs, AK::WwiseAuthoringAPI::AkJson::Array& Results);
+
 
 private:
 
 	void ReportConnectionError(CurrentWwiseConnection attemptedConnection);
 
 };
+
+
+///////////////////////////////////
+/////Plugin Window - Implements Object GET
+//////////////////////////////////
 
 class PluginWindow
 {
@@ -110,6 +117,11 @@ private:
 	INT_PTR CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 };
 
+
+
+///////////////////////////////////
+/////Create Import Window - Implements Object Create and Import
+//////////////////////////////////
 
 class CreateImportWindow
 {
