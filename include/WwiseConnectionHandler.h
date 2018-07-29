@@ -156,6 +156,8 @@ private:
 	void handleUI_B_Connect();
 	void handleUI_B_CreateObject();
 	void handleUI_B_GetSelectedParent();
+	void handleUI_GetType(int notifCode);
+	void handleUI_GetNameConflict(int notifCode);
 	////non-message function declarations
 	////=============================================================================
 	void OnCommand(const HWND hwnd, int id, int notifycode, const HWND hCntrl);

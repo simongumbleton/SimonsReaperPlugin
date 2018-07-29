@@ -105,6 +105,12 @@ void CreateImportWindow::OnCommand(const HWND hwnd, int id, int notifycode, cons
 	case IDC_B_GetSelectedParent:
 		handleUI_B_GetSelectedParent();
 		break;
+	case IDC_C_Create_Type:
+		handleUI_GetType(notifycode);
+		break;
+	case IDC_C_CreateOnNameConflict:
+		handleUI_GetNameConflict(notifycode);
+		break;
 	case ID_B_CANCEL:    //ESC key pressed or 'cancel' button selected
 		EndDialog(hwnd, id);
 	}
@@ -157,12 +163,26 @@ void CreateImportWindow::handleUI_B_CreateObject()
 	PrintToConsole("Creating New Wwise Object");
 	CreateObjectArgs myCreateObjectArgs;
 
-	///Get the FROM text if not selected
+	handleUI_GetType(1);
+	handleUI_GetNameConflict(1);
+
+	///Get the par ID text
 	char buffer[256];
+
 	GetDlgItemTextA(m_hWindow,IDC_ImportParent_ID, buffer, 256);
 	std::string s_parID = buffer;
 	myCreateObjectArgs.ParentID = s_parID;
 
+	GetDlgItemTextA(m_hWindow, IDC_text_CreateName, buffer, 256);
+	std::string s_name = buffer;
+	myCreateObjectArgs.Name = s_name;
+
+	GetDlgItemTextA(m_hWindow, IDC_Text_CreateNotes, buffer, 256);
+	std::string s_notes = buffer;
+	myCreateObjectArgs.Notes = s_notes;
+
+	myCreateObjectArgs.Type = s_CreateType;
+	myCreateObjectArgs.onNameConflict = s_CreateNameConflict;
 
 
 
@@ -181,6 +201,34 @@ void CreateImportWindow::handleUI_B_GetSelectedParent()
 	SetDlgItemText(m_hWindow, IDC_ImportParent_ID, parID.c_str());
 	SetDlgItemText(m_hWindow, IDC_ImportParent_NameType, parNameType.c_str());
 
+}
+
+void CreateImportWindow::handleUI_GetType(int notifCode)
+{
+	int x = 0;
+	switch (notifCode)
+	{
+	case CBN_SELCHANGE:
+		x = SendMessage(tr_c_CreateType, CB_GETCURSEL, 0, 0);
+		s_CreateType = myCreateChoices.waapiCREATEchoices_TYPE[x];
+		break;
+	default:
+		break;
+	}
+}
+
+void CreateImportWindow::handleUI_GetNameConflict(int notifCode)
+{
+	int x = 0;
+	switch (notifCode)
+	{
+	case CBN_SELCHANGE:
+		x = SendMessage(tr_c_CreateNameConflict, CB_GETCURSEL, 0, 0);
+		s_CreateNameConflict = myCreateChoices.waapiCREATEchoices_NAMECONFLICT[x];
+		break;
+	default:
+		break;
+	}
 }
 
 /// INIT ALL OPTIONS
