@@ -89,9 +89,9 @@ bool WwiseConnectionHandler::ConnectToWwise(bool suppressOuputMessages, int port
 	}
 }
 
-void WwiseConnectionHandler::GetSelectedWwiseObjects(bool suppressOuputMessages)
+bool WwiseConnectionHandler::GetSelectedWwiseObjects(bool suppressOuputMessages)
 {
-
+	return false;
 }
 
 WwiseObject WwiseConnectionHandler::GetSelectedObject()
@@ -105,7 +105,13 @@ WwiseObject WwiseConnectionHandler::GetSelectedObject()
 	}
 	using namespace AK::WwiseAuthoringAPI;
 	AkJson RawReturnResults;
-	waapi_GetSelectedWwiseObjects(RawReturnResults, true);
+
+	if (!waapi_GetSelectedWwiseObjects(RawReturnResults, true))
+	{
+		//Something went wrong!
+		PrintToConsole("ERROR. Get Selected Object Call Failed. Exiting.");
+		return mySelectedObject;
+	}
 
 	AkJson::Array MyReturnResults;
 	waapi_GetWaapiResultsArray(MyReturnResults, RawReturnResults);
@@ -129,13 +135,13 @@ void WwiseConnectionHandler::GetChildrenFromSelectedParent(bool suppressOuputMes
 
 }
 
-void WwiseConnectionHandler::GetWwiseObjects(bool suppressOuputMessages, ObjectGetArgs& getargs, AK::WwiseAuthoringAPI::AkJson::Array& Results)
+bool WwiseConnectionHandler::GetWwiseObjects(bool suppressOuputMessages, ObjectGetArgs& getargs, AK::WwiseAuthoringAPI::AkJson::Array& Results)
 {
 	if (!waapi_Connect(MyCurrentWwiseConnection))
 	{
 		/// WWise connection not found!
 		ReportConnectionError(MyCurrentWwiseConnection);
-		return;
+		return false;
 	}
 	using namespace AK::WwiseAuthoringAPI;
 
@@ -147,10 +153,13 @@ void WwiseConnectionHandler::GetWwiseObjects(bool suppressOuputMessages, ObjectG
 	}
 
 	AkJson MoreRawReturnResults;
-	if (waapi_GetObjectFromArgs(getargs, MoreRawReturnResults))
+	if (!waapi_GetObjectFromArgs(getargs, MoreRawReturnResults))
 	{
-		waapi_GetWaapiResultsArray(Results, MoreRawReturnResults);
+		//Something went wrong!
+		PrintToConsole("ERROR. Get Object Call Failed. Exiting.");
+		return false;
 	}
+	waapi_GetWaapiResultsArray(Results, MoreRawReturnResults);
 
 	if (!suppressOuputMessages)
 	{
@@ -190,15 +199,16 @@ void WwiseConnectionHandler::GetWwiseObjects(bool suppressOuputMessages, ObjectG
 		std::string getResults = objectList.str();
 		PrintToConsole(getResults);
 	}
+	return true;
 }
 
-void WwiseConnectionHandler::CreateWwiseObjects(bool suppressOutputMessages, CreateObjectArgs & createArgs, AK::WwiseAuthoringAPI::AkJson::Array & Results)
+bool WwiseConnectionHandler::CreateWwiseObjects(bool suppressOutputMessages, CreateObjectArgs & createArgs, AK::WwiseAuthoringAPI::AkJson::Array & Results)
 {
 	if (!waapi_Connect(MyCurrentWwiseConnection))
 	{
 		/// WWise connection not found!
 		ReportConnectionError(MyCurrentWwiseConnection);
-		return;
+		return false;
 	}
 	using namespace AK::WwiseAuthoringAPI;
 
@@ -222,13 +232,21 @@ void WwiseConnectionHandler::CreateWwiseObjects(bool suppressOutputMessages, Cre
 		createArgs.RandomOrSequence = 1;
 	}
 
+	waapi_UndoHandler(Begin, "Create Object");
 
 	AkJson MoreRawReturnResults;
-	if (waapi_CreateObjectFromArgs(createArgs, MoreRawReturnResults))
+	if (!waapi_CreateObjectFromArgs(createArgs, MoreRawReturnResults))
 	{
-		waapi_GetWaapiResultsArray(Results, MoreRawReturnResults);
+		//Something went wrong!
+		PrintToConsole("ERROR. Create Object Call Failed. Exiting.");
+		waapi_UndoHandler(Cancel, "Create Object");
+		return false;
 	}
+	waapi_GetWaapiResultsArray(Results, MoreRawReturnResults);
 
+	waapi_UndoHandler(End, "Create Object");
+	waapi_SaveWwiseProject();	
+	return true;
 }
 
 

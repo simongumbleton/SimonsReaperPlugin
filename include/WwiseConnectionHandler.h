@@ -33,15 +33,15 @@ public:
 
 	bool ConnectToWwise(bool suppressOuputMessages, int port);
 
-	void GetSelectedWwiseObjects(bool suppressOuputMessages);
+	bool GetSelectedWwiseObjects(bool suppressOuputMessages);
 
 	WwiseObject GetSelectedObject();
 
 	void GetChildrenFromSelectedParent(bool suppressOuputMessages);
 
-	void GetWwiseObjects(bool suppressOuputMessages, ObjectGetArgs& getargs, AK::WwiseAuthoringAPI::AkJson::Array& Results);
+	bool GetWwiseObjects(bool suppressOuputMessages, ObjectGetArgs& getargs, AK::WwiseAuthoringAPI::AkJson::Array& Results);
 
-	void CreateWwiseObjects(bool suppressOutputMessages, CreateObjectArgs& createArgs, AK::WwiseAuthoringAPI::AkJson::Array& Results);
+	bool CreateWwiseObjects(bool suppressOutputMessages, CreateObjectArgs& createArgs, AK::WwiseAuthoringAPI::AkJson::Array& Results);
 
 
 private:

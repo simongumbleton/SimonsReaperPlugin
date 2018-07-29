@@ -188,7 +188,11 @@ void CreateImportWindow::handleUI_B_CreateObject()
 
 
 	AK::WwiseAuthoringAPI::AkJson::Array results;
-	parentWwiseConnectionHnd->CreateWwiseObjects(false,myCreateObjectArgs, results);
+	if (!parentWwiseConnectionHnd->CreateWwiseObjects(false, myCreateObjectArgs, results))
+	{
+		//ERROR
+		return;
+	}
 
 	//waapi_CreateObjectFromArgs(myCreateObjectArgs, results);
 }

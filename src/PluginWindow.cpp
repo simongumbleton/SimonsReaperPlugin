@@ -284,7 +284,11 @@ void PluginWindow::handleUI_B_GO()
 
 	AK::WwiseAuthoringAPI::AkJson::Array results;
 
-	parentWwiseConnectionHnd->GetWwiseObjects(false, getArgsFromGUI, results);
+	if (!parentWwiseConnectionHnd->GetWwiseObjects(false, getArgsFromGUI, results))
+	{
+		//ERROR
+		return;
+	}
 
 }
 

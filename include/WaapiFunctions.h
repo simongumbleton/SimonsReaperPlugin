@@ -33,7 +33,10 @@ struct CreateObjectArgs {
 	std::string onNameConflict = "merge";
 	std::string Notes = "";
 	int RandomOrSequence = 0;
+	std::string language = "SFX";
 };
+
+enum undoStep {Begin = 0,End = 1,Cancel = 2};
 
 /// Vectors to store GET choices
 struct GetObjectChoices {
@@ -68,7 +71,7 @@ struct GetObjectChoices {
 struct CreateObjectChoices {
 	std::vector<std::string> waapiCREATEchoices_TYPE
 	{
-		"ActorMixer","Blend", "Random", "Sequence", "Switch"
+		"ActorMixer","Blend", "Random", "Sequence", "Switch","Sound","Voice"
 	};
 	std::vector<std::string> waapiCREATEchoices_NAMECONFLICT
 	{
@@ -125,4 +128,14 @@ struct CreateObjectChoices {
 	////     Helper function to Get the Results arrays in a more useful way than AkJson
 	///////////////////////////////
 	bool waapi_TranslateJSONResults(std::map<std::string,std::string> &INstringResults, std::map<std::string, double> &INnumberResults, AK::WwiseAuthoringAPI::AkJson result, std::string stringKey);
+
+
+	///////////////////////////////
+	////     Project Save, Undo, Open etc
+	///////////////////////////////
+	bool waapi_SaveWwiseProject();
+
+	bool waapi_OpenWwiseProject(std::string proj);
+
+	bool waapi_UndoHandler(undoStep undoStep, std::string undoTag);
 

@@ -214,8 +214,9 @@ bool waapi_CreateObjectFromArgs(CreateObjectArgs & createArgs, AK::WwiseAuthorin
 		{ "parent",AkVariant(createArgs.ParentID)},
 		{ "type", AkVariant(createArgs.Type) },
 		{ "name", AkVariant(createArgs.Name)},
-		{ "onNameConflict",AkVariant(createArgs.onNameConflict)},
-		{ "notes",AkVariant(createArgs.Notes)}
+		{ "onNameConflict", AkVariant(createArgs.onNameConflict)},
+		{ "notes", AkVariant(createArgs.Notes)},
+		//{ "@Volume", AkVariant(-6)}	// Add properties like this
 		});
 
 	if (createArgs.Type == "RandomSequenceContainer")
@@ -353,5 +354,44 @@ bool waapi_TranslateJSONResults(std::map<std::string,std::string>& INstringResul
 		//"Ak retunr Type not found";
 	}
 
+	return false;
+}
+
+bool waapi_SaveWwiseProject()
+{
+	using namespace AK::WwiseAuthoringAPI;
+	AkJson in;
+	AkJson out;
+	AkJson res;
+	return my_client.Call(ak::wwise::core::project::save, in, out, res, 0);
+}
+
+bool waapi_OpenWwiseProject(std::string proj)
+{
+	return false;
+}
+
+bool waapi_UndoHandler(undoStep undoStep, std::string undoTag)
+{
+	using namespace AK::WwiseAuthoringAPI;
+	AkJson in = AkJson(AkJson::Map());
+	AkJson akj_undoTag = AkJson(AkJson::Map{ {"displayName", AkVariant(undoTag)} });
+	AkJson out = AkJson(AkJson::Map());
+	AkJson res = AkJson(AkJson::Map());
+	std::string s_res;
+	switch (undoStep)
+	{
+	case Begin:
+		return my_client.Call(ak::wwise::core::undo::beginGroup, in, out, res, 0);
+		break;
+	case End:
+		return my_client.Call(ak::wwise::core::undo::endGroup, akj_undoTag, out, res, 0);
+		break;
+	case Cancel:
+		return my_client.Call(ak::wwise::core::undo::cancelGroup, in, out, res, 0);
+		break;
+	default:
+		break;
+	}
 	return false;
 }
