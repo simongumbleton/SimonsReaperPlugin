@@ -16,3 +16,7 @@ bool HookCommandProc(int command, int flag);
 void doAction1();
 
 void PrintToConsole(std::string text);
+
+std::string GetReaperResourcePath();
+
+std::string GetCurrentReaperProject();

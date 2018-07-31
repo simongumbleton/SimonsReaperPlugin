@@ -305,6 +305,7 @@
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;VALIDATE_WAMP;USE_WEBSOCKET;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR="Debug";SimonsReaperPlugin_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <AdditionalIncludeDirectories>$(SolutionDir)\include;%(AdditionalIncludeDirectories);C:\Program Files (x86)\Audiokinetic\Wwise 2017.2.1.6524\SDK\include</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;VALIDATE_WAMP;USE_WEBSOCKET;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"Debug\";SimonsReaperPlugin_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -345,6 +346,7 @@
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;VALIDATE_WAMP;USE_WEBSOCKET;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR="Debug";SimonsReaperPlugin_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <AdditionalIncludeDirectories>$(SolutionDir)\include;%(AdditionalIncludeDirectories);C:\Program Files (x86)\Audiokinetic\Wwise 2017.2.1.6524\SDK\include</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;VALIDATE_WAMP;USE_WEBSOCKET;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"Debug\";SimonsReaperPlugin_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -721,6 +723,7 @@
     <ClCompile Include="include\AkAutobahn\WebSocketClient.cpp" />
     <ClCompile Include="src\CreateImportWindow.cpp" />
     <ClCompile Include="src\PluginWindow.cpp" />
+    <ClCompile Include="src\ReaperRenderQueParser.cpp" />
     <ClCompile Include="src\SimonsReaperPlugin.cpp" />
     <ClCompile Include="src\WaapiFunctions.cpp" />
     <ClCompile Include="src\WwiseConnectionHandler.cpp" />
@@ -750,6 +753,7 @@
     <ClInclude Include="include\rapidjson\reader.h" />
     <ClInclude Include="include\rapidjson\stringbuffer.h" />
     <ClInclude Include="include\rapidjson\writer.h" />
+    <ClInclude Include="include\ReaperRenderQueParser.h" />
     <ClInclude Include="include\resource.h" />
     <ClInclude Include="include\SimonsReaperPlugin.h" />
     <ClInclude Include="include\reaper_plugin.h" />

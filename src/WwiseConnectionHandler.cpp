@@ -3,11 +3,12 @@
 #include <sstream>
 #include <vector>
 
-
 #include "WwiseConnectionHandler.h"
 
 #include "SimonsReaperPlugin.h"
 #include "PluginWindow.h"
+
+#include "ReaperRenderQueParser.h"
 
 
 static PluginWindow myPluginWindow = PluginWindow();
@@ -31,6 +32,8 @@ void WwiseConnectionHandler::ReportConnectionError(CurrentWwiseConnection attemp
 bool WwiseConnectionHandler::StartGUI_Get(HINSTANCE &myhInst)
 {
 	myPluginWindow.SetupPluginParent(this);
+
+	TestReadRenderQue();
 
 	if (myPluginWindow.CreatePluginWindow(myhInst, NULL, "Hello World", 0) == 0)
 	{

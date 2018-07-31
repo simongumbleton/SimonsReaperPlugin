@@ -26,6 +26,7 @@
 HWND g_parentWindow;
 HINSTANCE g_hInst;
 char reaperProjectName[256];
+std::string reaperResourcePath;
 int WaapiPort = 8095;
 
 char currentProject[256];
@@ -155,6 +156,7 @@ bool HookCommandProc(int command, int flag)
 {
 	MyWwiseConnectionHandler.MyCurrentWwiseConnection.port = WaapiPort;
 	MyWwiseConnectionHandler.MyCurrentWwiseConnection.supressDebugOutput = supressMessagebox;
+	GetReaperGlobals();
     if (command == action01.accel.cmd)
     {
 		doAction1();
@@ -198,13 +200,25 @@ void PrintToConsole(std::string text)
 	}
 }
 
+std::string GetReaperResourcePath()
+{
+	return GetResourcePath();
+}
 
+std::string GetCurrentReaperProject()
+{
+	char projName[256];
+	EnumProjects(-1, currentProject, MAX_PATH);
+	GetProjectName(EnumProjects(-1, nullptr, 0), projName, 256);
+	return std::string(projName);
+}
 
 void GetReaperGlobals()
 {
 	//get open project and compare
 	EnumProjects(-1, currentProject, MAX_PATH);
 	GetProjectName(EnumProjects(-1, nullptr, 0), reaperProjectName, 256);
+	reaperResourcePath = GetResourcePath();
 }
 
 
