@@ -62,7 +62,7 @@ void ParseRenderQueFile(string pathToQueFile)
 	file.open(pathToQueFile);
 	/// Looking for QUEUED_RENDER_OUTFILE
 	string line;
-
+	
 	getline(file, line);	//Read the first line here, its always <REAPER_PROJECT 0.1 "5.92/x64" 1532979245 or similar
 
 	while (!done && getline(file, line))
@@ -70,16 +70,21 @@ void ParseRenderQueFile(string pathToQueFile)
 		stringstream tkns(line);
 		if (line.find("QUEUED_RENDER_OUTFILE") != line.npos)
 		{
-			string word;
-			while (tkns >> word)
+			string word = line;
+			if (word.find(".wav") != line.npos)
 			{
-				if (word.find(".wav") != line.npos)
-				{
-					//Found a render output file!
-					word.erase(std::remove(word.begin(), word.end(), '"'), word.end());	// Removing "" from the result
-					RenderFiles.push_back(word);
-					//PrintToConsole(line);
-				}
+				//Found a render output file!
+				// --- /////   word.erase(std::remove(word.begin(), word.end(), '"'), word.end());	// Removing "" from the result
+				char input[256];
+				strcpy(input, word.c_str());
+				char* start = strchr(input, '\"')+1;
+				char* end = strrchr(input, '\"');
+				string sStart(start);
+				string sEnd(end);
+				size_t eraseFrom = sStart.find(sEnd);
+				sStart.erase(eraseFrom, sStart.npos);
+				RenderFiles.push_back(sStart);
+				//PrintToConsole(line);
 			}
 		}
 		else
