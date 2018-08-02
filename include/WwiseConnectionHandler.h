@@ -13,9 +13,16 @@ typedef struct WwiseObjectStruct
 	std::map<std::string, std::string> properties;
 } WwiseObject;
 
-class WwiseConnectionHandler
+struct RenderQueJob
 {
-	
+	std::string RenderQueFilePath;
+	WwiseObject parentWwiseObject;
+	std::vector<std::string> RenderQueJobFileList;
+	std::string ParentReaperProject;
+};
+
+class WwiseConnectionHandler
+{	
 
 public:
 	WwiseConnectionHandler();
@@ -173,6 +180,8 @@ private:
 	bool init_ALL_OPTIONS(HWND hwnd);
 	bool init_ComboBox_A(HWND hwnd_combo, std::vector<std::string> choices);
 	bool init_ListBox_A(HWND hwnd_list, std::vector<std::string> choices);
+
+	void FillRenderQueList();
 
 	INT_PTR CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 };

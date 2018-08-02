@@ -33,8 +33,6 @@ bool WwiseConnectionHandler::StartGUI_Get(HINSTANCE &myhInst)
 {
 	myPluginWindow.SetupPluginParent(this);
 
-	TestReadRenderQue();
-
 	if (myPluginWindow.CreatePluginWindow(myhInst, NULL, "Hello World", 0) == 0)
 	{
 		
