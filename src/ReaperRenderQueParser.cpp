@@ -50,6 +50,89 @@ void TestReadRenderQue()
 	}
 }
 
+std::vector<std::string> GetListOfRenderQues()
+{
+	string resourcePath = GetReaperResourcePath();
+	string QrenderPath = resourcePath + "\\QueuedRenders";
+	std::vector<string> renderQueFiles;
+
+	for (const auto & p : filesystem::directory_iterator(QrenderPath))
+	{
+		filesystem::path resourceFile = p.path();
+		string s_resourceFile = resourceFile.string();
+		if (s_resourceFile.find(".rpp") != s_resourceFile.npos)
+		{
+			renderQueFiles.push_back(s_resourceFile);
+		}
+	}
+	return renderQueFiles;
+}
+
+RenderQueJob CreateRenderQueJobFromRenderQueFile(std::string pathToQueFile)
+{
+	RenderQueJob myRenderQueJob;
+	std::vector<string> RenderFiles;
+	string RPPfile;
+	bool done = false;
+	ifstream file;
+	file.open(pathToQueFile);
+	if (file.good())
+	{
+		/// Looking for QUEUED_RENDER_OUTFILE
+		string line;
+		getline(file, line);	//Read the first line here, its always <REAPER_PROJECT 0.1 "5.92/x64" 1532979245 or similar
+		while (!done && getline(file, line))
+		{
+			stringstream tkns(line);
+			if (line.find("QUEUED_RENDER_OUTFILE") != line.npos)
+			{
+				string word = line;
+				if (word.find(".wav") != line.npos)
+				{
+					//Found a render output file!
+					// --- /////   word.erase(std::remove(word.begin(), word.end(), '"'), word.end());	// Removing "" from the result
+					char input[256];
+					strcpy(input, word.c_str());
+					char* start = strchr(input, '\"') + 1;
+					char* end = strrchr(input, '\"');
+					string sStart(start);
+					string sEnd(end);
+					size_t eraseFrom = sStart.find(sEnd);
+					sStart.erase(eraseFrom, sStart.npos);
+					RenderFiles.push_back(sStart);
+					//PrintToConsole(line);
+				}
+			}
+			else
+			{
+				if (line.find("QUEUED_RENDER_ORIGINAL_FILENAME") != line.npos)
+				{
+					string rppfile;
+					while (tkns >> rppfile)
+					{
+						if (rppfile.find(".rpp") != line.npos)
+						{
+							RPPfile = rppfile;
+						}
+					}
+				}
+				else { done = true; break; }
+			}
+		}
+
+	}
+	else
+	{
+		PrintToConsole("Error opening render que file: " + pathToQueFile);
+		return myRenderQueJob;
+	}
+
+	myRenderQueJob.RenderQueFilePath = pathToQueFile;
+	myRenderQueJob.RenderQueJobFileList = RenderFiles;
+	
+	return myRenderQueJob;
+}
+
 
 void ParseRenderQueFile(string pathToQueFile)
 {

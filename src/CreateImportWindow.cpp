@@ -3,6 +3,7 @@
 #include "resource.h"
 #include "PluginWindow.h"
 #include "SimonsReaperPlugin.h"
+#include "ReaperRenderQueParser.h"
 
 ///Handles to UI elements
 HWND tr_buttonConnect;
@@ -23,6 +24,9 @@ CreateObjectChoices myCreateChoices;
 HWND CreateImportWindow::m_hWindow = NULL;
 long CreateImportWindow::m_lSaveThis = 0;
 WwiseConnectionHandler* CreateImportWindow::parentWwiseConnectionHnd = NULL;
+
+std::vector<RenderQueJob> GlobalListOfRenderQueJobs;
+
 
 
 //=============================================================================
@@ -253,6 +257,8 @@ bool CreateImportWindow::init_ALL_OPTIONS(HWND hwnd)
 	init_ComboBox_A(tr_c_CreateType, myCreateChoices.waapiCREATEchoices_TYPE);
 	init_ComboBox_A(tr_c_CreateNameConflict, myCreateChoices.waapiCREATEchoices_NAMECONFLICT);
 
+	FillRenderQueList();
+
 	return true;
 }
 
@@ -278,4 +284,23 @@ bool CreateImportWindow::init_ListBox_A(HWND hwnd_list, std::vector<std::string>
 		i++;
 	}
 	return true;
+}
+
+
+void CreateImportWindow::FillRenderQueList()	
+{
+	std::vector<std::string> ListOfRenderQueFiles;
+	ListOfRenderQueFiles = GetListOfRenderQues();
+
+	for (auto RenderQueFile : ListOfRenderQueFiles)
+	{
+		RenderQueJob MyrenderQueJob = CreateRenderQueJobFromRenderQueFile(RenderQueFile);
+		if (!MyrenderQueJob.RenderQueJobFileList.empty())
+		{
+			GlobalListOfRenderQueJobs.push_back(MyrenderQueJob);
+		}
+	}
+	//// Next steps, use this data to fill the list box to display each render job
+	// IDC_LIST_RenderImportQue
+	//// Then, use Wwise set parent funtion to define a wwise parent for the selected render jobs
 }
