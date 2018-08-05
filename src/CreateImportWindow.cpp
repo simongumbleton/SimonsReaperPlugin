@@ -18,6 +18,8 @@ HWND tr_c_CreateNameConflict;
 std::string s_CreateNameConflict;
 HWND tr_txt_CreateName;
 HWND tr_txt_CreateNotes;
+HWND tr_Tree_RenderJobTree;
+HWND tr_Progress_Import;
 
 CreateObjectChoices myCreateChoices;
 
@@ -209,6 +211,8 @@ void CreateImportWindow::handleUI_B_GetSelectedParent()
 	SetDlgItemText(m_hWindow, IDC_ImportParent_ID, parID.c_str());
 	SetDlgItemText(m_hWindow, IDC_ImportParent_NameType, parNameType.c_str());
 
+	HandleUI_SetParentForRenderJob(selectedParent);
+
 }
 
 void CreateImportWindow::handleUI_GetType(int notifCode)
@@ -253,6 +257,8 @@ bool CreateImportWindow::init_ALL_OPTIONS(HWND hwnd)
 	tr_c_CreateNameConflict = GetDlgItem(hwnd, IDC_C_CreateOnNameConflict);
 	tr_txt_CreateName = GetDlgItem(hwnd, IDC_text_CreateName);
 	tr_txt_CreateNotes = GetDlgItem(hwnd, IDC_Text_CreateNotes);
+	tr_Tree_RenderJobTree = GetDlgItem(hwnd, IDC_TREE_RenderJobTree);
+	tr_Progress_Import = GetDlgItem(hwnd, IDC_PROGRESS_Import);
 
 	init_ComboBox_A(tr_c_CreateType, myCreateChoices.waapiCREATEchoices_TYPE);
 	init_ComboBox_A(tr_c_CreateNameConflict, myCreateChoices.waapiCREATEchoices_NAMECONFLICT);
@@ -289,6 +295,7 @@ bool CreateImportWindow::init_ListBox_A(HWND hwnd_list, std::vector<std::string>
 
 void CreateImportWindow::FillRenderQueList()	
 {
+	GlobalListOfRenderQueJobs.clear();
 	std::vector<std::string> ListOfRenderQueFiles;
 	ListOfRenderQueFiles = GetListOfRenderQues();
 
@@ -303,4 +310,93 @@ void CreateImportWindow::FillRenderQueList()
 	//// Next steps, use this data to fill the list box to display each render job
 	// IDC_LIST_RenderImportQue
 	//// Then, use Wwise set parent funtion to define a wwise parent for the selected render jobs
+
+	UpdateRenderJob_TreeView();
+
+}
+
+void CreateImportWindow::UpdateRenderJob_TreeView()
+{
+	for (auto RenderJob : GlobalListOfRenderQueJobs)
+	{
+
+		TV_INSERTSTRUCT tvInsert;
+		HTREEITEM Parent;
+		HTREEITEM Child;
+
+		tvInsert.hParent = NULL;
+		tvInsert.hInsertAfter = TVI_ROOT;
+		tvInsert.item.mask = TVIF_TEXT;	// tvinsert.item.mask=TVIF_TEXT|TVIF_IMAGE|TVIF_SELECTEDIMAGE;
+		tvInsert.item.pszText = &RenderJob.RenderQueFilePath[0];	//(LPARAM)choice.c_str()
+		Parent = (HTREEITEM)SendDlgItemMessage(m_hWindow, IDC_TREE_RenderJobTree, TVM_INSERTITEM, 0, (LPARAM)&tvInsert);
+
+		//Children = WAV files in this render que job
+		for (auto renderFile : RenderJob.RenderQueJobFileList)
+		{
+			tvInsert.hParent = Parent;
+			tvInsert.hInsertAfter = TVI_LAST;
+			tvInsert.item.pszText = &renderFile[0];
+			Child = (HTREEITEM)SendDlgItemMessage(m_hWindow, IDC_TREE_RenderJobTree, TVM_INSERTITEM, 0, (LPARAM)&tvInsert);
+		}
+
+
+	}
+
+}
+
+
+void CreateImportWindow::HandleUI_SetParentForRenderJob(WwiseObject selectedParent)
+{
+	std::string parentWwiseID = selectedParent.properties["id"];
+	std::string parentWwiseName = selectedParent.properties["name"];
+	std::string parentWwiseType = selectedParent.properties["type"];
+	TVITEM item;
+
+	if (parentWwiseID == "") return;	// Invalid wwise parent selection!
+
+	HTREEITEM hSelectedItem = TreeView_GetSelection(tr_Tree_RenderJobTree);
+	if (hSelectedItem == NULL) // Nothing selected
+	{
+		return;
+	}
+	TCHAR buffer[256];
+	item.hItem = hSelectedItem;
+	item.mask = TVIF_TEXT | TVIF_CHILDREN;
+	item.cchTextMax = 256;
+	item.pszText = buffer;
+	if (TreeView_GetItem(tr_Tree_RenderJobTree, &item))
+	{
+		if (item.cChildren != 1)
+		{
+			PrintToConsole("Render Job selected has no children");
+			return;
+		}
+		//Find the matching Render Que Job
+		std::string itemName = item.pszText;
+		int count = 0;
+		for (auto renderJob : GlobalListOfRenderQueJobs)
+		{
+			if (itemName.find(renderJob.RenderQueFilePath) != itemName.npos)
+			{
+				//Found a match
+				//PrintToConsole("Found a match");
+				GlobalListOfRenderQueJobs[count].parentWwiseObject = selectedParent;
+
+				//Set the display Text to include wwise parent name and type
+				std::string newItemName = parentWwiseName + "(" + parentWwiseType + ") " + itemName;
+				item.mask = TVIF_TEXT;
+				item.pszText = &newItemName[0];
+				TreeView_SetItem(tr_Tree_RenderJobTree, &item);
+			}
+			count++;
+		}
+
+	}
+
+	for (auto renderJob : GlobalListOfRenderQueJobs)
+	{
+		PrintToConsole(renderJob.RenderQueFilePath + " Imports into " + renderJob.parentWwiseObject.properties["name"]);
+	}
+
+
 }

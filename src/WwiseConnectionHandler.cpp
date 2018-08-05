@@ -225,12 +225,12 @@ bool WwiseConnectionHandler::CreateWwiseObjects(bool suppressOutputMessages, Cre
 	else if (createArgs.Type == "Random")
 	{
 		createArgs.Type = "RandomSequenceContainer";
-		createArgs.RandomOrSequence = 0;
+		createArgs.RandomOrSequence = 1;
 	}
 	else if (createArgs.Type == "Sequence")
 	{
 		createArgs.Type = "RandomSequenceContainer";
-		createArgs.RandomOrSequence = 1;
+		createArgs.RandomOrSequence = 0;
 	}
 
 	waapi_UndoHandler(Begin, "Create Object");

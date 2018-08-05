@@ -182,6 +182,8 @@ private:
 	bool init_ListBox_A(HWND hwnd_list, std::vector<std::string> choices);
 
 	void FillRenderQueList();
+	void UpdateRenderJob_TreeView();
+	void HandleUI_SetParentForRenderJob(WwiseObject selectedParent);
 
 	INT_PTR CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 };
