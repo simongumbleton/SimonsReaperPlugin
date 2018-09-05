@@ -74,10 +74,7 @@ INT_PTR CALLBACK PluginWindow::DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPAR
 
 INT_PTR PluginWindow::DialogProcStatic(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	if (m_hWindow == NULL)
-	{
-		m_hWindow = hDlg;
-	}
+	m_hWindow = hDlg;
 
 	PluginWindow *pThis = (PluginWindow*)m_lSaveThis;
 

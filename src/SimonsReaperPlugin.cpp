@@ -200,6 +200,15 @@ void PrintToConsole(std::string text)
 	}
 }
 
+void PrintToConsole(int text)
+{
+	if (!supressConsoleOutput)
+	{
+		std::string debugText = std::to_string(text) + "\n";
+		ShowConsoleMsg(debugText.c_str());
+	}
+}
+
 std::string GetReaperResourcePath()
 {
 	return GetResourcePath();
@@ -211,6 +220,11 @@ std::string GetCurrentReaperProject()
 	EnumProjects(-1, currentProject, MAX_PATH);
 	GetProjectName(EnumProjects(-1, nullptr, 0), projName, 256);
 	return std::string(projName);
+}
+
+void Reaper_RenderAllQuedJobs()
+{
+	Main_OnCommand(41207,0);
 }
 
 void GetReaperGlobals()

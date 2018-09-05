@@ -251,3 +251,20 @@ bool WwiseConnectionHandler::CreateWwiseObjects(bool suppressOutputMessages, Cre
 }
 
 
+
+
+
+
+
+ReaperRenderObj::ReaperRenderObj()
+{
+}
+
+ReaperRenderObj::~ReaperRenderObj()
+{
+}
+
+void ReaperRenderObj::RenderAllQues()
+{
+	Reaper_RenderAllQuedJobs();
+}

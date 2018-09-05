@@ -19,6 +19,13 @@ struct RenderQueJob
 	WwiseObject parentWwiseObject;
 	std::vector<std::string> RenderQueJobFileList;
 	std::string ParentReaperProject;
+	bool hasRendered = false;
+	bool hasImported = false;
+	bool isVoice = false;
+	std::string ImportLanguage;
+	bool OrigDirMatchesWwise = false;
+	
+
 };
 
 class WwiseConnectionHandler
@@ -165,6 +172,8 @@ private:
 	void handleUI_B_GetSelectedParent();
 	void handleUI_GetType(int notifCode);
 	void handleUI_GetNameConflict(int notifCode);
+	void handleUI_RenderImport();
+
 	////non-message function declarations
 	////=============================================================================
 	void OnCommand(const HWND hwnd, int id, int notifycode, const HWND hCntrl);
@@ -181,12 +190,26 @@ private:
 	bool init_ComboBox_A(HWND hwnd_combo, std::vector<std::string> choices);
 	bool init_ListBox_A(HWND hwnd_list, std::vector<std::string> choices);
 
-	void FillRenderQueList();
-	void UpdateRenderJob_TreeView();
+	void FillRenderQueList(HWND hwnd);
+	void UpdateRenderJob_TreeView(HWND hwnd);
 	void HandleUI_SetParentForRenderJob(WwiseObject selectedParent);
+	bool GetIsVoice();
+	std::string GetLanguage();
+	bool GetOrigsDirMatchesWwise();
+	void SetStatusMessageText(std::string message);
+
+	bool UpdateProgressDuringRender(int numJobs);
+
+	bool ImportJobsIntoWwise();
 
 	INT_PTR CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 };
 
 
-
+class ReaperRenderObj
+{
+public:
+	ReaperRenderObj();
+	~ReaperRenderObj();
+	void RenderAllQues();
+};

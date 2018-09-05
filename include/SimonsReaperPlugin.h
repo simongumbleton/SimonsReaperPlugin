@@ -17,6 +17,10 @@ void doAction1();
 
 void PrintToConsole(std::string text);
 
+void PrintToConsole(int text);
+
 std::string GetReaperResourcePath();
 
 std::string GetCurrentReaperProject();
+
+void Reaper_RenderAllQuedJobs();

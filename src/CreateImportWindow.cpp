@@ -4,6 +4,12 @@
 #include "PluginWindow.h"
 #include "SimonsReaperPlugin.h"
 #include "ReaperRenderQueParser.h"
+#include <filesystem>
+#include <thread>
+#include <iostream>
+#include <chrono>
+#include <mutex>
+#include <future>
 
 ///Handles to UI elements
 HWND tr_buttonConnect;
@@ -20,6 +26,12 @@ HWND tr_txt_CreateName;
 HWND tr_txt_CreateNotes;
 HWND tr_Tree_RenderJobTree;
 HWND tr_Progress_Import;
+HWND B_RenderImport;
+HWND txt_status;
+HWND check_IsVoice;
+HWND txt_Language;
+std::string defaultLanguage = "English(US)";
+HWND check_OrigDirMatchWwise;
 
 CreateObjectChoices myCreateChoices;
 
@@ -29,12 +41,16 @@ WwiseConnectionHandler* CreateImportWindow::parentWwiseConnectionHnd = NULL;
 
 std::vector<RenderQueJob> GlobalListOfRenderQueJobs;
 
-
+bool AllDone = false;
+std::mutex mtx;
+int numOfRendersDone = 0;
 
 //=============================================================================
 int CreateImportWindow::CreateTransferWindow(HINSTANCE hInst, HINSTANCE, LPSTR, int)
 {
 	INT_PTR success = DialogBox(hInst, MAKEINTRESOURCE(IDD_Transfer), 0, DialogProcStatic);
+	//HWND success = CreateDialog(hInst, MAKEINTRESOURCE(IDD_Transfer), 0, DialogProcStatic);
+	//ShowWindow(success, SW_SHOW);
 
 	if (success == -1)
 	{
@@ -72,10 +88,7 @@ INT_PTR CALLBACK CreateImportWindow::DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam
 
 INT_PTR CreateImportWindow::DialogProcStatic(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	if (m_hWindow == NULL)
-	{
-		m_hWindow = hDlg;
-	}
+	m_hWindow = hDlg;
 
 	CreateImportWindow *pThis = (CreateImportWindow*)m_lSaveThis;
 
@@ -117,8 +130,13 @@ void CreateImportWindow::OnCommand(const HWND hwnd, int id, int notifycode, cons
 	case IDC_C_CreateOnNameConflict:
 		handleUI_GetNameConflict(notifycode);
 		break;
+	case IDC_B_RenderImport:
+		handleUI_RenderImport();
+		break;
 	case ID_B_CANCEL:    //ESC key pressed or 'cancel' button selected
+		m_hWindow = NULL;
 		EndDialog(hwnd, id);
+		
 	}
 }
 //=============================================================================
@@ -154,12 +172,14 @@ void CreateImportWindow::handleUI_B_Connect()
 {
 	if (parentWwiseConnectionHnd->handle_GUI_Connect())
 	{
+		SetStatusMessageText("Ready");
 		SetDlgItemText(m_hWindow, IDC_WwiseConnection, "Wwise Connection Established");
 		//		SendMessage(hwnd_combo, CB_SETCURSEL, 0, 0);
 		//		textConnectionStatus
 	}
 	else
 	{
+		SetStatusMessageText("Error");
 		SetDlgItemText(m_hWindow, IDC_WwiseConnection, "!!Wwise Connection Missing!!");
 	}
 }
@@ -197,8 +217,10 @@ void CreateImportWindow::handleUI_B_CreateObject()
 	if (!parentWwiseConnectionHnd->CreateWwiseObjects(false, myCreateObjectArgs, results))
 	{
 		//ERROR
+		SetStatusMessageText("Error");
 		return;
 	}
+	SetStatusMessageText("Ready");
 
 	//waapi_CreateObjectFromArgs(myCreateObjectArgs, results);
 }
@@ -243,6 +265,109 @@ void CreateImportWindow::handleUI_GetNameConflict(int notifCode)
 	}
 }
 
+bool CreateImportWindow::UpdateProgressDuringRender(int numJobs)
+{
+	AllDone = false;
+	numOfRendersDone = 0;
+	
+	while (!AllDone)
+	{
+		
+		if (numOfRendersDone == numJobs) {
+			AllDone = true;
+			//PrintToConsole("ALL Renders complete");
+			return true;
+		}
+
+		int jobIndex = 0;
+		for (auto job : GlobalListOfRenderQueJobs)
+		{
+			if (!GlobalListOfRenderQueJobs[jobIndex].hasRendered)
+			{
+				WIN32_FIND_DATA FindFileData;
+				HANDLE hFind = FindFirstFile(job.RenderQueFilePath.c_str(), &FindFileData);
+
+				if (hFind == INVALID_HANDLE_VALUE)
+				{
+					if (GetLastError() == ERROR_FILE_NOT_FOUND)
+					{
+						if (!GlobalListOfRenderQueJobs[jobIndex].hasRendered)
+						{
+							PostMessage(tr_Progress_Import, PBM_STEPIT, 0, 0);
+
+							GlobalListOfRenderQueJobs[jobIndex].hasRendered = true;
+							numOfRendersDone++;
+						}
+					}
+				}
+				jobIndex++;
+			}
+				
+		}
+
+	}
+	
+	
+}
+
+
+
+void CreateImportWindow::handleUI_RenderImport()
+{
+	/// Render and import from que list
+
+	//For each job in the global render que
+	//check it has valid wwise parent and report errors/exit if not
+
+	for (auto job : GlobalListOfRenderQueJobs)
+	{
+		if (job.parentWwiseObject.properties.size() == 0)
+		{
+			PrintToConsole("  ERROR! A render job has no valid Wwise Parent!   \n");
+			PrintToConsole(job.RenderQueFilePath);
+			SetStatusMessageText("Error");
+			return;
+		}
+
+	}
+
+	SetStatusMessageText("Rendering from Reaper Render Que");
+
+	int numJobs = GlobalListOfRenderQueJobs.size();
+	bool startedRender = false;
+
+	SendMessage(tr_Progress_Import, PBM_SETRANGE, 0, MAKELPARAM(0, numJobs));
+
+	SendMessage(tr_Progress_Import, PBM_SETSTEP, (WPARAM)1, 0);
+
+	std::future<bool> fut = std::async(std::launch::async,&CreateImportWindow::UpdateProgressDuringRender,this,numJobs);
+
+	ReaperRenderObj renderObj;
+	renderObj.RenderAllQues();
+
+	PrintToConsole("Waiting for second thread");
+
+	fut.wait();
+	bool ret = fut.get();
+
+	if (ret)
+	{
+		PrintToConsole("Rejoined main");
+		ImportJobsIntoWwise();
+	}
+
+}
+
+
+
+bool CreateImportWindow::ImportJobsIntoWwise()
+{
+	SetStatusMessageText("Importing into Wwise");
+	return false;
+}
+
+
+
 /// INIT ALL OPTIONS
 
 bool CreateImportWindow::init_ALL_OPTIONS(HWND hwnd)
@@ -259,11 +384,20 @@ bool CreateImportWindow::init_ALL_OPTIONS(HWND hwnd)
 	tr_txt_CreateNotes = GetDlgItem(hwnd, IDC_Text_CreateNotes);
 	tr_Tree_RenderJobTree = GetDlgItem(hwnd, IDC_TREE_RenderJobTree);
 	tr_Progress_Import = GetDlgItem(hwnd, IDC_PROGRESS_Import);
+	B_RenderImport = GetDlgItem(hwnd, IDC_B_RenderImport);
+	txt_status = GetDlgItem(hwnd, IDC_Txt_Status);
+	txt_Language = GetDlgItem(hwnd, IDC_Language);
+	Edit_SetText(txt_Language, defaultLanguage.c_str());
+	check_IsVoice = GetDlgItem(hwnd, IDC_IsVoice);
+	check_OrigDirMatchWwise = GetDlgItem(hwnd, IDC_OrigsMatchWwise);
+	SendDlgItemMessage(m_hWindow, IDC_OrigsMatchWwise, BM_SETCHECK, BST_CHECKED, 0);
 
 	init_ComboBox_A(tr_c_CreateType, myCreateChoices.waapiCREATEchoices_TYPE);
 	init_ComboBox_A(tr_c_CreateNameConflict, myCreateChoices.waapiCREATEchoices_NAMECONFLICT);
 
-	FillRenderQueList();
+	FillRenderQueList(hwnd);
+
+	SetStatusMessageText("Ready");
 
 	return true;
 }
@@ -293,7 +427,7 @@ bool CreateImportWindow::init_ListBox_A(HWND hwnd_list, std::vector<std::string>
 }
 
 
-void CreateImportWindow::FillRenderQueList()	
+void CreateImportWindow::FillRenderQueList(HWND hwnd)	
 {
 	GlobalListOfRenderQueJobs.clear();
 	std::vector<std::string> ListOfRenderQueFiles;
@@ -307,15 +441,12 @@ void CreateImportWindow::FillRenderQueList()
 			GlobalListOfRenderQueJobs.push_back(MyrenderQueJob);
 		}
 	}
-	//// Next steps, use this data to fill the list box to display each render job
-	// IDC_LIST_RenderImportQue
-	//// Then, use Wwise set parent funtion to define a wwise parent for the selected render jobs
 
-	UpdateRenderJob_TreeView();
+	UpdateRenderJob_TreeView(hwnd);
 
 }
 
-void CreateImportWindow::UpdateRenderJob_TreeView()
+void CreateImportWindow::UpdateRenderJob_TreeView(HWND hwnd)
 {
 	for (auto RenderJob : GlobalListOfRenderQueJobs)
 	{
@@ -382,21 +513,83 @@ void CreateImportWindow::HandleUI_SetParentForRenderJob(WwiseObject selectedPare
 				//PrintToConsole("Found a match");
 				GlobalListOfRenderQueJobs[count].parentWwiseObject = selectedParent;
 
+				GlobalListOfRenderQueJobs[count].isVoice = GetIsVoice();
+
+				GlobalListOfRenderQueJobs[count].OrigDirMatchesWwise = GetOrigsDirMatchesWwise();
+
+				std::string language;
+				if (GlobalListOfRenderQueJobs[count].isVoice)
+				{
+					GlobalListOfRenderQueJobs[count].ImportLanguage = GetLanguage();
+					language = GlobalListOfRenderQueJobs[count].ImportLanguage;
+				}
+				else
+				{
+					GlobalListOfRenderQueJobs[count].ImportLanguage = "SFX";
+					language = "SFX";
+				}
+
 				//Set the display Text to include wwise parent name and type
-				std::string newItemName = parentWwiseName + "(" + parentWwiseType + ") " + itemName;
+				std::string newItemName = parentWwiseName + "(" + parentWwiseType +" : "+ language + ")  - " + renderJob.RenderQueFilePath;
 				item.mask = TVIF_TEXT;
 				item.pszText = &newItemName[0];
 				TreeView_SetItem(tr_Tree_RenderJobTree, &item);
+				PrintToConsole(renderJob.RenderQueFilePath + " Imports into " + renderJob.parentWwiseObject.properties["name"]);
 			}
 			count++;
 		}
 
 	}
 
-	for (auto renderJob : GlobalListOfRenderQueJobs)
-	{
-		PrintToConsole(renderJob.RenderQueFilePath + " Imports into " + renderJob.parentWwiseObject.properties["name"]);
-	}
+	SetStatusMessageText("Ready");
+
+	//for (auto renderJob : GlobalListOfRenderQueJobs)
+	//{
+	//	PrintToConsole(renderJob.RenderQueFilePath + " Imports into " + renderJob.parentWwiseObject.properties["name"]);
+	//}
 
 
 }
+
+bool CreateImportWindow::GetIsVoice()
+{
+
+	if (SendDlgItemMessage(m_hWindow, IDC_IsVoice, BM_GETCHECK, 0, 0))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+std::string CreateImportWindow::GetLanguage()
+{
+	///Get the par ID text
+	char buffer[256];
+	GetDlgItemTextA(m_hWindow, IDC_Language, buffer, 256);
+	std::string lang = buffer;
+	return lang;
+}
+
+bool CreateImportWindow::GetOrigsDirMatchesWwise()
+{
+	if (SendDlgItemMessage(m_hWindow, IDC_OrigsMatchWwise, BM_GETCHECK, 0, 0))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+void CreateImportWindow::SetStatusMessageText(std::string message)
+{
+	SetDlgItemText(m_hWindow, IDC_Txt_Status, message.c_str());
+}
+
+
+
+

@@ -36,6 +36,13 @@ struct CreateObjectArgs {
 	std::string language = "SFX";
 };
 
+struct ImportObjectArgs {
+	std::string ImportLanguage = "";
+	std::string ParentID = "";
+	std::string OriginalsSubFolder = "";
+	bool CreatePlayEvent = false;
+};
+
 enum undoStep {Begin = 0,End = 1,Cancel = 2};
 
 /// Vectors to store GET choices
