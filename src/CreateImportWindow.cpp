@@ -363,7 +363,90 @@ void CreateImportWindow::handleUI_RenderImport()
 bool CreateImportWindow::ImportJobsIntoWwise()
 {
 	SetStatusMessageText("Importing into Wwise");
-	return false;
+
+	int jobIndex = 0;
+	int importSuccesses = 0;
+	for (auto job : GlobalListOfRenderQueJobs)
+	{
+		if (job.hasRendered)
+		{
+			ImportObjectArgs curJobImportArgs = SetupImportArgs
+			(
+				job.parentWwiseObject,
+				job.isVoice,
+				job.ImportLanguage,
+				job.OrigDirMatchesWwise,
+				job.RenderQueJobFileList
+			);
+			if (ImportCurrentRenderJob(curJobImportArgs))
+			{
+				GlobalListOfRenderQueJobs[jobIndex].hasImported = true;
+				importSuccesses++;
+			}
+			
+		}
+		jobIndex++;
+	}
+
+	if (importSuccesses == GlobalListOfRenderQueJobs.size())
+	{
+		PrintToConsole("All jobs imported successfully");
+		return true;
+	}
+	else
+	{
+		PrintToConsole("Error! At least one import operation failed...");
+		SetStatusMessageText("Error");
+		return false;
+	}
+
+
+
+	
+}
+
+ImportObjectArgs CreateImportWindow::SetupImportArgs(WwiseObject parent, bool isVoice, std::string ImportLanguage, bool OrigsDirMatchesWwise, std::vector<std::string> ImportFiles)
+{
+	std::string originalsPath = parent.properties["path"];
+	std::string remove = "\\Actor-Mixer Hierarchy";
+	originalsPath.erase(0, remove.length());
+
+	ImportObjectArgs importArgs;
+	importArgs.ImportLocation = parent.properties["path"];
+	importArgs.ImportLanguage = ImportLanguage;
+	if (isVoice)
+	{
+		importArgs.objectType = "<Sound Voice>";
+	}
+	else
+	{
+		importArgs.objectType = "<Sound SFX>";
+	}
+	if (OrigsDirMatchesWwise)
+	{
+		importArgs.OriginalsSubFolder = originalsPath;
+	}
+	else
+	{
+		importArgs.OriginalsSubFolder = "\\REAPER";
+	}
+	for (auto file : ImportFiles)
+	{
+		std::string audiofile = file.substr(file.find_last_of("/\\")+1);
+		std::string rawAudioFile = audiofile.substr(0, audiofile.find_last_of("."));
+		std::string objectPath = parent.properties["path"] +"\\"+ importArgs.objectType + rawAudioFile;
+		std::pair<std::string, std::string> imports;
+		imports = std::make_pair(file, objectPath);
+		importArgs.ImportFileList.push_back(imports);
+	}
+
+	return importArgs;
+}
+
+bool CreateImportWindow::ImportCurrentRenderJob(ImportObjectArgs curJobImportArgs)
+{
+	AK::WwiseAuthoringAPI::AkJson::Array results;
+	return parentWwiseConnectionHnd->ImportAudioToWwise(false, curJobImportArgs, results);
 }
 
 

@@ -230,9 +230,41 @@ bool waapi_CreateObjectFromArgs(CreateObjectArgs & createArgs, AK::WwiseAuthorin
 }
 
 
-bool wappi_ImportFromArgs()
+bool wappi_ImportFromArgs(ImportObjectArgs & importArgs, AK::WwiseAuthoringAPI::AkJson & results)
 {
-	return false;
+	using namespace AK::WwiseAuthoringAPI;
+
+	AkJson::Array items;
+
+	for (auto importFile : importArgs.ImportFileList)
+	{
+		AkJson importItem = AkJson(AkJson::Map{
+			{ "audioFile", AkVariant(importFile.first) },
+			{ "objectPath", AkVariant(importFile.second) },
+			});
+		items.push_back(importItem);
+	}
+
+	AkJson args;
+	args = (AkJson::Map{
+		{ "importOperation", AkVariant(importArgs.importOperation) },
+		{ "default", AkJson::Map{
+			{ "importLanguage", AkVariant(importArgs.ImportLanguage) },
+		//	{ "importLocation", AkVariant(importArgs.ImportLocation) },
+		//	{ "objectType", AkVariant(importArgs.objectType) },
+			{ "originalsSubFolder", AkVariant(importArgs.OriginalsSubFolder) }
+		} },
+		{ "imports", items }
+		});
+
+	//if (importArgs.Type == "RandomSequenceContainer")
+	//{
+	//	args.GetMap().insert(std::make_pair("@RandomOrSequence", AkVariant(importArgs.RandomOrSequence)));
+	//}
+
+	AkJson options = AkJson(AkJson::Map());
+
+	return my_client.Call(ak::wwise::core::audio::import, args, options, results, 0);
 }
 
 void waapi_GetWaapiResultsArray(AK::WwiseAuthoringAPI::AkJson::Array & arrayIn, AK::WwiseAuthoringAPI::AkJson & results)

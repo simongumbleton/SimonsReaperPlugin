@@ -38,9 +38,13 @@ struct CreateObjectArgs {
 
 struct ImportObjectArgs {
 	std::string ImportLanguage = "";
-	std::string ParentID = "";
+	std::string ImportLocation = "";
 	std::string OriginalsSubFolder = "";
 	bool CreatePlayEvent = false;
+	std::vector<std::pair<std::string,std::string>> ImportFileList;
+	std::string importOperation = "useExisting";
+	std::string objectType;
+
 };
 
 enum undoStep {Begin = 0,End = 1,Cancel = 2};
@@ -117,7 +121,7 @@ struct CreateObjectChoices {
 	///////////////////////////////
 	bool waapi_CreateObjectFromArgs(CreateObjectArgs & createArgs, AK::WwiseAuthoringAPI::AkJson & results);
 
-	bool wappi_ImportFromArgs();
+	bool wappi_ImportFromArgs(ImportObjectArgs & importArgs, AK::WwiseAuthoringAPI::AkJson & results);
 
 	///////////////////////////////
 	////     Get the results array for calls to Waapi functions

@@ -250,6 +250,33 @@ bool WwiseConnectionHandler::CreateWwiseObjects(bool suppressOutputMessages, Cre
 	return true;
 }
 
+bool WwiseConnectionHandler::ImportAudioToWwise(bool suppressOutputMessages, ImportObjectArgs & importArgs, AK::WwiseAuthoringAPI::AkJson::Array & Results)
+{
+	if (!waapi_Connect(MyCurrentWwiseConnection))
+	{
+		/// WWise connection not found!
+		ReportConnectionError(MyCurrentWwiseConnection);
+		return false;
+	}
+	using namespace AK::WwiseAuthoringAPI;
+
+	waapi_UndoHandler(Begin, "Auto Import");
+	AkJson MoreRawReturnResults;
+	if (!wappi_ImportFromArgs(importArgs, MoreRawReturnResults))
+	{
+		//Something went wrong!
+		PrintToConsole("ERROR. Import Failed. Exiting.");
+		waapi_UndoHandler(Cancel, "Auto Import");
+		return false;
+	}
+	//waapi_GetWaapiResultsArray(Results, MoreRawReturnResults);
+
+	waapi_UndoHandler(End, "Auto Import");
+	waapi_SaveWwiseProject();
+	return true;
+
+}
+
 
 
 
