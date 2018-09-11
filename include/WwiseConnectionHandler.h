@@ -24,6 +24,7 @@ struct RenderQueJob
 	bool isVoice = false;
 	std::string ImportLanguage;
 	bool OrigDirMatchesWwise = false;
+	std::string userOrigsSubDir;
 	
 
 };
@@ -198,13 +199,17 @@ private:
 	bool GetIsVoice();
 	std::string GetLanguage();
 	bool GetOrigsDirMatchesWwise();
+	std::string GetUserOriginalsSubDir();
 	void SetStatusMessageText(std::string message);
 
 	bool UpdateProgressDuringRender(int numJobs);
 
 	bool ImportJobsIntoWwise();
-	ImportObjectArgs SetupImportArgs(WwiseObject parent, bool isVoice, std::string ImportLanguage, bool OrigsDirMatchesWwise, std::vector<std::string> ImportFiles);
+	ImportObjectArgs SetupImportArgs(WwiseObject parent, bool isVoice, std::string ImportLanguage, bool OrigsDirMatchesWwise,std::string userOrigSubDir, std::vector<std::string> ImportFiles);
 	bool ImportCurrentRenderJob(ImportObjectArgs curJobImportArgs);
+
+	void backupRenderQueFiles();
+	void restoreRenderQueFiles();
 
 
 	INT_PTR CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);

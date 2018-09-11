@@ -6,6 +6,7 @@
 #define IDD_Transfer                    108
 #define IDC_LIST1                       1001
 #define IDC_GetFrom_Uinput              1001
+#define IDC_LIST_EventOptions           1001
 #define IDC_COMBO_GetFrom               1002
 #define ID_B_GO                         1005
 #define ID_B_CANCEL                     1006
@@ -24,8 +25,10 @@
 #define IDC_Txt_Status                  1034
 #define IDC_IsVoice                     1035
 #define IDC_Language                    1036
-#define IDC_CHECK1                      1037
 #define IDC_OrigsMatchWwise             1038
+#define IDC_B_RefreshTree               1039
+#define IDC_EDIT1                       1040
+#define IDC_txt_OrigsDir                1040
 #define IDC_LIST_RenderImportQue        1801
 #define IDC_C_Create_Type               1803
 #define IDC_B_GetSelectedParent         1819
@@ -44,7 +47,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        110
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1039
+#define _APS_NEXT_CONTROL_VALUE         1041
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

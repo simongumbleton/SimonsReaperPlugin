@@ -262,6 +262,7 @@ bool WwiseConnectionHandler::ImportAudioToWwise(bool suppressOutputMessages, Imp
 
 	waapi_UndoHandler(Begin, "Auto Import");
 	AkJson MoreRawReturnResults;
+
 	if (!wappi_ImportFromArgs(importArgs, MoreRawReturnResults))
 	{
 		//Something went wrong!

@@ -27,11 +27,13 @@ HWND tr_txt_CreateNotes;
 HWND tr_Tree_RenderJobTree;
 HWND tr_Progress_Import;
 HWND B_RenderImport;
+HWND B_RefreshTree;
 HWND txt_status;
 HWND check_IsVoice;
 HWND txt_Language;
 std::string defaultLanguage = "English(US)";
 HWND check_OrigDirMatchWwise;
+HWND txt_OriginalsSubDir;
 
 CreateObjectChoices myCreateChoices;
 
@@ -40,6 +42,7 @@ long CreateImportWindow::m_lSaveThis = 0;
 WwiseConnectionHandler* CreateImportWindow::parentWwiseConnectionHnd = NULL;
 
 std::vector<RenderQueJob> GlobalListOfRenderQueJobs;
+std::vector<std::string> RenderFilesBackup;
 
 bool AllDone = false;
 std::mutex mtx;
@@ -136,7 +139,17 @@ void CreateImportWindow::OnCommand(const HWND hwnd, int id, int notifycode, cons
 	case ID_B_CANCEL:    //ESC key pressed or 'cancel' button selected
 		m_hWindow = NULL;
 		EndDialog(hwnd, id);
-		
+		break;
+	case ID_B_OK:
+		m_hWindow = NULL;
+		EndDialog(hwnd, id);
+		break;
+	case IDC_B_RefreshTree:
+		FillRenderQueList(hwnd);
+		break;
+	case IDC_OrigsMatchWwise:
+		GetOrigsDirMatchesWwise();
+		break;
 	}
 }
 //=============================================================================
@@ -294,6 +307,7 @@ bool CreateImportWindow::UpdateProgressDuringRender(int numJobs)
 						if (!GlobalListOfRenderQueJobs[jobIndex].hasRendered)
 						{
 							PostMessage(tr_Progress_Import, PBM_STEPIT, 0, 0);
+							//SendMessage(tr_Progress_Import, PBM_STEPIT, 0, 0);
 
 							GlobalListOfRenderQueJobs[jobIndex].hasRendered = true;
 							numOfRendersDone++;
@@ -334,6 +348,10 @@ void CreateImportWindow::handleUI_RenderImport()
 	SetStatusMessageText("Rendering from Reaper Render Que");
 
 	int numJobs = GlobalListOfRenderQueJobs.size();
+
+	//backup render que files in case of errors
+	backupRenderQueFiles();
+
 	bool startedRender = false;
 
 	SendMessage(tr_Progress_Import, PBM_SETRANGE, 0, MAKELPARAM(0, numJobs));
@@ -345,16 +363,44 @@ void CreateImportWindow::handleUI_RenderImport()
 	ReaperRenderObj renderObj;
 	renderObj.RenderAllQues();
 
-	PrintToConsole("Waiting for second thread");
+	PrintToConsole("Render done. Waiting for second thread");
+	SendMessage(tr_Progress_Import, PBM_SETPOS, numJobs, 0);
 
-	fut.wait();
-	bool ret = fut.get();
+	std::future_status status;
 
-	if (ret)
+	status = fut.wait_for(std::chrono::seconds(4));
+	//bool ret = fut.get();
+
+	PrintToConsole("Rejoined main");
+
+	MSG msg;	//Clears the message que for the progress bar
+	PeekMessage(&msg,tr_Progress_Import,0,0,PM_REMOVE);
+	
+	if (status == std::future_status::ready)
 	{
-		PrintToConsole("Rejoined main");
-		ImportJobsIntoWwise();
+		SetStatusMessageText("Importing into Wwise");
+		SendMessage(tr_Progress_Import, PBM_SETPOS, 0, 0);
+		
+		if (!ImportJobsIntoWwise())
+		{
+			// something went wrong, restore render que files
+			PrintToConsole("Something went wrong, restoring Reaper Render Que files.....");
+			restoreRenderQueFiles();
+			return;
+
+		}
+
+		FillRenderQueList(m_hWindow);
+		return;
 	}
+	else if (status == std::future_status::timeout)
+	{
+		PrintToConsole("Timeout error. Something went wrong in Render. Reaper did not remove all render que files after processing.");
+		SetStatusMessageText("Error");
+		restoreRenderQueFiles();
+		return;
+	}
+	
 
 }
 
@@ -376,12 +422,14 @@ bool CreateImportWindow::ImportJobsIntoWwise()
 				job.isVoice,
 				job.ImportLanguage,
 				job.OrigDirMatchesWwise,
+				job.userOrigsSubDir,
 				job.RenderQueJobFileList
 			);
 			if (ImportCurrentRenderJob(curJobImportArgs))
 			{
 				GlobalListOfRenderQueJobs[jobIndex].hasImported = true;
 				importSuccesses++;
+				SendMessage(tr_Progress_Import, PBM_SETPOS, importSuccesses, 0);
 			}
 			
 		}
@@ -391,6 +439,7 @@ bool CreateImportWindow::ImportJobsIntoWwise()
 	if (importSuccesses == GlobalListOfRenderQueJobs.size())
 	{
 		PrintToConsole("All jobs imported successfully");
+		SetStatusMessageText("All Import jobs complete");
 		return true;
 	}
 	else
@@ -405,7 +454,7 @@ bool CreateImportWindow::ImportJobsIntoWwise()
 	
 }
 
-ImportObjectArgs CreateImportWindow::SetupImportArgs(WwiseObject parent, bool isVoice, std::string ImportLanguage, bool OrigsDirMatchesWwise, std::vector<std::string> ImportFiles)
+ImportObjectArgs CreateImportWindow::SetupImportArgs(WwiseObject parent, bool isVoice, std::string ImportLanguage, bool OrigsDirMatchesWwise, std::string userOrigSubDir,std::vector<std::string> ImportFiles)
 {
 	std::string originalsPath = parent.properties["path"];
 	std::string remove = "\\Actor-Mixer Hierarchy";
@@ -428,7 +477,7 @@ ImportObjectArgs CreateImportWindow::SetupImportArgs(WwiseObject parent, bool is
 	}
 	else
 	{
-		importArgs.OriginalsSubFolder = "\\REAPER";
+		importArgs.OriginalsSubFolder = userOrigSubDir;//"\\REAPER";
 	}
 	for (auto file : ImportFiles)
 	{
@@ -447,6 +496,55 @@ bool CreateImportWindow::ImportCurrentRenderJob(ImportObjectArgs curJobImportArg
 {
 	AK::WwiseAuthoringAPI::AkJson::Array results;
 	return parentWwiseConnectionHnd->ImportAudioToWwise(false, curJobImportArgs, results);
+}
+
+void CreateImportWindow::backupRenderQueFiles()
+{
+	std::string resourcePath = GetReaperResourcePath();
+	std::filesystem::path backupPath = resourcePath + "\\QueuedRenders\\_backup";
+
+	for (auto RenderJob : GlobalListOfRenderQueJobs)
+	{
+		RenderFilesBackup.push_back(RenderJob.RenderQueFilePath);
+		std::filesystem::path source = RenderJob.RenderQueFilePath;
+		std::filesystem::path target = backupPath / source.filename();
+
+		try // If you want to avoid exception handling, then use the error code overload of the following functions.
+		{
+			std::filesystem::create_directories(backupPath); // Recursively create target directory if not existing.
+			std::filesystem::copy_file(source, target, std::filesystem::copy_options::overwrite_existing);
+		}
+		catch (std::exception& e) // Not using fs::filesystem_error since std::bad_alloc can throw too.  
+		{
+			std::cout << e.what();
+		}
+	}
+
+}
+
+void CreateImportWindow::restoreRenderQueFiles()
+{
+	std::string resourcePath = GetReaperResourcePath();
+	std::filesystem::path backupPath = resourcePath + "\\QueuedRenders\\_backup";
+	std::filesystem::path restorePath = resourcePath + "\\QueuedRenders";
+
+	for (auto RenderQueFile : RenderFilesBackup)
+	{
+		std::filesystem::path source = RenderQueFile;
+		std::filesystem::path sourceFile = source.filename();
+		source = backupPath / sourceFile;
+		std::filesystem::path target = restorePath / sourceFile;
+
+		try // If you want to avoid exception handling, then use the error code overload of the following functions.
+		{
+			std::filesystem::copy_file(source, target, std::filesystem::copy_options::overwrite_existing);
+			remove(source);
+		}
+		catch (std::exception& e) // Not using fs::filesystem_error since std::bad_alloc can throw too.  
+		{
+			std::cout << e.what();
+		}
+	}
 }
 
 
@@ -474,9 +572,14 @@ bool CreateImportWindow::init_ALL_OPTIONS(HWND hwnd)
 	check_IsVoice = GetDlgItem(hwnd, IDC_IsVoice);
 	check_OrigDirMatchWwise = GetDlgItem(hwnd, IDC_OrigsMatchWwise);
 	SendDlgItemMessage(m_hWindow, IDC_OrigsMatchWwise, BM_SETCHECK, BST_CHECKED, 0);
+	B_RefreshTree = GetDlgItem(hwnd, IDC_B_RefreshTree);
+	txt_OriginalsSubDir = GetDlgItem(hwnd, IDC_txt_OrigsDir);
+	Edit_SetText(txt_OriginalsSubDir, "ImportedFromReaper/");
 
 	init_ComboBox_A(tr_c_CreateType, myCreateChoices.waapiCREATEchoices_TYPE);
 	init_ComboBox_A(tr_c_CreateNameConflict, myCreateChoices.waapiCREATEchoices_NAMECONFLICT);
+
+	GetOrigsDirMatchesWwise();
 
 	FillRenderQueList(hwnd);
 
@@ -531,8 +634,12 @@ void CreateImportWindow::FillRenderQueList(HWND hwnd)
 
 void CreateImportWindow::UpdateRenderJob_TreeView(HWND hwnd)
 {
+	TreeView_DeleteAllItems(tr_Tree_RenderJobTree);
+
 	for (auto RenderJob : GlobalListOfRenderQueJobs)
 	{
+		std::filesystem::path filePath = RenderJob.RenderQueFilePath;
+		std::string filename = filePath.filename().string();
 
 		TV_INSERTSTRUCT tvInsert;
 		HTREEITEM Parent;
@@ -541,15 +648,17 @@ void CreateImportWindow::UpdateRenderJob_TreeView(HWND hwnd)
 		tvInsert.hParent = NULL;
 		tvInsert.hInsertAfter = TVI_ROOT;
 		tvInsert.item.mask = TVIF_TEXT;	// tvinsert.item.mask=TVIF_TEXT|TVIF_IMAGE|TVIF_SELECTEDIMAGE;
-		tvInsert.item.pszText = &RenderJob.RenderQueFilePath[0];	//(LPARAM)choice.c_str()
+		tvInsert.item.pszText = &filename[0];	//(LPARAM)choice.c_str()
 		Parent = (HTREEITEM)SendDlgItemMessage(m_hWindow, IDC_TREE_RenderJobTree, TVM_INSERTITEM, 0, (LPARAM)&tvInsert);
 
 		//Children = WAV files in this render que job
 		for (auto renderFile : RenderJob.RenderQueJobFileList)
 		{
+			std::filesystem::path filePath = renderFile;
+			std::string filename = filePath.filename().string();
 			tvInsert.hParent = Parent;
 			tvInsert.hInsertAfter = TVI_LAST;
-			tvInsert.item.pszText = &renderFile[0];
+			tvInsert.item.pszText = &filename[0];
 			Child = (HTREEITEM)SendDlgItemMessage(m_hWindow, IDC_TREE_RenderJobTree, TVM_INSERTITEM, 0, (LPARAM)&tvInsert);
 		}
 
@@ -564,9 +673,22 @@ void CreateImportWindow::HandleUI_SetParentForRenderJob(WwiseObject selectedPare
 	std::string parentWwiseID = selectedParent.properties["id"];
 	std::string parentWwiseName = selectedParent.properties["name"];
 	std::string parentWwiseType = selectedParent.properties["type"];
+	std::string parentWwisePath = selectedParent.properties["path"];
 	TVITEM item;
 
-	if (parentWwiseID == "") return;	// Invalid wwise parent selection!
+	if (parentWwiseID == "")
+	{
+		PrintToConsole("Error - No valid Wwise Parent");
+		return;	// Invalid wwise parent selection!
+	}
+
+	if (parentWwisePath.find("Actor-Mixer Hierarchy\\") == parentWwisePath.npos)
+	{
+		PrintToConsole("Import parent must be in Actor-Mixer hierarchy");
+		return;	// Invalid wwise parent selection!
+	}
+
+	// if type is Work Unit - Need to check if it's a folder
 
 	HTREEITEM hSelectedItem = TreeView_GetSelection(tr_Tree_RenderJobTree);
 	if (hSelectedItem == NULL) // Nothing selected
@@ -590,7 +712,10 @@ void CreateImportWindow::HandleUI_SetParentForRenderJob(WwiseObject selectedPare
 		int count = 0;
 		for (auto renderJob : GlobalListOfRenderQueJobs)
 		{
-			if (itemName.find(renderJob.RenderQueFilePath) != itemName.npos)
+			std::filesystem::path filePath = renderJob.RenderQueFilePath;
+			std::string filename = filePath.filename().string();
+
+			if (itemName.find(filename) != itemName.npos)
 			{
 				//Found a match
 				//PrintToConsole("Found a match");
@@ -599,6 +724,11 @@ void CreateImportWindow::HandleUI_SetParentForRenderJob(WwiseObject selectedPare
 				GlobalListOfRenderQueJobs[count].isVoice = GetIsVoice();
 
 				GlobalListOfRenderQueJobs[count].OrigDirMatchesWwise = GetOrigsDirMatchesWwise();
+
+				if (!GlobalListOfRenderQueJobs[count].OrigDirMatchesWwise)
+				{
+					GlobalListOfRenderQueJobs[count].userOrigsSubDir = GetUserOriginalsSubDir();
+				}
 
 				std::string language;
 				if (GlobalListOfRenderQueJobs[count].isVoice)
@@ -613,7 +743,7 @@ void CreateImportWindow::HandleUI_SetParentForRenderJob(WwiseObject selectedPare
 				}
 
 				//Set the display Text to include wwise parent name and type
-				std::string newItemName = parentWwiseName + "(" + parentWwiseType +" : "+ language + ")  - " + renderJob.RenderQueFilePath;
+				std::string newItemName = parentWwiseName + "(" + parentWwiseType +" : "+ language + ")  - " + filename;
 				item.mask = TVIF_TEXT;
 				item.pszText = &newItemName[0];
 				TreeView_SetItem(tr_Tree_RenderJobTree, &item);
@@ -660,12 +790,24 @@ bool CreateImportWindow::GetOrigsDirMatchesWwise()
 {
 	if (SendDlgItemMessage(m_hWindow, IDC_OrigsMatchWwise, BM_GETCHECK, 0, 0))
 	{
+		//IDC_txt_OrigsDir
+		Edit_Enable(txt_OriginalsSubDir, false);
 		return true;
 	}
 	else
 	{
+		Edit_Enable(txt_OriginalsSubDir, true);
 		return false;
 	}
+}
+
+std::string CreateImportWindow::GetUserOriginalsSubDir()
+{
+	char buffer[256];
+
+	GetDlgItemTextA(m_hWindow, IDC_txt_OrigsDir, buffer, 256);
+	std::string userOrigsDir = buffer;
+	return userOrigsDir;
 }
 
 void CreateImportWindow::SetStatusMessageText(std::string message)

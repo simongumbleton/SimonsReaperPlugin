@@ -53,6 +53,7 @@ bool waapi_GetSelectedWwiseObjects(AK::WwiseAuthoringAPI::AkJson & resultsOut, b
 			AkVariant("type"),
 			AkVariant("path"),
 			AkVariant("parent"),
+			//AkVariant("workunit_type"),
 			AkVariant("childrenCount"), } }
 		});
 	if (getNotes)
@@ -250,17 +251,12 @@ bool wappi_ImportFromArgs(ImportObjectArgs & importArgs, AK::WwiseAuthoringAPI::
 		{ "importOperation", AkVariant(importArgs.importOperation) },
 		{ "default", AkJson::Map{
 			{ "importLanguage", AkVariant(importArgs.ImportLanguage) },
-		//	{ "importLocation", AkVariant(importArgs.ImportLocation) },
+			{ "importLocation", AkVariant(importArgs.ImportLocation) },
 		//	{ "objectType", AkVariant(importArgs.objectType) },
 			{ "originalsSubFolder", AkVariant(importArgs.OriginalsSubFolder) }
 		} },
 		{ "imports", items }
 		});
-
-	//if (importArgs.Type == "RandomSequenceContainer")
-	//{
-	//	args.GetMap().insert(std::make_pair("@RandomOrSequence", AkVariant(importArgs.RandomOrSequence)));
-	//}
 
 	AkJson options = AkJson(AkJson::Map());
 
