@@ -177,6 +177,9 @@
     <None Include="include\AkAutobahn\md5.inl">
       <Filter>AkAutobahn</Filter>
     </None>
+    <None Include="include\resource.hm">
+      <Filter>include</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="include\SimonsReaperPlugin.rc">

@@ -770,6 +770,7 @@
   <ItemGroup>
     <None Include="include\AkAutobahn\handle_form.inl" />
     <None Include="include\AkAutobahn\md5.inl" />
+    <None Include="include\resource.hm" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="include\SimonsReaperPlugin.rc" />

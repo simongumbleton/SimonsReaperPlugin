@@ -34,6 +34,7 @@ HWND txt_Language;
 std::string defaultLanguage = "English(US)";
 HWND check_OrigDirMatchWwise;
 HWND txt_OriginalsSubDir;
+HWND l_eventOptions;
 
 CreateObjectChoices myCreateChoices;
 
@@ -141,14 +142,17 @@ void CreateImportWindow::OnCommand(const HWND hwnd, int id, int notifycode, cons
 		EndDialog(hwnd, id);
 		break;
 	case ID_B_OK:
-		m_hWindow = NULL;
-		EndDialog(hwnd, id);
+		//m_hWindow = NULL;
+		//EndDialog(hwnd, id);
 		break;
 	case IDC_B_RefreshTree:
 		FillRenderQueList(hwnd);
 		break;
 	case IDC_OrigsMatchWwise:
 		GetOrigsDirMatchesWwise();
+		break;
+	case IDC_IsVoice:
+		GetIsVoice();
 		break;
 	}
 }
@@ -199,18 +203,26 @@ void CreateImportWindow::handleUI_B_Connect()
 
 void CreateImportWindow::handleUI_B_CreateObject()
 {
+
+	/// Get selected wwise object first
+	WwiseObject selectedParent = parentWwiseConnectionHnd->GetSelectedObject();
+
 	PrintToConsole("Creating New Wwise Object");
 	CreateObjectArgs myCreateObjectArgs;
 
 	handleUI_GetType(1);
 	handleUI_GetNameConflict(1);
 
-	///Get the par ID text
-	char buffer[256];
+	if (selectedParent.properties.empty())
+	{
+		PrintToConsole("No Wwise object selected..");
+		return;
+	}
 
-	GetDlgItemTextA(m_hWindow,IDC_ImportParent_ID, buffer, 256);
-	std::string s_parID = buffer;
-	myCreateObjectArgs.ParentID = s_parID;
+	myCreateObjectArgs.ParentID = selectedParent.properties["id"];
+
+	///Get the par text fields
+	char buffer[256];
 
 	GetDlgItemTextA(m_hWindow, IDC_text_CreateName, buffer, 256);
 	std::string s_name = buffer;
@@ -570,16 +582,20 @@ bool CreateImportWindow::init_ALL_OPTIONS(HWND hwnd)
 	txt_Language = GetDlgItem(hwnd, IDC_Language);
 	Edit_SetText(txt_Language, defaultLanguage.c_str());
 	check_IsVoice = GetDlgItem(hwnd, IDC_IsVoice);
+	SendDlgItemMessage(m_hWindow, IDC_IsVoice, BM_SETCHECK, BST_UNCHECKED, 0);
 	check_OrigDirMatchWwise = GetDlgItem(hwnd, IDC_OrigsMatchWwise);
 	SendDlgItemMessage(m_hWindow, IDC_OrigsMatchWwise, BM_SETCHECK, BST_CHECKED, 0);
 	B_RefreshTree = GetDlgItem(hwnd, IDC_B_RefreshTree);
 	txt_OriginalsSubDir = GetDlgItem(hwnd, IDC_txt_OrigsDir);
 	Edit_SetText(txt_OriginalsSubDir, "ImportedFromReaper/");
+	l_eventOptions = GetDlgItem(hwnd, IDC_LIST_EventOptions);
 
 	init_ComboBox_A(tr_c_CreateType, myCreateChoices.waapiCREATEchoices_TYPE);
 	init_ComboBox_A(tr_c_CreateNameConflict, myCreateChoices.waapiCREATEchoices_NAMECONFLICT);
+	init_ComboBox_A(l_eventOptions, myCreateChoices.waapiCREATEchoices_EVENTOPTIONS);
 
 	GetOrigsDirMatchesWwise();
+	GetIsVoice();
 
 	FillRenderQueList(hwnd);
 
@@ -769,10 +785,12 @@ bool CreateImportWindow::GetIsVoice()
 
 	if (SendDlgItemMessage(m_hWindow, IDC_IsVoice, BM_GETCHECK, 0, 0))
 	{
+		Edit_Enable(txt_Language, true);
 		return true;
 	}
 	else
 	{
+		Edit_Enable(txt_Language, false);
 		return false;
 	}
 }
