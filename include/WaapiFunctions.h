@@ -58,7 +58,7 @@ struct GetObjectChoices {
 
 	std::vector<std::string> waapiGETchoices_SELECT
 	{
-		"descendants", "parent", "children", "ancestors"
+		"","descendants", "parent", "children", "ancestors"
 	};
 
 	std::vector<std::string> waapiGETchoices_WHERE
@@ -75,7 +75,7 @@ struct GetObjectChoices {
 		"soundbank:bnkFilePath", "music:transitionRoot", "music:playlistRoot",
 		"audioSource:playbackDuration", "audioSource:maxDurationSource",
 		"audioSource:trimValues", "workunit:isDefault", "workunit:type",
-		"workunit:isDirty", "switchContainerChild:context"
+		"workunit:isDirty", "switchContainerChild:context","@DefaultLanguage"
 	};
 };
 

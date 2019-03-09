@@ -131,13 +131,20 @@ bool waapi_GetObjectFromArgs(ObjectGetArgs & getArgs, AK::WwiseAuthoringAPI::AkJ
 
 	AkJson args;
 
-	if (getArgs.Where[0] == "" || getArgs.Where[1] == "")
+	if (getArgs.Where[0] == "" || getArgs.Where[1] == "") // If both Where args are empty
 	{
-		args = (AkJson::Map{
-			{ "from", AkJson::Map{ { from0, AkJson::Array{ from1 } } } },
-			{ "transform",{ AkJson::Array
-			{ AkJson::Map{ { "select",AkJson::Array{ { Akselect } } } } }, 
-			} } });
+		if (getArgs.Select == "")	// If Select is empty (we are running with no transform
+		{
+			args = (AkJson::Map{{ "from", AkJson::Map{ { from0, AkJson::Array{ from1 } } } } });
+		}
+		else
+		{
+			args = (AkJson::Map{
+				{ "from", AkJson::Map{ { from0, AkJson::Array{ from1 } } } },
+				{ "transform",{ AkJson::Array
+				{ AkJson::Map{ { "select",AkJson::Array{ { Akselect } } } } },
+				} } });
+		}
 	}
 	else
 	{
