@@ -60,6 +60,8 @@ public:
 
 	bool ImportAudioToWwise(bool suppressOutputMessages, ImportObjectArgs& importArgs, AK::WwiseAuthoringAPI::AkJson::Array& Results);
 
+	bool GetWwiseProjectGlobals(bool suppressOutputMessages, WwiseProjectGlobals& WwiseProjGlobals);
+
 
 private:
 

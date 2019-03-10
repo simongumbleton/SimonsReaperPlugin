@@ -47,6 +47,12 @@ struct ImportObjectArgs {
 
 };
 
+struct WwiseProjectGlobals {
+	std::vector<std::string> Project;
+	std::vector<std::string> Languages;
+	std::string DefaultLanguage;
+};
+
 enum undoStep {Begin = 0,End = 1,Cancel = 2};
 
 /// Vectors to store GET choices

@@ -278,6 +278,35 @@ bool WwiseConnectionHandler::ImportAudioToWwise(bool suppressOutputMessages, Imp
 
 }
 
+bool WwiseConnectionHandler::GetWwiseProjectGlobals(bool suppressOutputMessages, WwiseProjectGlobals & WwiseProjGlobals)
+{
+	if (!waapi_Connect(MyCurrentWwiseConnection))
+	{
+		/// WWise connection not found!
+		ReportConnectionError(MyCurrentWwiseConnection);
+		return false;
+	}
+	using namespace AK::WwiseAuthoringAPI;
+
+	ObjectGetArgs Project;
+	Project.From = { std::string("ofType"),std::string("Project") };
+	Project.customReturnArgs = { std::string("filePath"),std::string("@DefaultLanguage") };
+
+	AkJson MoreRawReturnResults;
+	if (!waapi_GetObjectFromArgs(Project, MoreRawReturnResults))
+	{
+		//Something went wrong!
+		PrintToConsole("ERROR. Get Object Call Failed. Exiting.");
+		return false;
+	}
+	AkJson::Array Results;
+	waapi_GetWaapiResultsArray(Results, MoreRawReturnResults);
+
+
+
+
+}
+
 
 
 
