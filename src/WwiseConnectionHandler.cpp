@@ -120,7 +120,7 @@ WwiseObject WwiseConnectionHandler::GetSelectedObject()
 	
 	for (const auto &result : MyReturnResults)
 	{
-		WwiseObjectStruct obj;
+		WwiseObject obj;
 		mySelectedObject.properties.insert(std::make_pair("id", result["id"].GetVariant().GetString()));
 		mySelectedObject.properties.insert(std::make_pair("name", result["name"].GetVariant().GetString()));
 		mySelectedObject.properties.insert(std::make_pair("type", result["type"].GetVariant().GetString()));
@@ -161,45 +161,11 @@ bool WwiseConnectionHandler::GetWwiseObjects(bool suppressOuputMessages, ObjectG
 		return false;
 	}
 	waapi_GetWaapiResultsArray(Results, MoreRawReturnResults);
-
-	if (!suppressOuputMessages)
+	for (const auto &result : Results)
 	{
-		std::stringstream objectList;
-		objectList << "Getting Wwise Results....\n";
-		objectList << "Getting " + getargs.Select + " from " + getargs.From[0] +" "+getargs.From[1];
-		if (getargs.Where[0] != "")
-			objectList << " where " + getargs.Where[0] + " " + getargs.Where[1];
-		objectList << "\n";
-		int resultCount = 1;
-		// Data structs to hold string and number results in after translation. BOOL types get converted to strings
-		std::map<std::string, std::string> stringResults;
-		std::map<std::string, double> numberResults;
-
-		for (const auto &result : Results)
-		{
-			for (const auto &string : getargs.customReturnArgs)
-			{
-				if (result.HasKey(string))
-				{
-					waapi_TranslateJSONResults(stringResults, numberResults, result, string);
-				}
-			}
-			objectList << "Result " + std::to_string(resultCount) + ": " + "\n";
-
-			for (auto i : stringResults)
-			{
-				objectList << i.first + " = " + i.second + "\n";
-			}
-			for (auto i : numberResults)
-			{
-				objectList << i.first + " = " + std::to_string(i.second) + "\n";
-			}
-			resultCount++;
-		}
-		objectList << "..Done..\n";
-		std::string getResults = objectList.str();
-		PrintToConsole(getResults);
+		WwiseObject Result = ResultToWwiseObject(result);
 	}
+
 	return true;
 }
 
@@ -305,6 +271,85 @@ bool WwiseConnectionHandler::GetWwiseProjectGlobals(bool suppressOutputMessages,
 
 
 
+}
+
+WwiseObject WwiseConnectionHandler::ResultToWwiseObject(AK::WwiseAuthoringAPI::AkJson Result)
+{
+	using namespace AK::WwiseAuthoringAPI;
+	WwiseObject returnWwiseObject;
+
+
+	for (const auto i : Result.GetMap()) {
+		AkJson::Type type;
+		std::string stringKey = i.first;
+		type = i.second.GetType();
+
+		///Type is already AK Variant
+		if (type == AkJson::Type::Variant)
+		{
+			AkVariant variant = Result[stringKey].GetVariant();
+			if (variant.IsString())
+			{
+				//push value into string results
+				std::string key = stringKey;
+				std::string value = variant.GetString();
+				returnWwiseObject.properties.emplace(std::make_pair(key, value));
+			}
+			else if (variant.IsNumber())
+			{
+				//push value into number results
+				std::string key = stringKey;
+				double value = variant.operator double();
+				returnWwiseObject.numericProperties.emplace(std::make_pair(key, value));
+			}
+			else if (variant.GetType() == 11)//Type is bool
+			{
+				std::string key = stringKey;
+				bool b_value = variant.GetBoolean();
+				std::string value = std::to_string(b_value);
+				returnWwiseObject.properties.emplace(std::make_pair(key, value));
+			}
+		}
+		else if (type == AK::WwiseAuthoringAPI::AkJson::Type::Map)
+		{
+			for (const auto x : Result[stringKey].GetMap())
+			{
+				std::string first = x.first;
+				AkVariant variant = x.second.GetVariant();
+				if (variant.IsString())
+				{
+					//push value into string results
+					std::string key = first;
+					std::string value = variant.GetString();
+					returnWwiseObject.properties.emplace(std::make_pair(stringKey+"_"+key, value));
+				}
+				else if (variant.IsNumber())
+				{
+					//push value into number results
+					std::string key = first;
+					double value = variant.operator double();
+					returnWwiseObject.numericProperties.emplace(std::make_pair(stringKey + "_" + key, value));
+				}
+				else if (variant.GetType() == 11)//Type is bool
+				{
+					std::string key = first;
+					bool b_value = variant.GetBoolean();
+					std::string value = std::to_string(b_value);
+					returnWwiseObject.properties.emplace(std::make_pair(stringKey + "_" + key, value));
+				}
+			}
+		}
+		else if (type == AK::WwiseAuthoringAPI::AkJson::Type::Array)
+		{
+			///Not implemented
+		}
+		else
+		{
+			//"Ak retunr Type not found";
+		}
+	}
+
+	return returnWwiseObject;
 }
 
 

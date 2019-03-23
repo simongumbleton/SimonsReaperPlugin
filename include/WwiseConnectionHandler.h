@@ -8,10 +8,15 @@
 #include "WaapiFunctions.h"
 //#include "PluginWindow.h"
 
-typedef struct WwiseObjectStruct
+typedef struct WwiseObject WwiseObject;
+
+struct WwiseObject
 {
 	std::map<std::string, std::string> properties;
-} WwiseObject;
+	std::map<std::string, double> numericProperties;
+	std::vector<WwiseObject*> childObjects;
+	WwiseObject* parentObject;
+};
 
 struct RenderQueJob
 {
@@ -61,6 +66,8 @@ public:
 	bool ImportAudioToWwise(bool suppressOutputMessages, ImportObjectArgs& importArgs, AK::WwiseAuthoringAPI::AkJson::Array& Results);
 
 	bool GetWwiseProjectGlobals(bool suppressOutputMessages, WwiseProjectGlobals& WwiseProjGlobals);
+
+	WwiseObject ResultToWwiseObject(AK::WwiseAuthoringAPI::AkJson Result);
 
 
 private:
