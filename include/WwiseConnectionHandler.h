@@ -69,6 +69,8 @@ public:
 
 	WwiseObject ResultToWwiseObject(AK::WwiseAuthoringAPI::AkJson Result);
 
+	bool LinkParentChildObjects(std::vector<WwiseObject>& objects);
+
 
 private:
 

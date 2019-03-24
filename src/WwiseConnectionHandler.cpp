@@ -168,6 +168,8 @@ std::vector<WwiseObject> WwiseConnectionHandler::GetWwiseObjects(bool suppressOu
 		WwiseObjects.push_back(Result);
 	}
 
+	LinkParentChildObjects(WwiseObjects);
+
 	return WwiseObjects;
 }
 
@@ -352,6 +354,30 @@ WwiseObject WwiseConnectionHandler::ResultToWwiseObject(AK::WwiseAuthoringAPI::A
 	}
 
 	return returnWwiseObject;
+}
+
+bool WwiseConnectionHandler::LinkParentChildObjects(std::vector<WwiseObject>& objects)
+{	
+	//get parent links
+	for (auto &childobj : objects) {
+		std::string parentID;
+		//PrintToConsole(obj.properties.at("name"));
+		if (childobj.properties.find("parent_id") != childobj.properties.end())
+		{
+			parentID = childobj.properties.at("parent_id");
+		}
+		else continue;
+		
+		for (auto &possibleparent : objects) {
+			if (parentID == possibleparent.properties.at("id")) {
+				childobj.parentObject = &possibleparent;
+				possibleparent.childObjects.push_back(&childobj);
+				break;
+			}
+
+		}
+	}
+	return true;
 }
 
 

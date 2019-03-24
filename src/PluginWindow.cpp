@@ -288,7 +288,12 @@ void PluginWindow::handleUI_B_GO()
 	}
 
 	for (const auto obj : MyWwiseObjects) {
+		PrintToConsole("");
 		PrintToConsole(obj.properties.at("name"));
+		for (auto prpty : obj.properties) {
+			PrintToConsole(prpty.first + " = " + prpty.second);
+			
+		}
 	}
 
 }
