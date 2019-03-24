@@ -136,13 +136,13 @@ void WwiseConnectionHandler::GetChildrenFromSelectedParent(bool suppressOuputMes
 
 }
 
-bool WwiseConnectionHandler::GetWwiseObjects(bool suppressOuputMessages, ObjectGetArgs& getargs, AK::WwiseAuthoringAPI::AkJson::Array& Results)
+std::vector<WwiseObject> WwiseConnectionHandler::GetWwiseObjects(bool suppressOuputMessages, ObjectGetArgs& getargs, AK::WwiseAuthoringAPI::AkJson::Array& Results)
 {
 	if (!waapi_Connect(MyCurrentWwiseConnection))
 	{
 		/// WWise connection not found!
 		ReportConnectionError(MyCurrentWwiseConnection);
-		return false;
+		throw std::string("Wwise connection not found!");
 	}
 	using namespace AK::WwiseAuthoringAPI;
 
@@ -158,15 +158,17 @@ bool WwiseConnectionHandler::GetWwiseObjects(bool suppressOuputMessages, ObjectG
 	{
 		//Something went wrong!
 		PrintToConsole("ERROR. Get Object Call Failed. Exiting.");
-		return false;
+		throw std::string("ERROR. Get Object Call Failed!");
 	}
 	waapi_GetWaapiResultsArray(Results, MoreRawReturnResults);
+	std::vector<WwiseObject> WwiseObjects;
 	for (const auto &result : Results)
 	{
 		WwiseObject Result = ResultToWwiseObject(result);
+		WwiseObjects.push_back(Result);
 	}
 
-	return true;
+	return WwiseObjects;
 }
 
 bool WwiseConnectionHandler::CreateWwiseObjects(bool suppressOutputMessages, CreateObjectArgs & createArgs, AK::WwiseAuthoringAPI::AkJson::Array & Results)

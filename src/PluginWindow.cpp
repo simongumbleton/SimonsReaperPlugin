@@ -280,11 +280,15 @@ void PluginWindow::handleUI_B_GO()
 	PrintToConsole("Args collected");
 
 	AK::WwiseAuthoringAPI::AkJson::Array results;
+	std::vector<WwiseObject> MyWwiseObjects;
+	try {
+		MyWwiseObjects = parentWwiseConnectionHnd->GetWwiseObjects(false, getArgsFromGUI, results);
+	}catch (std::string e) {
+		PrintToConsole(e);
+	}
 
-	if (!parentWwiseConnectionHnd->GetWwiseObjects(false, getArgsFromGUI, results))
-	{
-		//ERROR
-		return;
+	for (const auto obj : MyWwiseObjects) {
+		PrintToConsole(obj.properties.at("name"));
 	}
 
 }
