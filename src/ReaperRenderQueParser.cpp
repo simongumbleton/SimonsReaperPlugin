@@ -56,6 +56,8 @@ std::vector<std::string> GetListOfRenderQues()
 	string QrenderPath = resourcePath + "\\QueuedRenders";
 	std::vector<string> renderQueFiles;
 
+	//TODO add some saftey checks here. It can crash if it finds a file it doesn't know what to do with. Reaper crashed and left a file with no extension and Japanese characters, which crashed the plugin here
+
 	for (const auto & p : filesystem::directory_iterator(QrenderPath))
 	{
 		filesystem::path resourceFile = p.path();
