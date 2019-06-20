@@ -432,8 +432,26 @@ bool CreateImportWindow::ImportJobsIntoWwise()
 
 			if (job.hasPerFileOverrides)
 			{
+				int fileOverrideIndex = 0;
 				for (auto fileOverride : job.perFileOverrides)
 				{
+
+					std::string file = fileOverride.RenderJobFile;	// file is just the filename here
+
+					// the RenderQueJob filelist is the whole path to the file, need to get this from the render job and use it for the import step
+
+					for (auto renderJobFilePath : job.RenderQueJobFileList)
+					{
+						if (renderJobFilePath.find(file))
+						{
+							// we found a render file path matching our override file
+							GlobalListOfRenderQueJobs[jobIndex].perFileOverrides[fileOverrideIndex].RenderJobFile = renderJobFilePath;
+
+							//remove this overridden file from the main job render file list
+
+
+						}
+					}
 
 				}
 			}
