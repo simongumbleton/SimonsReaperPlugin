@@ -428,6 +428,19 @@ bool CreateImportWindow::ImportJobsIntoWwise()
 	{
 		if (job.hasRendered)
 		{
+			///deal with file overrides here
+
+			if (job.hasPerFileOverrides)
+			{
+				for (auto fileOverride : job.perFileOverrides)
+				{
+
+				}
+			}
+
+
+
+
 			ImportObjectArgs curJobImportArgs = SetupImportArgs
 			(
 				job.parentWwiseObject,
@@ -691,6 +704,7 @@ void CreateImportWindow::HandleUI_SetParentForRenderJob(WwiseObject selectedPare
 	std::string parentWwiseType = selectedParent.properties["type"];
 	std::string parentWwisePath = selectedParent.properties["path"];
 	TVITEM item;
+	TVITEM parentItem;
 
 	if (parentWwiseID == "")
 	{
@@ -716,54 +730,133 @@ void CreateImportWindow::HandleUI_SetParentForRenderJob(WwiseObject selectedPare
 	item.mask = TVIF_TEXT | TVIF_CHILDREN;
 	item.cchTextMax = 256;
 	item.pszText = buffer;
+	bool isItemWav = false;
 	if (TreeView_GetItem(tr_Tree_RenderJobTree, &item))
 	{
 		if (item.cChildren != 1)
 		{
-			PrintToConsole("Render Job selected has no children");
-			return;
+			// Check if selected thing is wav?
+			// Support overriding Wwise imports for child wavs of a render job?
+			std::string itemName = item.pszText;
+			if (itemName.find(".wav") != itemName.npos)
+			{
+				//Selected thing is a wav file! This render job has overrides
+
+				isItemWav = true;
+
+
+			}
+			else {
+				PrintToConsole("Render Job selected has no children");
+				return;
+
+			}
+			
 		}
-		//Find the matching Render Que Job
-		std::string itemName = item.pszText;
+		//Find the matching Render Que Job that we selected OR find the parent job of the selected wav
+		if (isItemWav) {
+
+			HTREEITEM hparentItem = TreeView_GetParent(tr_Tree_RenderJobTree,item.hItem);
+			if (hparentItem == NULL) // Nothing selected
+			{
+				return;
+			}
+			TCHAR buffer[256];
+			parentItem.hItem = hparentItem;
+			parentItem.mask = TVIF_TEXT;
+			parentItem.cchTextMax = 256;
+			parentItem.pszText = buffer;
+			if (TreeView_GetItem(tr_Tree_RenderJobTree, &parentItem))
+			{
+				std::string itemName = parentItem.pszText;
+			}
+			
+
+		}
+		std::string jobName = "";
+		if (isItemWav) {
+			jobName = parentItem.pszText;
+		}
+		else {
+			jobName = item.pszText;
+		}
 		int count = 0;
 		for (auto renderJob : GlobalListOfRenderQueJobs)
 		{
 			std::filesystem::path filePath = renderJob.RenderQueFilePath;
 			std::string filename = filePath.filename().string();
 
-			if (itemName.find(filename) != itemName.npos)
+			if (jobName.find(filename) != jobName.npos)
 			{
 				//Found a match
 				//PrintToConsole("Found a match");
-				GlobalListOfRenderQueJobs[count].parentWwiseObject = selectedParent;
 
-				GlobalListOfRenderQueJobs[count].isVoice = GetIsVoice();
+				if (isItemWav) {
+					GlobalListOfRenderQueJobs[count].hasPerFileOverrides = true;
+					RenderJobFileOverride fileOverride;
+					fileOverride.RenderJobFile = item.pszText;
+					fileOverride.parentWwiseObject = selectedParent;
+					fileOverride.isVoice = GetIsVoice();
+					fileOverride.OrigDirMatchesWwise = GetOrigsDirMatchesWwise();
+					if (!fileOverride.OrigDirMatchesWwise)
+					{
+						fileOverride.userOrigsSubDir = GetUserOriginalsSubDir();
+					}
 
-				GlobalListOfRenderQueJobs[count].OrigDirMatchesWwise = GetOrigsDirMatchesWwise();
+					std::string language;
+					if (fileOverride.isVoice)
+					{
+						fileOverride.ImportLanguage = GetLanguage();
+						language = fileOverride.ImportLanguage;
+					}
+					else
+					{
+						fileOverride.ImportLanguage = "SFX";
+						language = "SFX";
+					}
 
-				if (!GlobalListOfRenderQueJobs[count].OrigDirMatchesWwise)
-				{
-					GlobalListOfRenderQueJobs[count].userOrigsSubDir = GetUserOriginalsSubDir();
+					GlobalListOfRenderQueJobs[count].perFileOverrides.push_back(fileOverride);
+					
+					//Set the display Text to include wwise parent name and type
+					std::string newItemName = parentWwiseName + "(" + parentWwiseType + " : " + ")  - " + fileOverride.RenderJobFile;
+					item.mask = TVIF_TEXT;
+					item.pszText = &newItemName[0];
+					TreeView_SetItem(tr_Tree_RenderJobTree, &item);
+					PrintToConsole(fileOverride.RenderJobFile + " Imports into " + renderJob.parentWwiseObject.properties["name"]);
+
 				}
+				else {
 
-				std::string language;
-				if (GlobalListOfRenderQueJobs[count].isVoice)
-				{
-					GlobalListOfRenderQueJobs[count].ImportLanguage = GetLanguage();
-					language = GlobalListOfRenderQueJobs[count].ImportLanguage;
-				}
-				else
-				{
-					GlobalListOfRenderQueJobs[count].ImportLanguage = "SFX";
-					language = "SFX";
-				}
+					GlobalListOfRenderQueJobs[count].parentWwiseObject = selectedParent;
 
-				//Set the display Text to include wwise parent name and type
-				std::string newItemName = parentWwiseName + "(" + parentWwiseType +" : "+ language + ")  - " + filename;
-				item.mask = TVIF_TEXT;
-				item.pszText = &newItemName[0];
-				TreeView_SetItem(tr_Tree_RenderJobTree, &item);
-				PrintToConsole(renderJob.RenderQueFilePath + " Imports into " + renderJob.parentWwiseObject.properties["name"]);
+					GlobalListOfRenderQueJobs[count].isVoice = GetIsVoice();
+
+					GlobalListOfRenderQueJobs[count].OrigDirMatchesWwise = GetOrigsDirMatchesWwise();
+
+					if (!GlobalListOfRenderQueJobs[count].OrigDirMatchesWwise)
+					{
+						GlobalListOfRenderQueJobs[count].userOrigsSubDir = GetUserOriginalsSubDir();
+					}
+
+					std::string language;
+					if (GlobalListOfRenderQueJobs[count].isVoice)
+					{
+						GlobalListOfRenderQueJobs[count].ImportLanguage = GetLanguage();
+						language = GlobalListOfRenderQueJobs[count].ImportLanguage;
+					}
+					else
+					{
+						GlobalListOfRenderQueJobs[count].ImportLanguage = "SFX";
+						language = "SFX";
+					}
+					//Set the display Text to include wwise parent name and type
+					std::string newItemName = parentWwiseName + "(" + parentWwiseType + " : " + ")  - " + filename;
+					item.mask = TVIF_TEXT;
+					item.pszText = &newItemName[0];
+					TreeView_SetItem(tr_Tree_RenderJobTree, &item);
+					PrintToConsole(renderJob.RenderQueFilePath + " Imports into " + renderJob.parentWwiseObject.properties["name"]);
+				}
+				
 			}
 			count++;
 		}

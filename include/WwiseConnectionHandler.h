@@ -18,6 +18,16 @@ struct WwiseObject
 	WwiseObject* parentObject;
 };
 
+struct RenderJobFileOverride
+{
+	std::string RenderJobFile;
+	WwiseObject parentWwiseObject;
+	bool isVoice = false;
+	std::string ImportLanguage;
+	bool OrigDirMatchesWwise = false;
+	std::string userOrigsSubDir;
+};
+
 struct RenderQueJob
 {
 	std::string RenderQueFilePath;
@@ -30,6 +40,8 @@ struct RenderQueJob
 	std::string ImportLanguage;
 	bool OrigDirMatchesWwise = false;
 	std::string userOrigsSubDir;
+	bool hasPerFileOverrides = false;
+	std::vector<RenderJobFileOverride> perFileOverrides;
 	
 
 };
