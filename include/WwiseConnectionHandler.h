@@ -26,6 +26,7 @@ struct RenderJobFileOverride
 	std::string ImportLanguage;
 	bool OrigDirMatchesWwise = false;
 	std::string userOrigsSubDir;
+	bool hasImported = false;
 };
 
 struct RenderQueJob

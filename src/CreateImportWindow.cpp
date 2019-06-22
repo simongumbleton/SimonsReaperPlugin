@@ -347,9 +347,9 @@ void CreateImportWindow::handleUI_RenderImport()
 
 	for (auto job : GlobalListOfRenderQueJobs)
 	{
-		if (job.parentWwiseObject.properties.size() == 0)
+		if (job.parentWwiseObject.properties.size() == 0 && job.hasPerFileOverrides==false)
 		{
-			PrintToConsole("  ERROR! A render job has no valid Wwise Parent!   \n");
+			PrintToConsole("  ERROR! A render job has no import settings!   \n");
 			PrintToConsole(job.RenderQueFilePath);
 			SetStatusMessageText("Error");
 			return;
@@ -424,7 +424,7 @@ bool CreateImportWindow::ImportJobsIntoWwise()
 
 	int jobIndex = 0;
 	int importSuccesses = 0;
-	for (auto job : GlobalListOfRenderQueJobs)
+	for (auto &job : GlobalListOfRenderQueJobs)
 	{
 		if (job.hasRendered)
 		{
@@ -433,32 +433,51 @@ bool CreateImportWindow::ImportJobsIntoWwise()
 			if (job.hasPerFileOverrides)
 			{
 				int fileOverrideIndex = 0;
-				for (auto fileOverride : job.perFileOverrides)
+				for (auto &fileOverride : job.perFileOverrides)
 				{
 
 					std::string file = fileOverride.RenderJobFile;	// file is just the filename here
 
 					// the RenderQueJob filelist is the whole path to the file, need to get this from the render job and use it for the import step
 
-					for (auto renderJobFilePath : job.RenderQueJobFileList)
+					for (auto &renderJobFilePath : job.RenderQueJobFileList)
 					{
-						if (renderJobFilePath.find(file))
+						std::size_t found = renderJobFilePath.rfind(file);
+						if (found != renderJobFilePath.npos)
 						{
 							// we found a render file path matching our override file
-							GlobalListOfRenderQueJobs[jobIndex].perFileOverrides[fileOverrideIndex].RenderJobFile = renderJobFilePath;
+							fileOverride.RenderJobFile = renderJobFilePath;
 
 							//remove this overridden file from the main job render file list
-
+							renderJobFilePath = "";
 
 						}
 					}
 
+					std::vector<std::string> audiofile;
+					audiofile.push_back(fileOverride.RenderJobFile);
+
+					//deal with importing the overriden files
+					ImportObjectArgs curFileOverrideImportArgs = SetupImportArgs
+					(
+						fileOverride.parentWwiseObject,
+						fileOverride.isVoice,
+						fileOverride.ImportLanguage,
+						fileOverride.OrigDirMatchesWwise,
+						fileOverride.userOrigsSubDir,
+						audiofile
+						
+					);
+					if (ImportCurrentRenderJob(curFileOverrideImportArgs))
+					{
+						fileOverride.hasImported = true;
+					}
+
 				}
+
 			}
 
-
-
-
+			// import the remaining files from the job that are not overrideen
 			ImportObjectArgs curJobImportArgs = SetupImportArgs
 			(
 				job.parentWwiseObject,
@@ -468,7 +487,26 @@ bool CreateImportWindow::ImportJobsIntoWwise()
 				job.userOrigsSubDir,
 				job.RenderQueJobFileList
 			);
-			if (ImportCurrentRenderJob(curJobImportArgs))
+			if (curJobImportArgs.ImportFileList.empty())
+			{
+				int numOfOverrides = job.perFileOverrides.size();
+				int numOfImports = 0;
+				// job list for importing was empty. Check if all overrides completed
+				for (auto overrideJob : job.perFileOverrides)
+				{
+					if (overrideJob.hasImported)
+					{
+						numOfImports += 1;
+					}
+				}
+				if (numOfImports == numOfOverrides)
+				{
+					GlobalListOfRenderQueJobs[jobIndex].hasImported = true;
+					importSuccesses++;
+					SendMessage(tr_Progress_Import, PBM_SETPOS, importSuccesses, 0);
+				}
+			}
+			else if (ImportCurrentRenderJob(curJobImportArgs))
 			{
 				GlobalListOfRenderQueJobs[jobIndex].hasImported = true;
 				importSuccesses++;
@@ -524,6 +562,10 @@ ImportObjectArgs CreateImportWindow::SetupImportArgs(WwiseObject parent, bool is
 	}
 	for (auto file : ImportFiles)
 	{
+		if (file == "")
+		{
+			continue;
+		}
 		std::string audiofile = file.substr(file.find_last_of("/\\")+1);
 		std::string rawAudioFile = audiofile.substr(0, audiofile.find_last_of("."));
 		std::string objectPath = parent.properties["path"] +"\\"+ importArgs.objectType + rawAudioFile;
