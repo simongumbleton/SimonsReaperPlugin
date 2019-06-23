@@ -42,7 +42,7 @@ struct RenderQueJob
 	bool OrigDirMatchesWwise = false;
 	std::string userOrigsSubDir;
 	bool hasPerFileOverrides = false;
-	std::vector<RenderJobFileOverride> perFileOverrides;
+	std::map<std::string, RenderJobFileOverride> perFileOverridesmap;
 	
 
 };
