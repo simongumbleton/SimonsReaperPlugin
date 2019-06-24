@@ -801,6 +801,7 @@ void CreateImportWindow::HandleUI_SetParentForRenderJob(WwiseObject selectedPare
 		{
 			HTREEITEM nextSelected = TreeView_GetNextSelected(tr_Tree_RenderJobTree, hSelectedItem);
 			selectedItems.push_back(nextSelected);
+			hSelectedItem = nextSelected;
 		}
 	}
 
