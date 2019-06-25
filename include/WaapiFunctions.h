@@ -16,6 +16,7 @@ struct CurrentWwiseConnection {
 	int timeoutMS = 2000;
 	bool connected = false;
 	bool supressDebugOutput = false;
+	int year = 0;
 };
 
 struct ObjectGetArgs {	/// Init struct with some sensible defaults that can be error checked
@@ -109,6 +110,9 @@ struct CreateObjectChoices {
 	////     Connect to wwise client
 	///////////////////////////////
 	bool waapi_Connect(CurrentWwiseConnection &wwiseConnectionReturn);
+
+	// Set the automation mode
+	bool waapi_SetAutomationMode(bool enable);
 
 	///////////////////////////////
 	////     Get Selected Objects

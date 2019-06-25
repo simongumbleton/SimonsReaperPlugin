@@ -10,6 +10,7 @@
 
 ///Socket client for Waapi connection
 AK::WwiseAuthoringAPI::Client my_client;
+CurrentWwiseConnection myWwiseConnection;
 
 
 
@@ -30,6 +31,7 @@ bool waapi_Connect(CurrentWwiseConnection &wwiseConnectionReturn)
 		{
 			wwiseConnectionReturn.port = my_Waapi_Port;
 			wwiseConnectionReturn.Version = wwiseInfo["version"]["displayName"].GetVariant().GetString();
+			wwiseConnectionReturn.year = wwiseInfo["version"]["year"].GetVariant().GetInt32();
 			wwiseConnectionReturn.connected = true;
 		}
 	}
@@ -38,7 +40,18 @@ bool waapi_Connect(CurrentWwiseConnection &wwiseConnectionReturn)
 		MessageBox(NULL, "! ERROR - Failed to Connect to Wwise. !", "Wwise Connection Status", MB_OK);
 		wwiseConnectionReturn.connected = false;
 	}
+	myWwiseConnection = wwiseConnectionReturn;
 	return success;
+}
+
+bool waapi_SetAutomationMode(bool enable)
+{
+	using namespace AK::WwiseAuthoringAPI;
+	AkJson automationMode = AkJson(AkJson::Map{ {"enable", AkVariant(enable)} });
+	AkJson out = AkJson(AkJson::Map());
+	AkJson res = AkJson(AkJson::Map());
+
+	return my_client.Call(ak::wwise::debug::enableAutomationMode, automationMode, out, res, 0);
 }
 
 
@@ -216,6 +229,7 @@ bool waapi_CreateObjectFromArgs(CreateObjectArgs & createArgs, AK::WwiseAuthorin
 		PrintToConsole("!ERROR! - One or more required inputs are missing from Create Objects call");
 		return false;
 	}
+	bool autoAddSC = true;
 
 	AkJson args; //"@RandomOrSequence"
 	args = (AkJson::Map{
@@ -230,6 +244,10 @@ bool waapi_CreateObjectFromArgs(CreateObjectArgs & createArgs, AK::WwiseAuthorin
 	if (createArgs.Type == "RandomSequenceContainer")
 	{
 		args.GetMap().insert(std::make_pair("@RandomOrSequence", AkVariant(createArgs.RandomOrSequence)));
+	}
+	if (myWwiseConnection.year > 2017)
+	{
+		args.GetMap().insert(std::make_pair("autoAddToSourceControl", AkVariant(autoAddSC)));
 	}
 
 
@@ -252,7 +270,7 @@ bool wappi_ImportFromArgs(ImportObjectArgs & importArgs, AK::WwiseAuthoringAPI::
 			});
 		items.push_back(importItem);
 	}
-
+	bool autoAddSC = true;
 	AkJson args;
 	args = (AkJson::Map{
 		{ "importOperation", AkVariant(importArgs.importOperation) },
@@ -264,6 +282,11 @@ bool wappi_ImportFromArgs(ImportObjectArgs & importArgs, AK::WwiseAuthoringAPI::
 		} },
 		{ "imports", items }
 		});
+
+	if (myWwiseConnection.year > 2017)
+	{
+		args.GetMap().insert(std::make_pair("autoAddToSourceControl", AkVariant(autoAddSC)));
+	}
 
 	AkJson options = AkJson(AkJson::Map());
 

@@ -81,6 +81,12 @@ bool WwiseConnectionHandler::ConnectToWwise(bool suppressOuputMessages, int port
 			//MessageBox(NULL, WwiseConnectionStatus.c_str(), "Wwise Connection Status", MB_OK);
 			PrintToConsole(WwiseConnectionStatus);
 		}
+
+		if (!waapi_SetAutomationMode(true))
+		{
+			PrintToConsole("Failed to set automation mode. Not supported in WAAPI 2017 or earlier");
+		}
+
 		return true;
 	}
 	else
@@ -228,6 +234,13 @@ bool WwiseConnectionHandler::ImportAudioToWwise(bool suppressOutputMessages, Imp
 		ReportConnectionError(MyCurrentWwiseConnection);
 		return false;
 	}
+	bool autoAddToSourceControl = false;
+
+	if (MyCurrentWwiseConnection.year > 2017)
+	{
+		autoAddToSourceControl = true;
+	}
+
 	using namespace AK::WwiseAuthoringAPI;
 
 	waapi_UndoHandler(Begin, "Auto Import");
