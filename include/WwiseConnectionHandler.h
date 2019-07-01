@@ -231,6 +231,7 @@ private:
 	bool ImportJobsIntoWwise();
 	ImportObjectArgs SetupImportArgs(WwiseObject parent, bool isVoice, std::string ImportLanguage, bool OrigsDirMatchesWwise,std::string userOrigSubDir, std::vector<std::string> ImportFiles);
 	bool ImportCurrentRenderJob(ImportObjectArgs curJobImportArgs);
+	bool AudioFileExistsInWwise(std::string audioFile, WwiseObject parent);
 
 	void backupRenderQueFiles();
 	void restoreRenderQueFiles();

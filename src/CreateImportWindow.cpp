@@ -454,6 +454,14 @@ bool CreateImportWindow::ImportJobsIntoWwise()
 						}
 					}
 
+
+					if (AudioFileExistsInWwise(file,fileOverride.second.parentWwiseObject))
+					{
+						//audio file already exists under this parent, so replace the originals path
+					}
+
+
+
 					std::vector<std::string> audiofile;
 					audiofile.push_back(fileOverride.second.RenderJobFile);
 
@@ -581,6 +589,40 @@ bool CreateImportWindow::ImportCurrentRenderJob(ImportObjectArgs curJobImportArg
 {
 	AK::WwiseAuthoringAPI::AkJson::Array results;
 	return parentWwiseConnectionHnd->ImportAudioToWwise(false, curJobImportArgs, results);
+}
+
+bool CreateImportWindow::AudioFileExistsInWwise(std::string audioFile, WwiseObject parent)
+{
+	ObjectGetArgs getArgs;
+	std::string id = parent.properties["id"];
+	getArgs.From = { "id",id };
+	getArgs.Select = "descendants";
+	getArgs.Where = { "type:isIn","AudioFileSource" };
+	getArgs.customReturnArgs.push_back(""); // TODO add the original wav path as a custom return arg
+
+	AK::WwiseAuthoringAPI::AkJson::Array results;
+	std::vector<WwiseObject> MyWwiseObjects;
+	try {
+		MyWwiseObjects = parentWwiseConnectionHnd->GetWwiseObjects(false, getArgs, results);
+	}
+	catch (std::string e) {
+		PrintToConsole(e);
+	}
+
+	for (const auto obj : MyWwiseObjects) {
+		PrintToConsole("");
+		PrintToConsole(obj.properties.at("name"));
+		for (auto prpty : obj.properties) {
+			PrintToConsole(prpty.first + " = " + prpty.second);
+
+		}
+	}
+
+
+
+
+
+	return false;
 }
 
 void CreateImportWindow::backupRenderQueFiles()
