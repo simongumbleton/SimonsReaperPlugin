@@ -454,8 +454,8 @@ bool CreateImportWindow::ImportJobsIntoWwise()
 						}
 					}
 
-
-					if (AudioFileExistsInWwise(file,fileOverride.second.parentWwiseObject))
+					std::string existingOriginalsPath = "";
+					if (AudioFileExistsInWwise(file,fileOverride.second.parentWwiseObject, existingOriginalsPath))
 					{
 						//audio file already exists under this parent, so replace the originals path
 					}
@@ -591,14 +591,14 @@ bool CreateImportWindow::ImportCurrentRenderJob(ImportObjectArgs curJobImportArg
 	return parentWwiseConnectionHnd->ImportAudioToWwise(false, curJobImportArgs, results);
 }
 
-bool CreateImportWindow::AudioFileExistsInWwise(std::string audioFile, WwiseObject parent)
+bool CreateImportWindow::AudioFileExistsInWwise(std::string audioFile, WwiseObject parent, std::string& existingOriginalDir)
 {
 	ObjectGetArgs getArgs;
 	std::string id = parent.properties["id"];
 	getArgs.From = { "id",id };
 	getArgs.Select = "descendants";
-	getArgs.Where = { "type:isIn","AudioFileSource" };
-	getArgs.customReturnArgs.push_back(""); // TODO add the original wav path as a custom return arg
+	getArgs.Where = { "type:isIn","Sound" };
+	getArgs.customReturnArgs.push_back("sound:originalWavFilePath"); // TODO add the original wav path as a custom return arg
 
 	AK::WwiseAuthoringAPI::AkJson::Array results;
 	std::vector<WwiseObject> MyWwiseObjects;
@@ -610,17 +610,28 @@ bool CreateImportWindow::AudioFileExistsInWwise(std::string audioFile, WwiseObje
 	}
 
 	for (const auto obj : MyWwiseObjects) {
-		PrintToConsole("");
-		PrintToConsole(obj.properties.at("name"));
-		for (auto prpty : obj.properties) {
-			PrintToConsole(prpty.first + " = " + prpty.second);
-
+		//PrintToConsole("");
+		//PrintToConsole(obj.properties.at("name"));
+		std::string name = obj.properties.at("name")+".wav";
+		if (name == audioFile)
+		{
+			std::string fullPath = obj.properties.at("sound:originalWavFilePath");
+			fullPath.erase(0, fullPath.find("Originals\\"));
+			fullPath.erase(0, 10);
+			size_t pos = fullPath.find(audioFile);
+			fullPath.erase(pos, audioFile.length());
+			if (fullPath.find("Voices\\") != fullPath.npos)
+			{
+				fullPath.erase(0, 7);
+			}
+			if (fullPath.find("SFX\\") != fullPath.npos)
+			{
+				fullPath.erase(0, 4);
+			}
+			
+			return true;
 		}
 	}
-
-
-
-
 
 	return false;
 }
