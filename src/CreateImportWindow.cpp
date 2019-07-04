@@ -456,6 +456,7 @@ bool CreateImportWindow::ImportJobsIntoWwise()
 
 					std::string existingOriginalsPath = "";
 					std::string existingWwisePath = "";
+
 					if (AudioFileExistsInWwise(file,fileOverride.second.parentWwiseObject, existingOriginalsPath, existingWwisePath))
 					{
 						//audio file already exists under this parent, so replace the originals path
@@ -600,7 +601,7 @@ bool CreateImportWindow::ImportCurrentRenderJob(ImportObjectArgs curJobImportArg
 	return parentWwiseConnectionHnd->ImportAudioToWwise(false, curJobImportArgs, results);
 }
 
-bool CreateImportWindow::AudioFileExistsInWwise(std::string audioFile, WwiseObject parent, std::string& existingOriginalDir, std::string& existingWwisePath)
+bool CreateImportWindow::AudioFileExistsInWwise(std::string audioFile, WwiseObject& parent, std::string& existingOriginalDir, std::string& existingWwisePath)
 {
 	ObjectGetArgs getArgs;
 	std::string id = parent.properties["id"];
@@ -625,6 +626,7 @@ bool CreateImportWindow::AudioFileExistsInWwise(std::string audioFile, WwiseObje
 		std::string name = obj.properties.at("name")+".wav";
 		if (name == audioFile)
 		{
+			std::string wwisePath = obj.properties.at("path");
 			std::string fullPath = obj.properties.at("sound:originalWavFilePath");
 
 			fullPath.erase(0, fullPath.find("Originals\\"));
@@ -641,7 +643,11 @@ bool CreateImportWindow::AudioFileExistsInWwise(std::string audioFile, WwiseObje
 			size_t pos = fullPath.find(audioFile);
 			fullPath.erase(pos, audioFile.length());
 
+			size_t pos = wwisePath.find(obj.properties.at("name"));
+			wwisePath.erase(pos, obj.properties.at("name").length());
+
 			existingOriginalDir = fullPath;
+			existingWwisePath = wwisePath;
 
 			
 			return true;
@@ -650,6 +656,7 @@ bool CreateImportWindow::AudioFileExistsInWwise(std::string audioFile, WwiseObje
 
 	return false;
 }
+
 
 void CreateImportWindow::backupRenderQueFiles()
 {
