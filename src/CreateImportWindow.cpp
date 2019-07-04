@@ -455,9 +455,18 @@ bool CreateImportWindow::ImportJobsIntoWwise()
 					}
 
 					std::string existingOriginalsPath = "";
-					if (AudioFileExistsInWwise(file,fileOverride.second.parentWwiseObject, existingOriginalsPath))
+					std::string existingWwisePath = "";
+					if (AudioFileExistsInWwise(file,fileOverride.second.parentWwiseObject, existingOriginalsPath, existingWwisePath))
 					{
 						//audio file already exists under this parent, so replace the originals path
+						if (fileOverride.second.ImportLanguage != "SFX")
+						{
+							size_t pos = existingOriginalsPath.find(fileOverride.second.ImportLanguage);
+							existingOriginalsPath.erase(pos, fileOverride.second.ImportLanguage.length() + 1);
+							
+						}
+						fileOverride.second.OrigDirMatchesWwise = false;
+						fileOverride.second.userOrigsSubDir = existingOriginalsPath;
 					}
 
 
@@ -591,7 +600,7 @@ bool CreateImportWindow::ImportCurrentRenderJob(ImportObjectArgs curJobImportArg
 	return parentWwiseConnectionHnd->ImportAudioToWwise(false, curJobImportArgs, results);
 }
 
-bool CreateImportWindow::AudioFileExistsInWwise(std::string audioFile, WwiseObject parent, std::string& existingOriginalDir)
+bool CreateImportWindow::AudioFileExistsInWwise(std::string audioFile, WwiseObject parent, std::string& existingOriginalDir, std::string& existingWwisePath)
 {
 	ObjectGetArgs getArgs;
 	std::string id = parent.properties["id"];
@@ -599,7 +608,7 @@ bool CreateImportWindow::AudioFileExistsInWwise(std::string audioFile, WwiseObje
 	getArgs.Select = "descendants";
 	getArgs.Where = { "type:isIn","Sound" };
 	getArgs.customReturnArgs.push_back("sound:originalWavFilePath"); 
-	getArgs.customReturnArgs.push_back("audioSource:language");
+	getArgs.customReturnArgs.push_back("path");
 
 	AK::WwiseAuthoringAPI::AkJson::Array results;
 	std::vector<WwiseObject> MyWwiseObjects;
@@ -631,6 +640,8 @@ bool CreateImportWindow::AudioFileExistsInWwise(std::string audioFile, WwiseObje
 
 			size_t pos = fullPath.find(audioFile);
 			fullPath.erase(pos, audioFile.length());
+
+			existingOriginalDir = fullPath;
 
 			
 			return true;
