@@ -598,7 +598,8 @@ bool CreateImportWindow::AudioFileExistsInWwise(std::string audioFile, WwiseObje
 	getArgs.From = { "id",id };
 	getArgs.Select = "descendants";
 	getArgs.Where = { "type:isIn","Sound" };
-	getArgs.customReturnArgs.push_back("sound:originalWavFilePath"); // TODO add the original wav path as a custom return arg
+	getArgs.customReturnArgs.push_back("sound:originalWavFilePath"); 
+	getArgs.customReturnArgs.push_back("audioSource:language");
 
 	AK::WwiseAuthoringAPI::AkJson::Array results;
 	std::vector<WwiseObject> MyWwiseObjects;
@@ -616,18 +617,21 @@ bool CreateImportWindow::AudioFileExistsInWwise(std::string audioFile, WwiseObje
 		if (name == audioFile)
 		{
 			std::string fullPath = obj.properties.at("sound:originalWavFilePath");
+
 			fullPath.erase(0, fullPath.find("Originals\\"));
-			fullPath.erase(0, 10);
+
+			if (fullPath.find("Originals\\Voices\\") != fullPath.npos)
+			{
+				fullPath.erase(0, 17);
+			}
+			if (fullPath.find("Originals\\SFX\\") != fullPath.npos)
+			{
+				fullPath.erase(0, 14);
+			}
+
 			size_t pos = fullPath.find(audioFile);
 			fullPath.erase(pos, audioFile.length());
-			if (fullPath.find("Voices\\") != fullPath.npos)
-			{
-				fullPath.erase(0, 7);
-			}
-			if (fullPath.find("SFX\\") != fullPath.npos)
-			{
-				fullPath.erase(0, 4);
-			}
+
 			
 			return true;
 		}
