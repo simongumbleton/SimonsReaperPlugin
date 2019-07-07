@@ -495,7 +495,34 @@ bool CreateImportWindow::ImportJobsIntoWwise()
 
 			}
 
+
 			// import the remaining files from the job that are not overrideen
+
+			for (auto file : job.RenderQueJobFileList)
+			{
+				std::string existingOriginalsPath = "";
+				std::string existingWwisePath = "";
+				// file is the full path in this context, need to get the just the filename
+				if (file.rfind("\\") != file.npos)
+				{
+					file.erase(0, file.rfind("\\")+1);
+				}
+
+				if (AudioFileExistsInWwise(file, job.parentWwiseObject, existingOriginalsPath, existingWwisePath))
+				{
+					//audio file already exists under this parent, so replace the originals path
+					if (job.ImportLanguage != "SFX")
+					{
+						size_t pos = existingOriginalsPath.find(job.ImportLanguage);
+						existingOriginalsPath.erase(pos, job.ImportLanguage.length() + 1);
+
+					}
+					job.OrigDirMatchesWwise = false;
+					job.userOrigsSubDir = existingOriginalsPath;
+				}
+
+			}
+
 			ImportObjectArgs curJobImportArgs = SetupImportArgs
 			(
 				job.parentWwiseObject,
