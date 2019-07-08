@@ -503,6 +503,7 @@ bool CreateImportWindow::ImportJobsIntoWwise()
 				std::string existingOriginalsPath = "";
 				std::string existingWwisePath = "";
 				// file is the full path in this context, need to get the just the filename
+				std::string fullPath = file;
 				if (file.rfind("\\") != file.npos)
 				{
 					file.erase(0, file.rfind("\\")+1);
@@ -517,8 +518,29 @@ bool CreateImportWindow::ImportJobsIntoWwise()
 						existingOriginalsPath.erase(pos, job.ImportLanguage.length() + 1);
 
 					}
-					job.OrigDirMatchesWwise = false;
-					job.userOrigsSubDir = existingOriginalsPath;
+					std::vector<std::string> importfiles;
+					importfiles.push_back(fullPath);
+
+					ImportObjectArgs curJobImportArgs = SetupImportArgs
+					(
+						job.parentWwiseObject,
+						job.isVoice,
+						job.ImportLanguage,
+						false,
+						existingOriginalsPath,
+						importfiles
+					);
+					if (ImportCurrentRenderJob(curJobImportArgs))
+					{
+						for (auto &renderJobFile : job.RenderQueJobFileList)
+						{
+							if (renderJobFile == fullPath)
+							{
+								renderJobFile = "";
+							}
+						}
+					}
+
 				}
 
 			}

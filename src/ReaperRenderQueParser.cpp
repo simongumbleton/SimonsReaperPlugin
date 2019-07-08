@@ -100,6 +100,7 @@ RenderQueJob CreateRenderQueJobFromRenderQueFile(std::string pathToQueFile)
 					string sStart(start);
 					string sEnd(end);
 					size_t eraseFrom = sStart.find(sEnd);
+					// TODO some kind of error checking here to catch very long strings? string out of range
 					sStart.erase(eraseFrom, sStart.npos);
 					RenderFiles.push_back(sStart);
 					//PrintToConsole(line);
