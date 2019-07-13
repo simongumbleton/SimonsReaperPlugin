@@ -93,6 +93,10 @@ RenderQueJob CreateRenderQueJobFromRenderQueFile(std::string pathToQueFile)
 				{
 					//Found a render output file!
 					// --- /////   word.erase(std::remove(word.begin(), word.end(), '"'), word.end());	// Removing "" from the result
+					if (word.length() > 256) {
+						PrintToConsole("WARNING! Export path found in render que greater than 256 chars. File not availble for import");
+						continue;
+					}
 					char input[256];
 					strcpy(input, word.c_str());
 					char* start = strchr(input, '\"') + 1;
