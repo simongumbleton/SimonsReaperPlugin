@@ -35,6 +35,7 @@ struct CreateObjectArgs {
 	std::string Notes = "";
 	int RandomOrSequence = 0;
 	std::string language = "SFX";
+	bool createPlayEvent = false;
 };
 
 struct ImportObjectArgs {

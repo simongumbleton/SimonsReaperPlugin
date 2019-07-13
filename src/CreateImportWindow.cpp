@@ -34,6 +34,7 @@ HWND txt_Language;
 std::string defaultLanguage = "English(US)";
 HWND check_OrigDirMatchWwise;
 HWND txt_OriginalsSubDir;
+HWND check_CreateEvent;
 HWND l_eventOptions;
 
 CreateObjectChoices myCreateChoices;
@@ -234,6 +235,7 @@ void CreateImportWindow::handleUI_B_CreateObject()
 
 	myCreateObjectArgs.Type = s_CreateType;
 	myCreateObjectArgs.onNameConflict = s_CreateNameConflict;
+	myCreateObjectArgs.createPlayEvent = GetCreateEvent();
 
 
 
@@ -814,6 +816,7 @@ bool CreateImportWindow::init_ALL_OPTIONS(HWND hwnd)
 	B_RefreshTree = GetDlgItem(hwnd, IDC_B_RefreshTree);
 	txt_OriginalsSubDir = GetDlgItem(hwnd, IDC_txt_OrigsDir);
 	Edit_SetText(txt_OriginalsSubDir, "ImportedFromReaper/");
+	check_CreateEvent = GetDlgItem(hwnd, IDC_Create_Event);
 	l_eventOptions = GetDlgItem(hwnd, IDC_LIST_EventOptions);
 
 	init_ComboBox_A(tr_c_CreateType, myCreateChoices.waapiCREATEchoices_TYPE);
@@ -1132,6 +1135,18 @@ bool CreateImportWindow::GetIsVoice()
 	else
 	{
 		Edit_Enable(txt_Language, false);
+		return false;
+	}
+}
+bool CreateImportWindow::GetCreateEvent()
+{
+
+	if (SendDlgItemMessage(m_hWindow, IDC_Create_Event, BM_GETCHECK, 0, 0))
+	{
+		return true;
+	}
+	else
+	{
 		return false;
 	}
 }

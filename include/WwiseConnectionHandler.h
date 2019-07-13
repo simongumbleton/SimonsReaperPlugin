@@ -220,6 +220,7 @@ private:
 	void FillRenderQueList(HWND hwnd);
 	void UpdateRenderJob_TreeView(HWND hwnd);
 	void HandleUI_SetParentForRenderJob(WwiseObject selectedParent);
+	bool GetCreateEvent();
 	bool GetIsVoice();
 	std::string GetLanguage();
 	bool GetOrigsDirMatchesWwise();
