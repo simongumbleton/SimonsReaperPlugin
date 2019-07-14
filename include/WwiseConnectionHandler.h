@@ -230,6 +230,7 @@ private:
 	bool UpdateProgressDuringRender(int numJobs);
 
 	bool ImportJobsIntoWwise();
+	void CreatePlayEventForID(std::string id,std::string name);
 	ImportObjectArgs SetupImportArgs(WwiseObject parent, bool isVoice, std::string ImportLanguage, bool OrigsDirMatchesWwise,std::string userOrigSubDir, std::vector<std::string> ImportFiles);
 	bool ImportCurrentRenderJob(ImportObjectArgs curJobImportArgs);
 	bool AudioFileExistsInWwise(std::string audioFile, WwiseObject& parent, std::string& originalsPath, std::string& existingWwisePath);

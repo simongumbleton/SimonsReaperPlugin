@@ -249,6 +249,18 @@ bool waapi_CreateObjectFromArgs(CreateObjectArgs & createArgs, AK::WwiseAuthorin
 	{
 		args.GetMap().insert(std::make_pair("autoAddToSourceControl", AkVariant(autoAddSC)));
 	}
+	if (createArgs.Type == "Event")
+	{
+		AkJson::Array eventArgs;
+		eventArgs.push_back(AkJson::Map{
+			{"name",AkVariant("0")},
+			{"type",AkVariant("Action")},
+			{"@ActionType",AkVariant(createArgs.eventArgs.action)},
+			{"@Target",AkVariant(createArgs.eventArgs.target)},
+
+			});
+		args.GetMap().insert(std::make_pair("children", eventArgs));
+	}
 
 
 	AkJson options = AkJson(AkJson::Map());

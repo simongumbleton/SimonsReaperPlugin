@@ -247,6 +247,14 @@ void CreateImportWindow::handleUI_B_CreateObject()
 		SetStatusMessageText("Error");
 		return;
 	}
+	if (myCreateObjectArgs.createPlayEvent)
+	{
+		//create play event for the object we just created
+		std::string id = results[0]["id"].GetVariant();
+		std::string name = results[0]["name"].GetVariant();
+		CreatePlayEventForID(id,name);
+	}
+
 	SetStatusMessageText("Ready");
 
 	//waapi_CreateObjectFromArgs(myCreateObjectArgs, results);
@@ -602,6 +610,28 @@ bool CreateImportWindow::ImportJobsIntoWwise()
 
 
 	
+}
+
+void CreateImportWindow::CreatePlayEventForID(std::string id, std::string name)
+{
+	CreateObjectArgs args;
+	args.ParentID = "\\Events\\Default Work Unit";
+	args.Type = "Event";
+	args.Name = "Play_"+name;
+	args.createPlayEvent = true;
+
+	EventCreateArgs eventArgs;
+	eventArgs.target = id;
+	
+	args.eventArgs = eventArgs;
+
+
+	AK::WwiseAuthoringAPI::AkJson::Array results;
+	if (!parentWwiseConnectionHnd->CreateWwiseObjects(false, args, results))
+	{
+		PrintToConsole("Error creating Play event");
+	}
+
 }
 
 ImportObjectArgs CreateImportWindow::SetupImportArgs(WwiseObject parent, bool isVoice, std::string ImportLanguage, bool OrigsDirMatchesWwise, std::string userOrigSubDir,std::vector<std::string> ImportFiles)

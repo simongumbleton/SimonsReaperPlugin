@@ -27,6 +27,11 @@ struct ObjectGetArgs {	/// Init struct with some sensible defaults that can be e
 	bool fromSelected = false;
 };
 
+struct EventCreateArgs {
+	int action = 1; // Play
+	std::string target = "";
+};
+
 struct CreateObjectArgs {
 	std::string ParentID = "";
 	std::string Type = "";
@@ -36,6 +41,7 @@ struct CreateObjectArgs {
 	int RandomOrSequence = 0;
 	std::string language = "SFX";
 	bool createPlayEvent = false;
+	EventCreateArgs eventArgs;
 };
 
 struct ImportObjectArgs {
