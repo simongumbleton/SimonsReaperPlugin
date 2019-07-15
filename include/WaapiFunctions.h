@@ -48,10 +48,11 @@ struct ImportObjectArgs {
 	std::string ImportLanguage = "";
 	std::string ImportLocation = "";
 	std::string OriginalsSubFolder = "";
-	bool CreatePlayEvent = false;
+	//bool CreatePlayEvent = false;
 	std::vector<std::pair<std::string,std::string>> ImportFileList;
 	std::string importOperation = "useExisting";
 	std::string objectType;
+	int eventCreateOption = 0; // 0 = no event, 1 = children, 2 = parent
 
 };
 

@@ -253,7 +253,7 @@ bool WwiseConnectionHandler::ImportAudioToWwise(bool suppressOutputMessages, Imp
 		waapi_UndoHandler(Cancel, "Auto Import");
 		return false;
 	}
-	//waapi_GetWaapiResultsArray(Results, MoreRawReturnResults);
+	waapi_GetWaapiResultsArray(Results, MoreRawReturnResults);
 
 	waapi_UndoHandler(End, "Auto Import");
 	waapi_SaveWwiseProject();

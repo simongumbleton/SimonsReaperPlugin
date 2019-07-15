@@ -36,6 +36,7 @@ HWND check_OrigDirMatchWwise;
 HWND txt_OriginalsSubDir;
 HWND check_CreateEvent;
 HWND l_eventOptions;
+std::string importEventOption;
 
 CreateObjectChoices myCreateChoices;
 
@@ -131,6 +132,9 @@ void CreateImportWindow::OnCommand(const HWND hwnd, int id, int notifycode, cons
 		break;
 	case IDC_C_Create_Type:
 		handleUI_GetType(notifycode);
+		break;
+	case IDC_LIST_EventOptions:
+		handleUI_GetImportEventOptions(notifycode);
 		break;
 	case IDC_C_CreateOnNameConflict:
 		handleUI_GetNameConflict(notifycode);
@@ -280,6 +284,20 @@ void CreateImportWindow::handleUI_GetType(int notifCode)
 	case CBN_SELCHANGE:
 		x = SendMessage(tr_c_CreateType, CB_GETCURSEL, 0, 0);
 		s_CreateType = myCreateChoices.waapiCREATEchoices_TYPE[x];
+		break;
+	default:
+		break;
+	}
+}
+
+void CreateImportWindow::handleUI_GetImportEventOptions(int notifCode)
+{
+	int x = 0;
+	switch (notifCode)
+	{
+	case CBN_SELCHANGE:
+		x = SendMessage(l_eventOptions, CB_GETCURSEL, 0, 0);
+		importEventOption = myCreateChoices.waapiCREATEchoices_EVENTOPTIONS[x];
 		break;
 	default:
 		break;
@@ -493,7 +511,8 @@ bool CreateImportWindow::ImportJobsIntoWwise()
 						fileOverride.second.ImportLanguage,
 						fileOverride.second.OrigDirMatchesWwise,
 						fileOverride.second.userOrigsSubDir,
-						audiofile
+						audiofile,
+						fileOverride.second.createEventOption
 						
 					);
 					if (ImportCurrentRenderJob(curFileOverrideImportArgs))
@@ -538,7 +557,8 @@ bool CreateImportWindow::ImportJobsIntoWwise()
 						job.ImportLanguage,
 						false,
 						existingOriginalsPath,
-						importfiles
+						importfiles,
+						job.createEventOption
 					);
 					if (ImportCurrentRenderJob(curJobImportArgs))
 					{
@@ -562,7 +582,8 @@ bool CreateImportWindow::ImportJobsIntoWwise()
 				job.ImportLanguage,
 				job.OrigDirMatchesWwise,
 				job.userOrigsSubDir,
-				job.RenderQueJobFileList
+				job.RenderQueJobFileList,
+				job.createEventOption
 			);
 			if (curJobImportArgs.ImportFileList.empty())
 			{
@@ -634,7 +655,7 @@ void CreateImportWindow::CreatePlayEventForID(std::string id, std::string name)
 
 }
 
-ImportObjectArgs CreateImportWindow::SetupImportArgs(WwiseObject parent, bool isVoice, std::string ImportLanguage, bool OrigsDirMatchesWwise, std::string userOrigSubDir,std::vector<std::string> ImportFiles)
+ImportObjectArgs CreateImportWindow::SetupImportArgs(WwiseObject parent, bool isVoice, std::string ImportLanguage, bool OrigsDirMatchesWwise, std::string userOrigSubDir,std::vector<std::string> ImportFiles,std::string eventCreateOption)
 {
 	std::string originalsPath = parent.properties["path"];
 	std::string remove = "\\Actor-Mixer Hierarchy";
@@ -672,14 +693,44 @@ ImportObjectArgs CreateImportWindow::SetupImportArgs(WwiseObject parent, bool is
 		imports = std::make_pair(file, objectPath);
 		importArgs.ImportFileList.push_back(imports);
 	}
+	if (eventCreateOption == "Play@Children") // "None", "Play@Children" , "Play@Parent"
+	{
+		importArgs.eventCreateOption = 1;
+	}
+	else if (eventCreateOption == "Play@Parent")
+	{
+		importArgs.eventCreateOption = 2;
+	}
+	else importArgs.eventCreateOption = 0;
+
 
 	return importArgs;
 }
 
 bool CreateImportWindow::ImportCurrentRenderJob(ImportObjectArgs curJobImportArgs)
 {
+	bool success;
 	AK::WwiseAuthoringAPI::AkJson::Array results;
-	return parentWwiseConnectionHnd->ImportAudioToWwise(false, curJobImportArgs, results);
+	success = parentWwiseConnectionHnd->ImportAudioToWwise(false, curJobImportArgs, results);
+
+	if (curJobImportArgs.eventCreateOption == 1)
+	{
+		for (auto obj : results)
+		{
+			CreatePlayEventForID(obj["id"].GetVariant(), obj["name"].GetVariant());
+		}
+	}
+	else if (curJobImportArgs.eventCreateOption == 2)
+	{
+		// \Actor-Mixer Hierarchy\Default Work Unit\MyAM\AnotherAM\New Random Container
+		std::string target = curJobImportArgs.ImportLocation;
+		std::string name = curJobImportArgs.ImportLocation.erase(0,curJobImportArgs.ImportLocation.rfind("\\")+1);
+		CreatePlayEventForID(target, name);
+	}
+
+
+
+	return success;
 }
 
 bool CreateImportWindow::AudioFileExistsInWwise(std::string audioFile, WwiseObject& parent, std::string& existingOriginalDir, std::string& existingWwisePath)
@@ -1076,6 +1127,7 @@ void CreateImportWindow::HandleUI_SetParentForRenderJob(WwiseObject selectedPare
 						fileOverride.RenderJobFile = item.pszText;
 						fileOverride.parentWwiseObject = selectedParent;
 						fileOverride.isVoice = GetIsVoice();
+						fileOverride.createEventOption = GetImportEventOption();
 						fileOverride.OrigDirMatchesWwise = GetOrigsDirMatchesWwise();
 						if (!fileOverride.OrigDirMatchesWwise)
 						{
@@ -1110,6 +1162,8 @@ void CreateImportWindow::HandleUI_SetParentForRenderJob(WwiseObject selectedPare
 						renderJob.parentWwiseObject = selectedParent;
 
 						renderJob.isVoice = GetIsVoice();
+
+						renderJob.createEventOption = GetImportEventOption();
 
 						renderJob.OrigDirMatchesWwise = GetOrigsDirMatchesWwise();
 
@@ -1188,6 +1242,12 @@ std::string CreateImportWindow::GetLanguage()
 	GetDlgItemTextA(m_hWindow, IDC_Language, buffer, 256);
 	std::string lang = buffer;
 	return lang;
+}
+
+std::string CreateImportWindow::GetImportEventOption()
+{
+	int x = SendMessage(l_eventOptions, CB_GETCURSEL, 0, 0);
+	return myCreateChoices.waapiCREATEchoices_EVENTOPTIONS[x];
 }
 
 bool CreateImportWindow::GetOrigsDirMatchesWwise()

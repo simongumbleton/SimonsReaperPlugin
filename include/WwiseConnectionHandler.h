@@ -27,6 +27,7 @@ struct RenderJobFileOverride
 	bool OrigDirMatchesWwise = false;
 	std::string userOrigsSubDir;
 	bool hasImported = false;
+	std::string createEventOption;
 };
 
 struct RenderQueJob
@@ -43,6 +44,7 @@ struct RenderQueJob
 	std::string userOrigsSubDir;
 	bool hasPerFileOverrides = false;
 	std::map<std::string, RenderJobFileOverride> perFileOverridesmap;
+	std::string createEventOption;
 	
 
 };
@@ -198,6 +200,7 @@ private:
 	void handleUI_B_CreateObject();
 	void handleUI_B_GetSelectedParent();
 	void handleUI_GetType(int notifCode);
+	void handleUI_GetImportEventOptions(int notifCode);
 	void handleUI_GetNameConflict(int notifCode);
 	void handleUI_RenderImport();
 
@@ -223,6 +226,7 @@ private:
 	bool GetCreateEvent();
 	bool GetIsVoice();
 	std::string GetLanguage();
+	std::string GetImportEventOption();
 	bool GetOrigsDirMatchesWwise();
 	std::string GetUserOriginalsSubDir();
 	void SetStatusMessageText(std::string message);
@@ -231,6 +235,7 @@ private:
 
 	bool ImportJobsIntoWwise();
 	void CreatePlayEventForID(std::string id,std::string name);
+	ImportObjectArgs SetupImportArgs(WwiseObject parent, bool isVoice, std::string ImportLanguage, bool OrigsDirMatchesWwise, std::string userOrigSubDir, std::vector<std::string> ImportFiles, std::string eventCreateOption);
 	ImportObjectArgs SetupImportArgs(WwiseObject parent, bool isVoice, std::string ImportLanguage, bool OrigsDirMatchesWwise,std::string userOrigSubDir, std::vector<std::string> ImportFiles);
 	bool ImportCurrentRenderJob(ImportObjectArgs curJobImportArgs);
 	bool AudioFileExistsInWwise(std::string audioFile, WwiseObject& parent, std::string& originalsPath, std::string& existingWwisePath);
