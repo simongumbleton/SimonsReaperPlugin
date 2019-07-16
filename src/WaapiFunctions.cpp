@@ -312,6 +312,7 @@ void waapi_GetWaapiResultsArray(AK::WwiseAuthoringAPI::AkJson::Array & arrayIn, 
 	{
 	case AkJson::Type::Map:
 	{
+
 		if (results.HasKey("objects"))
 		{
 			arrayIn = results["objects"].GetArray();
@@ -431,6 +432,7 @@ bool waapi_TranslateJSONResults(std::map<std::string,std::string>& INstringResul
 
 	return false;
 }
+
 
 bool waapi_SaveWwiseProject()
 {

@@ -87,6 +87,8 @@ bool WwiseConnectionHandler::ConnectToWwise(bool suppressOuputMessages, int port
 			PrintToConsole("Failed to set automation mode. Not supported in WAAPI 2017 or earlier");
 		}
 
+		GetWwiseProjectGlobals(false, MyCurrentWwiseConnection.projectGlobals);
+
 		return true;
 	}
 	else
@@ -273,7 +275,8 @@ bool WwiseConnectionHandler::GetWwiseProjectGlobals(bool suppressOutputMessages,
 
 	ObjectGetArgs Project;
 	Project.From = { std::string("ofType"),std::string("Project") };
-	Project.customReturnArgs = { std::string("filePath"),std::string("@DefaultLanguage") };
+	Project.customReturnArgs = { std::string("@DefaultLanguage"),std::string("filePath") };
+	Project.Select = "";
 
 	AkJson MoreRawReturnResults;
 	if (!waapi_GetObjectFromArgs(Project, MoreRawReturnResults))
@@ -285,6 +288,34 @@ bool WwiseConnectionHandler::GetWwiseProjectGlobals(bool suppressOutputMessages,
 	AkJson::Array Results;
 	waapi_GetWaapiResultsArray(Results, MoreRawReturnResults);
 
+	WwiseProjGlobals.DefaultLanguage = Results[0]["@DefaultLanguage"].GetVariant(); 
+	WwiseProjGlobals.Project = Results[0]["filePath"].GetVariant();
+
+
+	ObjectGetArgs langs;
+	langs.From = { std::string("ofType"),std::string("Language") };
+	langs.Select = "";
+
+	AkJson langRawReturnResults;
+	if (!waapi_GetObjectFromArgs(langs, langRawReturnResults))
+	{
+		//Something went wrong!
+		PrintToConsole("ERROR. Get Object Call Failed. Exiting.");
+		return false;
+	}
+	AkJson::Array langResults;
+	waapi_GetWaapiResultsArray(langResults, langRawReturnResults);
+	for (auto language : langResults)
+	{
+		std::string lang = language["name"].GetVariant();
+		if (lang == "SFX" || lang == "External" || lang == "Mixed")
+		{
+			continue;
+		}
+		else {
+			WwiseProjGlobals.Languages.push_back(language["name"].GetVariant());
+		}
+	}
 
 
 

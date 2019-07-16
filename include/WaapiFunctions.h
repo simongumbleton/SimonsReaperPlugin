@@ -9,6 +9,12 @@
 #include <AkAutobahn\Client.h>
 #include <AkAutobahn\AkJson.h>
 
+struct WwiseProjectGlobals {
+	std::string Project;
+	std::vector<std::string> Languages;
+	std::string DefaultLanguage;
+};
+
 ///struct to hold the current Waapi connection info (version, port etc)
 struct CurrentWwiseConnection {
 	int port = 8095;
@@ -17,6 +23,7 @@ struct CurrentWwiseConnection {
 	bool connected = false;
 	bool supressDebugOutput = false;
 	int year = 0;
+	WwiseProjectGlobals projectGlobals;
 };
 
 struct ObjectGetArgs {	/// Init struct with some sensible defaults that can be error checked
@@ -56,11 +63,7 @@ struct ImportObjectArgs {
 
 };
 
-struct WwiseProjectGlobals {
-	std::vector<std::string> Project;
-	std::vector<std::string> Languages;
-	std::string DefaultLanguage;
-};
+
 
 enum undoStep {Begin = 0,End = 1,Cancel = 2};
 
