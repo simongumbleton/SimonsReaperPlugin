@@ -546,7 +546,9 @@ bool CreateImportWindow::ImportJobsIntoWwise()
 					file.erase(0, file.rfind("\\")+1);
 				}
 
-				if (AudioFileExistsInWwise(file, job.parentWwiseObject, existingOriginalsPath, existingWwisePath))
+				WwiseObject originalJobWwiseParent = job.parentWwiseObject;
+
+				if (AudioFileExistsInWwise(file, originalJobWwiseParent, existingOriginalsPath, existingWwisePath))
 				{
 					//audio file already exists under this parent, so replace the originals path
 					//If file is not SFX (is localised) then need to strip out the top level language dir from the existing originals path, as it is handled by the import Language
@@ -564,7 +566,7 @@ bool CreateImportWindow::ImportJobsIntoWwise()
 
 					ImportObjectArgs curJobImportArgs = SetupImportArgs
 					(
-						job.parentWwiseObject,
+						originalJobWwiseParent,
 						job.isVoice,
 						job.ImportLanguage,
 						false,
