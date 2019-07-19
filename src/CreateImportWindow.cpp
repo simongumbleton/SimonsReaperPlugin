@@ -490,11 +490,15 @@ bool CreateImportWindow::ImportJobsIntoWwise()
 					if (AudioFileExistsInWwise(file,fileOverride.second.parentWwiseObject, existingOriginalsPath, existingWwisePath))
 					{
 						//audio file already exists under this parent, so replace the originals path
-						if (fileOverride.second.ImportLanguage != "SFX")
+					//If file is not SFX (is localised) then need to strip out the top level language dir from the existing originals path, as it is handled by the import Language
+						if (job.ImportLanguage != "SFX")
 						{
-							size_t pos = existingOriginalsPath.find(fileOverride.second.ImportLanguage);
-							existingOriginalsPath.erase(pos, fileOverride.second.ImportLanguage.length() + 1);
-							
+
+							if (existingOriginalsPath.find("\\") != existingOriginalsPath.npos)
+							{
+								existingOriginalsPath.erase(0, existingOriginalsPath.find("\\") + 1);
+							}
+
 						}
 						fileOverride.second.OrigDirMatchesWwise = false;
 						fileOverride.second.userOrigsSubDir = existingOriginalsPath;
@@ -528,6 +532,8 @@ bool CreateImportWindow::ImportJobsIntoWwise()
 
 
 			// import the remaining files from the job that are not overrideen
+
+			// TODO - figure out a way to handle whole job imports where the files exist in Wwise already under multiple structures
 
 			for (auto file : job.RenderQueJobFileList)
 			{
