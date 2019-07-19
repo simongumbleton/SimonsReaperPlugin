@@ -318,6 +318,7 @@ bool WwiseConnectionHandler::GetWwiseProjectGlobals(bool suppressOutputMessages,
 			WwiseProjGlobals.Languages.push_back(language["name"].GetVariant());
 		}
 	}
+	return true;
 }
 
 WwiseObject WwiseConnectionHandler::ResultToWwiseObject(AK::WwiseAuthoringAPI::AkJson Result)
