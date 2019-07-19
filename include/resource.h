@@ -30,6 +30,7 @@
 #define IDC_txt_OrigsDir                1040
 #define IDC_Create_Event                1041
 #define IDC_COMBO1                      1042
+#define IDC_LIST2                       1043
 #define IDC_LIST_RenderImportQue        1801
 #define IDC_C_Create_Type               1803
 #define IDC_B_GetSelectedParent         1819
@@ -48,7 +49,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        110
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1043
+#define _APS_NEXT_CONTROL_VALUE         1044
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

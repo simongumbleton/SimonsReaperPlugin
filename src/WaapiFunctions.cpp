@@ -329,12 +329,14 @@ void waapi_GetWaapiResultsArray(AK::WwiseAuthoringAPI::AkJson::Array & arrayIn, 
 		}
 		else
 		{
-			MessageBox(NULL,"!Error! Malformed Results array","Waapi Results Array Error", MB_OK);
+			//MessageBox(NULL,"!Error! Malformed Results array","Waapi Results Array Error", MB_OK);
+			PrintToConsole("Waapi results array empty");
 			return;
 		}
 	} break;
 	default:
-		MessageBox(NULL, "!Error! Results array is not of type AkJson::Map", "Waapi Results Array Error", MB_OK);
+		//MessageBox(NULL, "!Error! Results array is not of type AkJson::Map", "Waapi Results Array Error", MB_OK);
+		PrintToConsole("Waapi results are not of type AkJson::Map");
 		return;
 	}
 }

@@ -172,11 +172,13 @@ INT_PTR CreateImportWindow::OnInitDlg(const HWND hwnd, LPARAM lParam)
 	//ensure focus rectangle is properly draw around control with focus
 	PostMessage(hwnd, WM_KEYDOWN, VK_TAB, 0);
 
+	//init Wwise Connection
+	handleUI_B_Connect();
+
 	//Init options
 	init_ALL_OPTIONS(hwnd);
 
-	//init Wwise Connection
-	handleUI_B_Connect();
+	
 
 	return TRUE;
 }
@@ -541,10 +543,14 @@ bool CreateImportWindow::ImportJobsIntoWwise()
 				if (AudioFileExistsInWwise(file, job.parentWwiseObject, existingOriginalsPath, existingWwisePath))
 				{
 					//audio file already exists under this parent, so replace the originals path
+					//If file is not SFX (is localised) then need to strip out the top level language dir from the existing originals path, as it is handled by the import Language
 					if (job.ImportLanguage != "SFX")
 					{
-						size_t pos = existingOriginalsPath.find(job.ImportLanguage);
-						existingOriginalsPath.erase(pos, job.ImportLanguage.length() + 1);
+					
+						if (existingOriginalsPath.find("\\") != existingOriginalsPath.npos)
+						{
+							existingOriginalsPath.erase(0, existingOriginalsPath.find("\\") + 1);
+						}
 
 					}
 					std::vector<std::string> importfiles;
@@ -889,7 +895,7 @@ bool CreateImportWindow::init_ALL_OPTIONS(HWND hwnd)
 	B_RenderImport = GetDlgItem(hwnd, IDC_B_RenderImport);
 	txt_status = GetDlgItem(hwnd, IDC_Txt_Status);
 	txt_Language = GetDlgItem(hwnd, IDC_Language);
-	Edit_SetText(txt_Language, defaultLanguage.c_str());
+	//Edit_SetText(txt_Language, defaultLanguage.c_str());
 	check_IsVoice = GetDlgItem(hwnd, IDC_IsVoice);
 	SendDlgItemMessage(m_hWindow, IDC_IsVoice, BM_SETCHECK, BST_UNCHECKED, 0);
 	check_OrigDirMatchWwise = GetDlgItem(hwnd, IDC_OrigsMatchWwise);
@@ -904,6 +910,11 @@ bool CreateImportWindow::init_ALL_OPTIONS(HWND hwnd)
 	init_ComboBox_A(tr_c_CreateNameConflict, myCreateChoices.waapiCREATEchoices_NAMECONFLICT);
 	init_ComboBox_A(l_eventOptions, myCreateChoices.waapiCREATEchoices_EVENTOPTIONS);
 
+	init_ComboBox_A(
+		txt_Language,
+		parentWwiseConnectionHnd->MyCurrentWwiseConnection.projectGlobals.Languages
+	);
+
 	GetOrigsDirMatchesWwise();
 	GetIsVoice();
 
@@ -917,6 +928,7 @@ bool CreateImportWindow::init_ALL_OPTIONS(HWND hwnd)
 ///Initialise dialogue boxes
 bool CreateImportWindow::init_ComboBox_A(HWND hwnd_combo, std::vector<std::string> choices)
 {
+	//SendMessage(hwnd_combo, CB_RESETCONTENT,0,0);
 	int i = 0;
 	for (auto choice : choices)
 	{
@@ -1198,6 +1210,10 @@ void CreateImportWindow::HandleUI_SetParentForRenderJob(WwiseObject selectedPare
 		}
 	}
 
+
+	// TODO clear the selction here after user has done the property setting. Workaround for bad implementation of multiselect in Treeview
+
+
 	SetStatusMessageText("Ready");
 
 	//for (auto renderJob : GlobalListOfRenderQueJobs)
@@ -1213,12 +1229,12 @@ bool CreateImportWindow::GetIsVoice()
 
 	if (SendDlgItemMessage(m_hWindow, IDC_IsVoice, BM_GETCHECK, 0, 0))
 	{
-		Edit_Enable(txt_Language, true);
+		//Edit_Enable(txt_Language, true);
 		return true;
 	}
 	else
 	{
-		Edit_Enable(txt_Language, false);
+		//Edit_Enable(txt_Language, false);
 		return false;
 	}
 }
@@ -1239,8 +1255,9 @@ std::string CreateImportWindow::GetLanguage()
 {
 	///Get the par ID text
 	char buffer[256];
-	GetDlgItemTextA(m_hWindow, IDC_Language, buffer, 256);
-	std::string lang = buffer;
+	//GetDlgItemTextA(m_hWindow, IDC_Language, buffer, 256);
+	int x = SendMessage(txt_Language, CB_GETCURSEL, 0, 0);
+	std::string lang = parentWwiseConnectionHnd->MyCurrentWwiseConnection.projectGlobals.Languages[x];
 	return lang;
 }
 

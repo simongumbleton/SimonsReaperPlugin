@@ -305,6 +305,8 @@ bool WwiseConnectionHandler::GetWwiseProjectGlobals(bool suppressOutputMessages,
 	}
 	AkJson::Array langResults;
 	waapi_GetWaapiResultsArray(langResults, langRawReturnResults);
+
+	WwiseProjGlobals.Languages.clear();
 	for (auto language : langResults)
 	{
 		std::string lang = language["name"].GetVariant();
@@ -316,9 +318,6 @@ bool WwiseConnectionHandler::GetWwiseProjectGlobals(bool suppressOutputMessages,
 			WwiseProjGlobals.Languages.push_back(language["name"].GetVariant());
 		}
 	}
-
-
-
 }
 
 WwiseObject WwiseConnectionHandler::ResultToWwiseObject(AK::WwiseAuthoringAPI::AkJson Result)
