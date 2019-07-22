@@ -1042,6 +1042,7 @@ void CreateImportWindow::HandleUI_SetParentForRenderJob(WwiseObject selectedPare
 	HTREEITEM hSelectedItem = TreeView_GetSelection(tr_Tree_RenderJobTree);
 	if (hSelectedItem == NULL) // Nothing selected
 	{
+		PrintToConsole("No render job or file selected");
 		return;
 	}
 	std::vector<HTREEITEM> selectedItems;
@@ -1257,6 +1258,9 @@ void CreateImportWindow::HandleUI_SetParentForRenderJob(WwiseObject selectedPare
 		}
 
 	}
+
+	// TODO try calling SelectItem on the treeview with NULL as the arg?
+	TreeView_SelectItem(tr_Tree_RenderJobTree, NULL);
 
 
 	SetStatusMessageText("Ready");
