@@ -1316,7 +1316,8 @@ void CreateImportWindow::SetStatusMessageText(std::string message)
 
 void CreateImportWindow::OpenHelp()
 {
+	std::string help = "https://github.com/simongumbleton/SimonsReaperPlugin/raw/master/help/SimonsReaperPlugin_Help.docx";
 	PrintToConsole("Help wanted");
-	ShellExecute(NULL, "open", "www.google.com", NULL, NULL, SW_SHOWNORMAL);
+	ShellExecute(NULL, "open", help.c_str(), NULL, NULL, SW_SHOWNORMAL);
 }
 
