@@ -231,6 +231,8 @@ private:
 	std::string GetUserOriginalsSubDir();
 	void SetStatusMessageText(std::string message);
 
+	void OpenHelp();
+
 	bool UpdateProgressDuringRender(int numJobs);
 
 	bool ImportJobsIntoWwise();

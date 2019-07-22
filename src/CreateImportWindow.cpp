@@ -147,8 +147,8 @@ void CreateImportWindow::OnCommand(const HWND hwnd, int id, int notifycode, cons
 		EndDialog(hwnd, id);
 		break;
 	case ID_B_OK:
-		//m_hWindow = NULL;
-		//EndDialog(hwnd, id);
+		m_hWindow = NULL;
+		EndDialog(hwnd, id);
 		break;
 	case IDC_B_RefreshTree:
 		FillRenderQueList(hwnd);
@@ -158,6 +158,9 @@ void CreateImportWindow::OnCommand(const HWND hwnd, int id, int notifycode, cons
 		break;
 	case IDC_IsVoice:
 		GetIsVoice();
+		break;
+	case IDC_B_Help:
+		OpenHelp();
 		break;
 	}
 }
@@ -1220,30 +1223,6 @@ void CreateImportWindow::HandleUI_SetParentForRenderJob(WwiseObject selectedPare
 	}
 
 
-	// TODO clear the selction here after user has done the property setting. Workaround for bad implementation of multiselect in Treeview
-
-	//int clearselectedcount = TreeView_GetSelectedCount(tr_Tree_RenderJobTree);
-
-	//HTREEITEM hclearSelectedItem = TreeView_GetSelection(tr_Tree_RenderJobTree);
-	//if (hclearSelectedItem == NULL) // Nothing selected
-	//{
-	//	return;
-	//}
-	//std::vector<HTREEITEM> clearSelectedItems;
-	//clearSelectedItems.push_back(hclearSelectedItem);
-
-	//if (clearselectedcount > 1)
-	//{
-	//	for (int i = 1; i < clearselectedcount; i++)
-	//	{
-	//		HTREEITEM clearNextSelected = TreeView_GetNextSelected(tr_Tree_RenderJobTree, hclearSelectedItem);
-	//		clearSelectedItems.push_back(clearNextSelected);
-	//		hclearSelectedItem = clearNextSelected;
-	//	}
-	//}
-
-	// TODO how the hell do I set the flags for is selected?
-
 	for (auto &selectedItem : selectedItems)
 	{
 		TVITEM clearitem;
@@ -1252,24 +1231,13 @@ void CreateImportWindow::HandleUI_SetParentForRenderJob(WwiseObject selectedPare
 		clearitem.state = 0;
 		if (TreeView_GetItem(tr_Tree_RenderJobTree, &item))
 		{
-			//item.mask = TVIF_TEXT;;
-			//TreeView_SetItem(tr_Tree_RenderJobTree, &item);
 			TreeView_SetItemState(tr_Tree_RenderJobTree, clearitem.hItem, clearitem.state, TVIS_SELECTED);
 		}
 
 	}
-
-	// TODO try calling SelectItem on the treeview with NULL as the arg?
 	TreeView_SelectItem(tr_Tree_RenderJobTree, NULL);
 
-
 	SetStatusMessageText("Ready");
-
-	//for (auto renderJob : GlobalListOfRenderQueJobs)
-	//{
-	//	PrintToConsole(renderJob.RenderQueFilePath + " Imports into " + renderJob.parentWwiseObject.properties["name"]);
-	//}
-
 
 }
 
@@ -1346,5 +1314,9 @@ void CreateImportWindow::SetStatusMessageText(std::string message)
 }
 
 
-
+void CreateImportWindow::OpenHelp()
+{
+	PrintToConsole("Help wanted");
+	ShellExecute(NULL, "open", "www.google.com", NULL, NULL, SW_SHOWNORMAL);
+}
 
