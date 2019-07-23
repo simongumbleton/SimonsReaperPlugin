@@ -288,9 +288,11 @@ bool WwiseConnectionHandler::GetWwiseProjectGlobals(bool suppressOutputMessages,
 	AkJson::Array Results;
 	waapi_GetWaapiResultsArray(Results, MoreRawReturnResults);
 
-	WwiseProjGlobals.DefaultLanguage = Results[0]["@DefaultLanguage"].GetVariant(); 
-	WwiseProjGlobals.Project = Results[0]["filePath"].GetVariant();
-
+	if (Results.size() != 0)
+	{
+		WwiseProjGlobals.DefaultLanguage = Results[0]["@DefaultLanguage"].GetVariant();
+		WwiseProjGlobals.Project = Results[0]["filePath"].GetVariant();
+	}
 
 	ObjectGetArgs langs;
 	langs.From = { std::string("ofType"),std::string("Language") };
