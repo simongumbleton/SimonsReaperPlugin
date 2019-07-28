@@ -11,8 +11,8 @@
 #include <libconfig.h++>
 
 
-bool CreateNewConfigFile();
+//bool CreateNewConfigFile();
 
-std::string GetConfigValueForItem(std::string item);
+//std::string GetConfigValueForItem(std::string item);
 
-int GetConfigValueForItem()
+//int GetConfigValueForItem()
