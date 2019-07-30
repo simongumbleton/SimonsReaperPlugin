@@ -198,8 +198,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IntDir>reaper_simonsreaperplugin.dir\x64\Debug\</IntDir>
     <OutDir>C:\REAPER\UserPlugins</OutDir>
-    <IncludePath>C:\Users\SimonGumbleton\Projects\vcpkg-master\vcpkg-master\installed\x86-windows\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\SimonGumbleton\Projects\vcpkg-master\vcpkg-master\installed\x86-windows\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugWork|x64'">
     <IntDir>reaper_simonsreaperplugin.dir\x64\Debug\</IntDir>
@@ -716,7 +714,6 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="configfilehandler.cpp" />
     <ClCompile Include="include\AkAutobahn\autobahn.cpp" />
     <ClCompile Include="include\AkAutobahn\civetweb.cpp" />
     <ClCompile Include="include\AkAutobahn\Client.cpp" />
@@ -730,7 +727,6 @@
     <ClCompile Include="src\SimonsReaperPlugin.cpp" />
     <ClCompile Include="src\WaapiFunctions.cpp" />
     <ClCompile Include="src\WwiseConnectionHandler.cpp" />
-    <ClInclude Include="configfilehandler.h" />
     <ClInclude Include="include\AkAutobahn\AkJson.h" />
     <ClInclude Include="include\AkAutobahn\AkVariant.h" />
     <ClInclude Include="include\AkAutobahn\autobahn.h" />

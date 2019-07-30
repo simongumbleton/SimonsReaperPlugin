@@ -103,9 +103,6 @@
     <ClInclude Include="include\ReaperRenderQueParser.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="configfilehandler.h">
-      <Filter>include</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">
@@ -159,9 +156,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\ReaperRenderQueParser.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="configfilehandler.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

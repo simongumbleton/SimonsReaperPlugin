@@ -11,9 +11,6 @@
 #include <mutex>
 #include <future>
 
-
-
-
 ///Handles to UI elements
 HWND tr_buttonConnect;
 HWND tr_textConnectionStatus;
