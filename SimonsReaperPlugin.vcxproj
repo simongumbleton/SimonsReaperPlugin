@@ -198,6 +198,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IntDir>reaper_simonsreaperplugin.dir\x64\Debug\</IntDir>
     <OutDir>C:\REAPER\UserPlugins</OutDir>
+    <IncludePath>C:\Users\SimonGumbleton\Projects\vcpkg-master\vcpkg-master\installed\x64-windows\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\SimonGumbleton\Projects\vcpkg-master\vcpkg-master\installed\x64-windows\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugWork|x64'">
     <IntDir>reaper_simonsreaperplugin.dir\x64\Debug\</IntDir>
@@ -325,6 +327,7 @@
       <ImportLibrary>$(SolutionDir)/Build/x64/Debug/reaper_simonsreaperplugin_x64.lib</ImportLibrary>
       <ProgramDataBaseFile>$(SolutionDir)/Build/x64/Debug/reaper_simonsreaperplugin_x64.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
@@ -721,6 +724,7 @@
     <ClCompile Include="include\AkAutobahn\JSONHelpers.cpp" />
     <ClCompile Include="include\AkAutobahn\Logger.cpp" />
     <ClCompile Include="include\AkAutobahn\WebSocketClient.cpp" />
+    <ClCompile Include="src\ConfigFileHandler.cpp" />
     <ClCompile Include="src\CreateImportWindow.cpp" />
     <ClCompile Include="src\PluginWindow.cpp" />
     <ClCompile Include="src\ReaperRenderQueParser.cpp" />
@@ -738,6 +742,7 @@
     <ClInclude Include="include\AkAutobahn\JsonProvider.h" />
     <ClInclude Include="include\AkAutobahn\Logger.h" />
     <ClInclude Include="include\AkAutobahn\WebSocketClient.h" />
+    <ClInclude Include="include\ConfigFileHandler.h" />
     <ClInclude Include="include\PluginWindow.h" />
     <ClInclude Include="include\rapidjson\allocators.h" />
     <ClInclude Include="include\rapidjson\document.h" />

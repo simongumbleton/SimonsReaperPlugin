@@ -11,6 +11,8 @@
 #include <mutex>
 #include <future>
 
+#include "ConfigFileHandler.h"
+
 ///Handles to UI elements
 HWND tr_buttonConnect;
 HWND tr_textConnectionStatus;
@@ -181,7 +183,8 @@ INT_PTR CreateImportWindow::OnInitDlg(const HWND hwnd, LPARAM lParam)
 	//Init options
 	init_ALL_OPTIONS(hwnd);
 
-	
+	config myConfig;
+	ReadConfigFile(myConfig);
 
 	return TRUE;
 }
