@@ -1,10 +1,10 @@
-#include <iostream>
+
 #include <iomanip>
 #include <cstdlib>
-#include <vector>
+
 #include <sstream>
-#include <iostream>
-#include <fstream>
+#include <map>
+
 #include <algorithm>
 #include "SimonsReaperPlugin.h"
 
@@ -15,17 +15,24 @@ using namespace std;
 
 const char dummyconfig[] = "waapiPort=8095\n";
 
+string configFileDir = "";
+map<string, string> rawConfigData;
+
 
 bool ReadConfigFile(config & outConfig)
 {
 	string reaperPath = GetReaperResourcePath();
-	string pluginPath = reaperPath + "\\UserPlugins";
+	configFileDir = reaperPath + "\\UserPlugins";
 
+	ifstream configFile;
+	CheckConfigExists();
 
-	std::istringstream is_file(dummyconfig);
+	configFile.open("csg_reaperwwise.config");
+
+	//std::istringstream is_file(dummyconfig);
 
 	std::string line;
-	while (std::getline(is_file, line))
+	while (std::getline(configFile, line))
 	{
 		std::istringstream is_line(line);
 		std::string key;
@@ -33,8 +40,32 @@ bool ReadConfigFile(config & outConfig)
 		{
 			std::string value;
 			if (std::getline(is_line, value))
-				PrintToConsole(key + " " + value);
+				rawConfigData[key] = value;
+				
 		}
 	}
+
+	// Set the config properties 
+	outConfig.waapiPort = std::stoi(rawConfigData["waapiPort"]);
+
+	return true;
+}
+
+bool CheckConfigExists()
+{
+	ifstream outFile("csg_reaperwwise.config");
+	if (!outFile.is_open())
+	{
+		CreateConfigFile();
+	}
+	return true;
+}
+
+bool CreateConfigFile()
+{
+	ofstream newFile;
+	newFile.open("csg_reaperwwise.config");
+	newFile << dummyconfig;
+	newFile.close();
 	return true;
 }

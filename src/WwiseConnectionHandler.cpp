@@ -426,6 +426,11 @@ bool WwiseConnectionHandler::LinkParentChildObjects(std::vector<WwiseObject>& ob
 	return true;
 }
 
+void WwiseConnectionHandler::SetOptionsFromConfig(config myConfig)
+{
+	MyCurrentWwiseConnection.port = myConfig.waapiPort;
+}
+
 
 
 

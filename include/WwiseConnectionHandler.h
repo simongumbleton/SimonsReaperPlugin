@@ -4,6 +4,7 @@
 #include <tchar.h>    //string and other mapping macros
 #include <string>
 #include <map>
+#include "ConfigFileHandler.h"
 
 #include "WaapiFunctions.h"
 //#include "PluginWindow.h"
@@ -85,6 +86,8 @@ public:
 	WwiseObject ResultToWwiseObject(AK::WwiseAuthoringAPI::AkJson Result);
 
 	bool LinkParentChildObjects(std::vector<WwiseObject>& objects);
+
+	void SetOptionsFromConfig(config myConfig);
 
 
 private:

@@ -177,14 +177,19 @@ INT_PTR CreateImportWindow::OnInitDlg(const HWND hwnd, LPARAM lParam)
 	//ensure focus rectangle is properly draw around control with focus
 	PostMessage(hwnd, WM_KEYDOWN, VK_TAB, 0);
 
+
+	config myConfig;
+	ReadConfigFile(myConfig);
+	parentWwiseConnectionHnd->SetOptionsFromConfig(myConfig);
+
+
 	//init Wwise Connection
 	handleUI_B_Connect();
 
 	//Init options
 	init_ALL_OPTIONS(hwnd);
 
-	config myConfig;
-	ReadConfigFile(myConfig);
+	
 
 	return TRUE;
 }
