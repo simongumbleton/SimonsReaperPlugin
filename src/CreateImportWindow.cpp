@@ -544,8 +544,6 @@ bool CreateImportWindow::ImportJobsIntoWwise()
 
 			// import the remaining files from the job that are not overrideen
 
-			// TODO - figure out a way to handle whole job imports where the files exist in Wwise already under multiple structures
-
 			for (auto file : job.RenderQueJobFileList)
 			{
 				std::string existingOriginalsPath = "";
