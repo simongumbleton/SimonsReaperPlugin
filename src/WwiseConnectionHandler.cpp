@@ -66,8 +66,6 @@ bool WwiseConnectionHandler::handle_GUI_Connect()
 
 bool WwiseConnectionHandler::ConnectToWwise(bool suppressOuputMessages, int port)
 {
-	
-	MyCurrentWwiseConnection.port = port;
 
 	if (waapi_Connect(MyCurrentWwiseConnection))  //Connect to Wwise. Optionally pass bool true to supress message boxes from wwise connection
 	{
@@ -75,16 +73,18 @@ bool WwiseConnectionHandler::ConnectToWwise(bool suppressOuputMessages, int port
 		{
 			//create a status text string and set it
 			std::stringstream status;
-			status << "Connected on port " + std::to_string(MyCurrentWwiseConnection.port) + ": ";
+			status << "Connected on port " + std::to_string(port) + ": ";
 			status << " - " + MyCurrentWwiseConnection.Version;
 			std::string WwiseConnectionStatus = status.str();
 			//MessageBox(NULL, WwiseConnectionStatus.c_str(), "Wwise Connection Status", MB_OK);
 			PrintToConsole(WwiseConnectionStatus);
 		}
-
-		if (!waapi_SetAutomationMode(true))
+		if (MyCurrentWwiseConnection.useAutomationMode)
 		{
-			PrintToConsole("Failed to set automation mode. Not supported in WAAPI 2017 or earlier");
+			if (!waapi_SetAutomationMode(true))
+			{
+				PrintToConsole("Failed to set automation mode. Not supported in WAAPI 2017 or earlier");
+			}
 		}
 
 		GetWwiseProjectGlobals(false, MyCurrentWwiseConnection.projectGlobals);
@@ -429,6 +429,12 @@ bool WwiseConnectionHandler::LinkParentChildObjects(std::vector<WwiseObject>& ob
 void WwiseConnectionHandler::SetOptionsFromConfig(config myConfig)
 {
 	MyCurrentWwiseConnection.port = myConfig.waapiPort;
+	MyCurrentWwiseConnection.useAutomationMode = myConfig.useAutomationMode;
+}
+
+void WwiseConnectionHandler::SetWwiseAutomationMode(bool enable)
+{
+	waapi_SetAutomationMode(enable);
 }
 
 

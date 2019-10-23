@@ -89,6 +89,8 @@ public:
 
 	void SetOptionsFromConfig(config myConfig);
 
+	void SetWwiseAutomationMode(bool enable);
+
 
 private:
 
@@ -247,6 +249,8 @@ private:
 
 	void backupRenderQueFiles();
 	void restoreRenderQueFiles();
+
+	void SetWwiseAutomationMode(bool enable);
 
 
 	INT_PTR CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);

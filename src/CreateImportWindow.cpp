@@ -145,10 +145,12 @@ void CreateImportWindow::OnCommand(const HWND hwnd, int id, int notifycode, cons
 		handleUI_RenderImport();
 		break;
 	case ID_B_CANCEL:    //ESC key pressed or 'cancel' button selected
+		SetWwiseAutomationMode(false);
 		m_hWindow = NULL;
 		EndDialog(hwnd, id);
 		break;
 	case ID_B_OK:
+		SetWwiseAutomationMode(false);
 		m_hWindow = NULL;
 		EndDialog(hwnd, id);
 		break;
@@ -886,6 +888,11 @@ void CreateImportWindow::restoreRenderQueFiles()
 	}
 }
 
+void CreateImportWindow::SetWwiseAutomationMode(bool enable)
+{
+	parentWwiseConnectionHnd->SetWwiseAutomationMode(enable);
+}
+
 
 
 /// INIT ALL OPTIONS
@@ -1326,4 +1333,3 @@ void CreateImportWindow::OpenHelp()
 	PrintToConsole("Help wanted");
 	ShellExecute(NULL, "open", help.c_str(), NULL, NULL, SW_SHOWNORMAL);
 }
-

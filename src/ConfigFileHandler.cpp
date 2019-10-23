@@ -13,7 +13,12 @@
 
 using namespace std;
 
-const char dummyconfig[] = "waapiPort=8095\n";
+string defaults = 
+"waapiPort=8095\n"
+"useAutomationMode=1\n"
+;
+
+//const char dummyconfig[] = "";
 
 string configFileDir = "";
 map<string, string> rawConfigData;
@@ -46,7 +51,8 @@ bool ReadConfigFile(config & outConfig)
 	}
 
 	// Set the config properties 
-	outConfig.waapiPort = std::stoi(rawConfigData["waapiPort"]);
+	outConfig.waapiPort = std::stoi(rawConfigData["waapiPort"]);	//stoi converts string to integer
+	outConfig.useAutomationMode = std::stoi(rawConfigData["useAutomationMode"]);
 
 	return true;
 }
@@ -65,7 +71,7 @@ bool CreateConfigFile()
 {
 	ofstream newFile;
 	newFile.open("csg_reaperwwise.config");
-	newFile << dummyconfig;
+	newFile << defaults; //dummyconfig;
 	newFile.close();
 	return true;
 }

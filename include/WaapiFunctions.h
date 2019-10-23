@@ -24,6 +24,7 @@ struct CurrentWwiseConnection {
 	bool supressDebugOutput = false;
 	int year = 0;
 	WwiseProjectGlobals projectGlobals;
+	bool useAutomationMode = false;
 };
 
 struct ObjectGetArgs {	/// Init struct with some sensible defaults that can be error checked
