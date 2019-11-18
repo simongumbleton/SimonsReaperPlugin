@@ -9,7 +9,7 @@ using namespace std;
 struct config
 {
 	int waapiPort = 8095;
-	bool useAutomationMode = true;
+	bool useAutomationMode = false;
 };
 
 // PUBLIC client calls this function
