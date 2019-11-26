@@ -15,6 +15,7 @@ using namespace std;
 
 string defaults = 
 "waapiPort=8095\n"
+"useAutomationMode=1\n"
 ;
 
 //const char dummyconfig[] = "";
@@ -51,7 +52,7 @@ bool ReadConfigFile(config & outConfig)
 
 	// Set the config properties 
 	outConfig.waapiPort = std::stoi(rawConfigData["waapiPort"]);	//stoi converts string to integer
-	outConfig.useAutomationMode = false; //std::stoi(rawConfigData["useAutomationMode"]);	//set it to false as we dont want to use automation mode
+	outConfig.useAutomationMode = std::stoi(rawConfigData["useAutomationMode"]);
 
 	return true;
 }
