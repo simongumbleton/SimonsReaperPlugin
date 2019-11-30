@@ -133,6 +133,7 @@ WwiseObject WwiseConnectionHandler::GetSelectedObject()
 		mySelectedObject.properties.insert(std::make_pair("name", result["name"].GetVariant().GetString()));
 		mySelectedObject.properties.insert(std::make_pair("type", result["type"].GetVariant().GetString()));
 		mySelectedObject.properties.insert(std::make_pair("path", result["path"].GetVariant().GetString()));
+		mySelectedObject.properties.insert(std::make_pair("workunit", result["workunit"]["id"].GetVariant().GetString()));
 	}
 
 	return mySelectedObject;

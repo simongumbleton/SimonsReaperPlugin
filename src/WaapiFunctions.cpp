@@ -66,7 +66,7 @@ bool waapi_GetSelectedWwiseObjects(AK::WwiseAuthoringAPI::AkJson & resultsOut, b
 			AkVariant("type"),
 			AkVariant("path"),
 			AkVariant("parent"),
-			//AkVariant("workunit_type"),
+			AkVariant("workunit"),
 			AkVariant("childrenCount"), } }
 		});
 	if (getNotes)
