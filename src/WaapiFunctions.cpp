@@ -474,3 +474,21 @@ bool waapi_UndoHandler(undoStep undoStep, std::string undoTag)
 	}
 	return false;
 }
+
+bool waapi_DoWorkgoupOperation(std::string operation, std::string target)
+{
+	using namespace AK::WwiseAuthoringAPI;
+
+	AkJson args;
+	args = AkJson::Map{
+		{ "command", AkVariant(operation)},
+		{ "objects", AkJson::Array{
+			AkVariant(target),
+		} }};
+
+	AkJson options = AkJson(AkJson::Map());
+	AkJson results = AkJson(AkJson::Map());
+
+
+	return my_client.Call(ak::wwise::ui::commands::execute, args, options, results);
+}

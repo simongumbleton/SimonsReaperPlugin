@@ -118,6 +118,17 @@ struct CreateObjectChoices {
 
 };
 
+struct WorkgroupOperations {
+	std::vector<std::string> WorkUnit
+	{
+		"WorkgroupCheckoutWWU",
+		"WorkgroupRevertWWU",
+		"WorkgroupUpdateWWU",
+		"WorkgroupCommitWWU"
+	};
+	//TO DO - add other workgroup commands 
+};
+
 	///////////////////////////////
 	////     Connect to wwise client
 	///////////////////////////////
@@ -175,4 +186,9 @@ struct CreateObjectChoices {
 	bool waapi_OpenWwiseProject(std::string proj);
 
 	bool waapi_UndoHandler(undoStep undoStep, std::string undoTag);
+
+	///////////////////////////////
+	////     Workgroup operations
+	///////////////////////////////
+	bool waapi_DoWorkgoupOperation(std::string operation, std::string target);
 
