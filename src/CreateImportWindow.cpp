@@ -240,6 +240,7 @@ void CreateImportWindow::handleUI_B_CreateObject()
 	}
 
 	myCreateObjectArgs.ParentID = selectedParent.properties["id"];
+	myCreateObjectArgs.Workunit = selectedParent.properties["workunit"];
 
 	///Get the par text fields
 	char buffer[256];
@@ -737,6 +738,8 @@ bool CreateImportWindow::ImportCurrentRenderJob(ImportObjectArgs curJobImportArg
 	bool success;
 	AK::WwiseAuthoringAPI::AkJson::Array results;
 	success = parentWwiseConnectionHnd->ImportAudioToWwise(false, curJobImportArgs, results);
+
+	/// to do - bug here, the results contains two objects in the case where a newly imported file is made under an Actor mixer, caauing errors in the event creation?
 
 	if (curJobImportArgs.eventCreateOption == 1)
 	{

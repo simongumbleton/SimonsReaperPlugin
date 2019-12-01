@@ -219,6 +219,39 @@ bool waapi_GetObjectFromArgs(ObjectGetArgs & getArgs, AK::WwiseAuthoringAPI::AkJ
 	return my_client.Call(ak::wwise::core::object::get, args, options, results);;
 }
 
+std::string GetPropertyFromGUID(const AK::WwiseAuthoringAPI::AkVariant & id, std::string property, bool usePath)
+{
+	using namespace AK::WwiseAuthoringAPI;
+	AkJson query;
+	AkJson args;
+
+	if (usePath)
+	{
+		args = (AkJson::Map{
+	{ "from", AkJson::Map{
+		{ "path", AkJson::Array{ id } } } }
+			});
+	}
+	else {
+		args = (AkJson::Map{
+	{ "from", AkJson::Map{
+		{ "id", AkJson::Array{ id } } } }
+			});
+	}
+
+	AkJson options(AkJson::Map{
+		{ "return", AkJson::Array{
+			AkVariant(property)
+		} }
+		});
+
+	AkJson results;
+
+	my_client.Call(ak::wwise::core::object::get, args, options, results);
+
+	return std::string();
+}
+
 bool waapi_CreateObjectFromArgs(CreateObjectArgs & createArgs, AK::WwiseAuthoringAPI::AkJson & results)
 {
 	using namespace AK::WwiseAuthoringAPI;
@@ -230,6 +263,10 @@ bool waapi_CreateObjectFromArgs(CreateObjectArgs & createArgs, AK::WwiseAuthorin
 		return false;
 	}
 	bool autoAddSC = true;
+
+	// Do Source control operations
+	waapi_DoWorkgoupOperation(CheckoutWWU, createArgs.ParentID);
+
 
 	AkJson args; //"@RandomOrSequence"
 	args = (AkJson::Map{
@@ -251,6 +288,8 @@ bool waapi_CreateObjectFromArgs(CreateObjectArgs & createArgs, AK::WwiseAuthorin
 	}
 	if (createArgs.Type == "Event")
 	{
+		// GetPropertyFromGUID(createArgs.eventArgs.target, "type", true);  // Need to finish this. Check type of event target
+
 		AkJson::Array eventArgs;
 		eventArgs.push_back(AkJson::Map{
 			{"name",AkVariant("0")},
@@ -271,6 +310,9 @@ bool waapi_CreateObjectFromArgs(CreateObjectArgs & createArgs, AK::WwiseAuthorin
 bool wappi_ImportFromArgs(ImportObjectArgs & importArgs, AK::WwiseAuthoringAPI::AkJson & results)
 {
 	using namespace AK::WwiseAuthoringAPI;
+
+	// Do Source control operations
+	waapi_DoWorkgoupOperation(CheckoutWWU, importArgs.ImportLocation);
 
 	AkJson::Array items;
 
@@ -475,13 +517,34 @@ bool waapi_UndoHandler(undoStep undoStep, std::string undoTag)
 	return false;
 }
 
-bool waapi_DoWorkgoupOperation(std::string operation, std::string target)
+bool waapi_DoWorkgoupOperation(SourceControlOperation operation, std::string target)
 {
 	using namespace AK::WwiseAuthoringAPI;
 
+	std::string s_operation;
+	switch (operation)
+	{
+	case CheckoutWWU:
+		s_operation = "WorkgroupCheckoutWWU";
+		break;
+	case RevertWWU:
+		s_operation = "WorkgroupRevertWWU";
+		break;
+	case UpdateWWU:
+		s_operation = "WorkgroupUpdateWWU";
+		break;
+	case CommitWWU:
+		s_operation = "WorkgroupCommitWWU";
+		break;
+	default:
+		s_operation = "WorkgroupCheckoutWWU";
+		break;
+	}
+
+
 	AkJson args;
 	args = AkJson::Map{
-		{ "command", AkVariant(operation)},
+		{ "command", AkVariant(s_operation)},
 		{ "objects", AkJson::Array{
 			AkVariant(target),
 		} }};

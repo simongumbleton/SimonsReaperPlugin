@@ -211,6 +211,10 @@ bool WwiseConnectionHandler::CreateWwiseObjects(bool suppressOutputMessages, Cre
 		createArgs.Type = "RandomSequenceContainer";
 		createArgs.RandomOrSequence = 0;
 	}
+	else if (createArgs.Type == "Event")
+	{
+		//Check the type for the event target
+	}
 
 	waapi_UndoHandler(Begin, "Create Object");
 

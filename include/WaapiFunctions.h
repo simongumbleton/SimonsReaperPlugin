@@ -50,6 +50,7 @@ struct CreateObjectArgs {
 	std::string language = "SFX";
 	bool createPlayEvent = false;
 	EventCreateArgs eventArgs;
+	std::string Workunit = "";
 };
 
 struct ImportObjectArgs {
@@ -61,6 +62,7 @@ struct ImportObjectArgs {
 	std::string importOperation = "useExisting";
 	std::string objectType;
 	int eventCreateOption = 0; // 0 = no event, 1 = children, 2 = parent
+	std::string Workunit = "";
 
 };
 
@@ -129,6 +131,11 @@ struct WorkgroupOperations {
 	//TO DO - add other workgroup commands 
 };
 
+enum SourceControlOperation
+{
+	CheckoutWWU,RevertWWU,UpdateWWU,CommitWWU
+};
+
 	///////////////////////////////
 	////     Connect to wwise client
 	///////////////////////////////
@@ -152,6 +159,8 @@ struct WorkgroupOperations {
 	bool waapi_GetParentFromGUID(const AK::WwiseAuthoringAPI::AkVariant &id, AK::WwiseAuthoringAPI::AkJson &results);
 
 	bool waapi_GetObjectFromArgs(ObjectGetArgs & getArgs, AK::WwiseAuthoringAPI::AkJson & results);
+
+	std::string GetPropertyFromGUID(const AK::WwiseAuthoringAPI::AkVariant &id, std::string property, bool usePath);
 
 	///////////////////////////////
 	////    Create and Import
@@ -190,5 +199,5 @@ struct WorkgroupOperations {
 	///////////////////////////////
 	////     Workgroup operations
 	///////////////////////////////
-	bool waapi_DoWorkgoupOperation(std::string operation, std::string target);
+	bool waapi_DoWorkgoupOperation(SourceControlOperation operation, std::string target);
 
