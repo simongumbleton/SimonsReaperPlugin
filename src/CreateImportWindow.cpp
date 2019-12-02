@@ -738,15 +738,14 @@ bool CreateImportWindow::ImportCurrentRenderJob(ImportObjectArgs curJobImportArg
 	bool success;
 	AK::WwiseAuthoringAPI::AkJson::Array results;
 	success = parentWwiseConnectionHnd->ImportAudioToWwise(false, curJobImportArgs, results);
-
-	/// to do - bug here, the results contains two objects in the case where a newly imported file is made under an Actor mixer, caauing errors in the event creation?
-
-
 	
 	if (curJobImportArgs.eventCreateOption == 1)
 	{
 		for (auto obj : results)
 		{
+			std::string type = obj["type"].GetVariant();
+			if (type == "AudioFileSource") { continue; }
+
 			CreatePlayEventForID(obj["id"].GetVariant(), obj["name"].GetVariant());
 		}
 	}
@@ -757,8 +756,6 @@ bool CreateImportWindow::ImportCurrentRenderJob(ImportObjectArgs curJobImportArg
 		std::string name = curJobImportArgs.ImportLocation.erase(0,curJobImportArgs.ImportLocation.rfind("\\")+1);
 		CreatePlayEventForID(target, name);
 	}
-
-
 
 	return success;
 }

@@ -263,10 +263,10 @@ bool WwiseConnectionHandler::ImportAudioToWwise(bool suppressOutputMessages, Imp
 	waapi_GetWaapiResultsArray(Results, MoreRawReturnResults);
 
 
-	std::map<std::string, std::string> stringRes;
-	std::map<std::string, double> numRes;
+	//std::map<std::string, std::string> stringRes;
+	//std::map<std::string, double> numRes;
 
-	waapi_TranslateJSONResults(stringRes, numRes, MoreRawReturnResults, "");
+	//waapi_TranslateJSONResults(stringRes, numRes, MoreRawReturnResults, "");
 
 
 	waapi_UndoHandler(End, "Auto Import");

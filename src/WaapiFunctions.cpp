@@ -282,13 +282,13 @@ bool waapi_CreateObjectFromArgs(CreateObjectArgs & createArgs, AK::WwiseAuthorin
 	{
 		args.GetMap().insert(std::make_pair("@RandomOrSequence", AkVariant(createArgs.RandomOrSequence)));
 	}
-	if (myWwiseConnection.year > 2017)
+	if (myWwiseConnection.year > 2017 && createArgs.Type !="Event") // Events cant have this property
 	{
 		args.GetMap().insert(std::make_pair("autoAddToSourceControl", AkVariant(autoAddSC)));
 	}
 	if (createArgs.Type == "Event")
 	{
-		// GetPropertyFromGUID(createArgs.eventArgs.target, "type", true);  // Need to finish this. Check type of event target
+		// GetPropertyFromGUID(createArgs.eventArgs.target, "type", true);  /// TODO - Need to finish this. Check type of event target
 
 		AkJson::Array eventArgs;
 		eventArgs.push_back(AkJson::Map{
@@ -342,7 +342,16 @@ bool wappi_ImportFromArgs(ImportObjectArgs & importArgs, AK::WwiseAuthoringAPI::
 		args.GetMap().insert(std::make_pair("autoAddToSourceControl", AkVariant(autoAddSC)));
 	}
 
-	AkJson options = AkJson(AkJson::Map());
+	AkJson options(AkJson::Map{
+	{ "return", AkJson::Array{
+		AkVariant("id"),
+		AkVariant("name"),
+		AkVariant("path"),
+		AkVariant("type"),
+		//AkVariant("parent"),
+		//AkVariant("childrenCount")
+	} }
+		});
 
 	return my_client.Call(ak::wwise::core::audio::import, args, options, results, 0);
 }
@@ -504,10 +513,11 @@ bool waapi_TranslateJSONResults(std::map<std::string,std::string>& INstringResul
 		else
 		{
 			//"Ak retunr Type not found";
+			return false;
 		}
 	}
 
-	return false;
+	return true;
 }
 
 
