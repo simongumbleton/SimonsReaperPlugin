@@ -741,6 +741,8 @@ bool CreateImportWindow::ImportCurrentRenderJob(ImportObjectArgs curJobImportArg
 
 	/// to do - bug here, the results contains two objects in the case where a newly imported file is made under an Actor mixer, caauing errors in the event creation?
 
+
+	
 	if (curJobImportArgs.eventCreateOption == 1)
 	{
 		for (auto obj : results)

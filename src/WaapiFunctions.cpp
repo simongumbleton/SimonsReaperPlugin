@@ -467,6 +467,39 @@ bool waapi_TranslateJSONResults(std::map<std::string,std::string>& INstringResul
 		else if (type == AK::WwiseAuthoringAPI::AkJson::Type::Array)
 		{
 			///Not implemented
+			if (result.HasKey("objects"))
+			{
+				for (const auto obj : result["objects"].GetArray())
+				{
+					for (const auto x : obj.GetMap())
+					{
+						std::string first = x.first;
+						AkVariant variant = x.second.GetVariant();
+						if (variant.IsString())
+						{
+							//push value into string results
+							std::string key = first;
+							std::string value = variant.GetString();
+							INstringResults[key] = value;
+						}
+						else if (variant.IsNumber())
+						{
+							//push value into number results
+							std::string key = first;
+							double value = variant.operator double();
+							INnumberResults[key] = value;
+						}
+						else if (variant.GetType() == 11)//Type is bool
+						{
+							std::string key = stringKey;
+							bool b_value = variant.GetBoolean();
+							std::string value = std::to_string(b_value);
+							INstringResults[key] = value;
+						}
+					}
+				}
+			}
+
 		}
 		else
 		{
