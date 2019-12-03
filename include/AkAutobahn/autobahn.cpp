@@ -50,6 +50,7 @@ namespace AK
 {
 	namespace WwiseAuthoringAPI
 	{
+		int x = 0;
 #ifdef VALIDATE_WAMP
 		void session::WampAssert(bool value, const char* message)
 		{
